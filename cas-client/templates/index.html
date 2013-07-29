@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+	<head>
+		<title>MIToces</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+		body {
+			padding-top: 60px;
+		}
+		@media (max-width: 979px) {
+			body {
+				padding-top: 0px;
+			}
+		}
+		</style>
+		<link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="{{ STATIC_URL }}css/bootstrap-responsive.css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					</button>
+					<a class="brand" href="#">MIToces</a>
+					<div class="nav-collapse collapse">
+						<ul class="nav">
+							<li class="active">
+								<a href="#">home</a>
+							</li>
+							<li>
+								<a href="#explore">explore</a>
+							</li>
+							<li>
+								<a href="#create">create</a>
+							</li>
+							<li class="dropdown pull-right">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{user}}<b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="#profile">Profile</a>
+								</li>
+								<li>
+									<a href="/cas-test/logout">Logout</a>
+								</li>
+							</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			{% block content %}
+			
+				<h1>New Modules</h1>
+				{% if latest_module_list %}
+					<ul>
+						{% for module in latest_module_list %}	
+						<li><a href="/modules/{{ module.id }}/"></a></li>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<p>No new modules created.</p>
+				{% endif %}
+
+				<h1>My Modules</h1>
+				{% if user_module_list %}
+					<ul>
+						{% for module in user_module_list %}
+						<li><a href="/modules/{{ module.id }}/"></a></li>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<p>You have not created any new modules.</p>
+				{% endif %}				
+
+			{% endblock %}
+		</div>
+	<script src="http://code.jquery.com/jquery.js"></script>
+	<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+	</body>
+</html>
