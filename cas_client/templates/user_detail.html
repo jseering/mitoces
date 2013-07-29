@@ -1,0 +1,32 @@
+{% extends "index.html" %}
+
+
+{% block topnav %}
+
+<li>
+<a href="/">home</a>
+</li>
+<li>
+<a href="/explore">explore</a>
+</li>
+<li>
+<a href="/create">create</a>
+</li>
+
+{% endblock %}
+
+
+{% block content %}
+
+<h1>{{ user }}</h1>
+<h2>{{ user.first_name }} {{ user.last_name }}</h2>
+
+<ul>
+{% for module in user_module_list %}
+	<li>
+	<a href="/modules/{{ module.id }}">{{ module.name }}</a> created on {{ module.date }}
+	</li>
+{% endfor %}
+</ul>
+
+{% endblock %}

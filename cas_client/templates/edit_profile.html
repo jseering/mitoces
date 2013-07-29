@@ -1,0 +1,22 @@
+{% extends "index.html" %}
+
+{% block topnav %}
+
+<li>
+<a href="/">home</a>
+</li>
+<li>
+<a href="/explore">explore</a>
+</li>
+<li>
+<a href="/create">create</a>
+</li>
+
+{% endblock %}
+
+{% block content %}
+
+<h1>Hello. My username is {{ user }}.</h1>
+<h2>My real name is {{ user.first_name }}.</h2>
+
+{% endblock %}
