@@ -46,14 +46,21 @@ def modules(request):
     args['module_list'] = module_list
     return render_to_response('modules.html', args, RequestContext(request,context))
 
-def search_modules(request):
+def search(request):
     context = {}
     if request.method == "POST":
         search_text = request.POST['search_text']
     else:
         search_text = ''
-    modules = Module.objects.filter(name__contains=search_text)
-    return render_to_response('ajax_search.html', {'modules': modules}, RequestContext(request,context))
+    if search_text == '':
+        modules = {}
+        keywords = {}
+        users = {}
+    else:
+        modules = Module.objects.filter(name__contains=search_text)
+        keywords = Keyword.objects.filter(name__contains=search_text)
+        users = User.objects.filter(username__contains=search_text)
+    return render_to_response('ajax_search.html', {'modules': modules, 'keywords': keywords, 'users': users}, RequestContext(request,context))
     
 def keyword(request, keyword_id):
     context = {}
@@ -74,9 +81,9 @@ def edit_profile(request):
 
 def user(request, user_id):
     context = {}
-    user    = get_object_or_404(User, id=user_id)
-    user_module_list = Module.objects.filter(creator=user).order_by('-date')
-    return render_to_response('user_detail.html', {'user': user, 'user_module_list': user_module_list}, RequestContext(request,context))
+    this_user    = get_object_or_404(User, id=user_id)
+    user_module_list = Module.objects.filter(creator=this_user).order_by('-date')
+    return render_to_response('user_detail.html', {'this_user': this_user, 'user_module_list': user_module_list}, RequestContext(request,context))
 
 def users(request):
     context = {}

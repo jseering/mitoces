@@ -26,7 +26,7 @@ urlpatterns = patterns('',
     url(r'^users/(?P<user_id>\d+)/$', 'cas_client.views.user', name="user"),
     url(r'^user/profile/edit/$', 'cas_client.views.edit_profile', name="edit_profile"),
 
-    url(r'^modules/search/$', 'cas_client.views.search_modules'),
+    url(r'^search/$', 'cas_client.views.search'),
 
     url(r'^cas-test/login/$', 'django_cas.views.login', name="login"),
     url(r'^cas-test/logout/$', 'django_cas.views.logout', name="logout"),

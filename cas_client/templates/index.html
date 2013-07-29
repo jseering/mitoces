@@ -71,6 +71,13 @@
 			</div>
 		</div>
 		<div class="container">
+
+{% csrf_token %}
+<input type="text" id="search" name="search" width="400"/>
+
+<ul id="search-results">
+</ul>
+
 			{% block content %}
 			
 				<h1>New Modules</h1>
