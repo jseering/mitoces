@@ -73,10 +73,10 @@
 		<div class="container">
 
 {% csrf_token %}
-<input type="text" id="search" name="search" width="200"/>
+<input type="text" id="search" name="search" width="400"/>
 
-<ul id="search-results">
-</ul>
+<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" id="search-results">
+</div>
 
 			{% block content %}
 			

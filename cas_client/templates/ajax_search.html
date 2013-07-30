@@ -1,26 +1,30 @@
-{% if modules.count > 0 %}
 
-<h2>Modules</h2>
-{% for module in modules %}
-	<li><a href="/modules/{{ module.id }}/">{{ module.name }}</a></li>
-{% endfor %}
+    <li class="dropdown-header">Modules</li>
+    {% if modules.count > 0 %}
+        {% for module in modules %}
+	        <li><a href="/modules/{{ module.id }}/">{{ module.name }}</a></li>
+        {% endfor %}
+    {% else %}
+        <li>No matches</li>
+    {% endif %}
 
-{% endif %}
+    <li class="divider"></li>
+    <li class="dropdown-header">Keywords</li>
+    {% if keywords.count > 0 %}
+        {% for keyword in keywords %}
+	        <li><a href="/keywords/{{ keyword.id }}/">{{ keyword.name }}</a></li>
+        {% endfor %}
+    {% else %}
+        <li>No matches</li>
+    {% endif %}
 
-{% if keywords.count > 0 %}
-
-<h2>Keywords</h2>
-{% for keyword in keywords %}
-	<li><a href="/keywords/{{ keyword.id }}/">{{ keyword.name }}</a></li>
-{% endfor %}
-
-{% endif %}
-
-{% if users.count > 0 %}
-
-<h2>Users</h2>
-{% for this_user in users %}
-	<li><a href="/users/{{ this_user.id }}/">{{ this_user }}</a></li>
-{% endfor %}
-
-{% endif %}
+    
+    <li class="divider"></li>
+    <li class="dropdown-header">Users</li>
+    {% if users.count > 0 %}
+        {% for this_user in users %}
+	        <li><a href="/users/{{ this_user.id }}/">{{ this_user }}</a></li>
+        {% endfor %}
+    {% else %}
+        <li>No matches</li>
+    {% endif %}

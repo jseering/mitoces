@@ -6,8 +6,9 @@ from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
 from models import Module, Outcome, Keyword
 from django.contrib.auth.models import User
-from forms import ModuleForm
+from forms import ModuleForm, UserForm
 from django.core.context_processors import csrf
+from django.core.exceptions import ObjectDoesNotExist
 
 #-----------------------------------------------------------------------------
 # index
@@ -77,7 +78,25 @@ def keywords(request):
 
 def edit_profile(request):
     context = {}
-    return render_to_response('edit_profile.html',RequestContext(request,context))
+    if request.POST:
+        try:
+            u = User.objects.get(username=request.user)
+            form = UserForm(request.POST, instance=u)
+        except ObjectDoesNotExist:
+            form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/users/')
+    else:
+        try:
+            u = User.objects.get(username=request.user)
+            form = UserForm(instance=u)
+        except ObjectDoesNotExist:
+            form = UserForm()
+    args = {}
+    args.update(csrf(request))
+    args['form'] = form
+    return render_to_response('edit_profile.html', args, RequestContext(request,context))
 
 def user(request, user_id):
     context = {}

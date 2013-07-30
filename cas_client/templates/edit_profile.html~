@@ -21,7 +21,7 @@
 {{ form.as_ul }}
 </ul>
 
-<button onclick="window.location='/users/'; return false;">Cancel</button>
+<button onclick="window.location='/modules/'; return false;">Cancel</button>
 <input type="submit" name="submit" value="Save">
 </form>
 

@@ -1,6 +1,6 @@
 from django import forms
 from models import Module, Outcome, Keyword
-from django.contrib.auth.models import User
+from django.contrib.auth import User
 
 class ModuleForm(forms.ModelForm):
     
