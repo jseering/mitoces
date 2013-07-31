@@ -31,6 +31,7 @@ urlpatterns = patterns('',
     url(r'^users/(?P<user_id>\d+)/$', 'cas_client.views.user', name="user"),
     url(r'^user/profile/edit/$', 'cas_client.views.edit_profile', name="edit_profile"),
 
+    url(r'^create_name/$', 'cas_client.views.create_name'),
     url(r'^search/$', 'cas_client.views.search'),
 
     url(r'^cas-test/login/$', 'django_cas.views.login', name="login"),

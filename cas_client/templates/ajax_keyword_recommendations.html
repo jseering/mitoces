@@ -1,0 +1,12 @@
+{% if keywords.count > 0 %}
+
+    {% for keyword in keywords %}
+	    <li>{{ keyword.name }}</li>
+    {% endfor %}
+
+
+{% else %}
+
+<li>No keywords to recommend.</li>
+
+{% endif %}

@@ -9,6 +9,8 @@ from django.contrib.auth.models import User
 from forms import ModuleForm, UserForm
 from django.core.context_processors import csrf
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
+from operator import *
 
 #-----------------------------------------------------------------------------
 # index
@@ -67,6 +69,19 @@ def search(request):
         keywords = Keyword.objects.filter(name__contains=search_text)
         users = User.objects.filter(username__contains=search_text)
     return render_to_response('ajax_search.html', {'modules': modules, 'outcomes': outcomes, 'keywords': keywords, 'users': users}, RequestContext(request,context))
+
+def create_name(request):
+    context = {}
+    if request.method == "POST":
+        name_text = request.POST['name_text']
+    else:
+        name_text = ''
+    if name_text == '':
+        keywords = {}
+    else:
+        words_in_name_text = name_text.split(' ');
+        keywords = Keyword.objects.filter(reduce(or_, (Q(name__contains=word.strip()) for word in words_in_name_text)))
+    return render_to_response('ajax_keyword_recommendations.html', {'keywords': keywords}, RequestContext(request,context))
 
 def outcome(request, outcome_id):
     context = {}

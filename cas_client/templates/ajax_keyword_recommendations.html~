@@ -1,0 +1,12 @@
+{% if keywords.count > 0 %}
+
+    {% for module in modules %}
+	    <li><a href="/modules/{{ module.id }}/">{{ module.name }}</a></li>
+    {% endfor %}
+
+
+{% else %}
+
+<li>No keywords to recommend.</li>
+
+{% endif %}
