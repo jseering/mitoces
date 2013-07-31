@@ -14,10 +14,15 @@ urlpatterns = patterns('',
 
     url(r'^$', 'cas_client.views.index', name="root"),
 
+    url(r'^explore/$', 'cas_client.views.explore', name="explore"),
+
     url(r'^create/$', 'cas_client.views.create', name="create"),
 
 	url(r'^keywords/$', 'cas_client.views.keywords', name="keywords"),
 	url(r'^keywords/(?P<keyword_id>\d+)/$', 'cas_client.views.keyword', name="keyword"),
+
+	url(r'^outcomes/$', 'cas_client.views.outcomes', name="outcomes"),
+    url(r'^outcomes/(?P<outcome_id>\d+)/$', 'cas_client.views.outcome', name="outcome"),
 
     url(r'^modules/$', 'cas_client.views.modules', name="modules"),
     url(r'^modules/(?P<module_id>\d+)/$', 'cas_client.views.module', name="module"),

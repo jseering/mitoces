@@ -33,7 +33,9 @@
 
 <p>
 {% for keyword in module.keywords.all %}
-	<button type="button" onclick="window.location.href='/keywords/{{ keyword.id }}'">{{ keyword.name }}</button>
+	<li>
+	{{ keyword.name }}
+	</li>
 {% endfor %}
 </p>
 

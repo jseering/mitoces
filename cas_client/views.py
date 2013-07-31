@@ -20,6 +20,10 @@ def index(request):
     user_module_list   = Module.objects.filter(creator=request.user).order_by('-date')[:5]
     return render_to_response('index.html', {'latest_module_list': latest_module_list, 'user_module_list': user_module_list},RequestContext(request,context))
 
+def explore(request):
+    context = {}
+    return render_to_response('explore.html', RequestContext(request,context))
+
 def create(request):
     context = {}
     if request.POST:
@@ -59,10 +63,22 @@ def search(request):
         users = {}
     else:
         modules = Module.objects.filter(name__contains=search_text)
+        outcomes = Outcome.objects.filter(name__contains=search_text)
         keywords = Keyword.objects.filter(name__contains=search_text)
         users = User.objects.filter(username__contains=search_text)
-    return render_to_response('ajax_search.html', {'modules': modules, 'keywords': keywords, 'users': users}, RequestContext(request,context))
+    return render_to_response('ajax_search.html', {'modules': modules, 'outcomes': outcomes, 'keywords': keywords, 'users': users}, RequestContext(request,context))
+
+def outcome(request, outcome_id):
+    context = {}
+    outcome_ = get_object_or_404(Outcome, id=outcome_id)
+    module_list = Module.objects.filter(outcomes__name__contains=outcome_).order_by('-date')
+    return render_to_response('outcome_detail.html', {'outcome': outcome_, 'module_list': module_list}, RequestContext(request,context))
     
+def outcomes(request):
+    context = {}
+    outcome_list = Outcome.objects.all()
+    return render_to_response('outcomes.html', {'outcome_list': outcome_list}, RequestContext(request,context))
+
 def keyword(request, keyword_id):
     context = {}
     keyword_ = get_object_or_404(Keyword, id=keyword_id)

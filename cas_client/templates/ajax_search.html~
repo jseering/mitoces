@@ -1,31 +1,25 @@
-<ul class="dropdown-menu" role="menu" arialabelledby="dropdownMenu">
-    <li class="dropdown-header">Modules</li>
+{% if modules.count > 0 or keywords.count > 0 or users.count > 0 %}
+    <li class="nav-header">Modules</li>
     {% if modules.count > 0 %}
         {% for module in modules %}
 	        <li><a href="/modules/{{ module.id }}/">{{ module.name }}</a></li>
         {% endfor %}
-    {% else %}
-        <li>No matches</li>
     {% endif %}
 
     <li class="divider"></li>
-    <li class="dropdown-header">Keywords</li>
+    <li class="nav-header">Keywords</li>
     {% if keywords.count > 0 %}
         {% for keyword in keywords %}
 	        <li><a href="/keywords/{{ keyword.id }}/">{{ keyword.name }}</a></li>
         {% endfor %}
-    {% else %}
-        <li>No matches</li>
     {% endif %}
 
     
     <li class="divider"></li>
-    <li class="dropdown-header">Users</li>
+    <li class="nav-header">Users</li>
     {% if users.count > 0 %}
         {% for this_user in users %}
 	        <li><a href="/users/{{ this_user.id }}/">{{ this_user }}</a></li>
         {% endfor %}
-    {% else %}
-        <li>No matches</li>
     {% endif %}
-</ul>
+{% endif %}
