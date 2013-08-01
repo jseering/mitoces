@@ -11,6 +11,7 @@ from django.core.context_processors import csrf
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from operator import *
+from django.forms.models import modelformset_factory
 
 #-----------------------------------------------------------------------------
 # index
@@ -39,6 +40,20 @@ def create(request):
     args.update(csrf(request))
     args['form'] = form   
     return render_to_response('create.html', args, RequestContext(request,context))
+
+def create_formset(request):
+    context = {}
+    ModuleFormSet = modelformset_factory(Module)
+    if request.POST:
+        formset = ModuleFormSet(request.POST)
+        if formset.is_valid():
+            formset.save()
+    else:
+        formset = ModuleFormSet()
+    args = {}
+    args.update(csrf(request))
+    args['formset'] = formset   
+    return render_to_response('create_formset.html', args, RequestContext(request,context))
 
 def module(request, module_id):
     context = {}

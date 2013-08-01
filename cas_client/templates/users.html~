@@ -18,12 +18,11 @@
 
 {% block content %}
 
-<h1>Keywords</h1>
-
+<h1>Users</h1>
 <ul>
-{% for keyword in keyword_list %}
+{% for user in user_list %}
 	<li>
-	<a href="/keywords/{{ keyword.id }}/">{{ keyword.name }}</a>
+	<a href="/users/{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</a>
 	</li>
 {% endfor %}
 </ul>

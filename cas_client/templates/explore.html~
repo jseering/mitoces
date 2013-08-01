@@ -18,15 +18,6 @@
 
 {% block content %}
 
-<h1>New Module</h1>
-
-<form action="/create/" method="post">{% csrf_token %}
-<ul>
-{{ form.as_ul }}
-</ul>
-
-<button onclick="window.location='/modules/'; return false;">Cancel</button>
-<input type="submit" name="submit" value="Create">
-</form>
+<h1>Explore</h1>
 
 {% endblock %}

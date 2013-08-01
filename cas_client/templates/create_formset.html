@@ -1,0 +1,32 @@
+{% extends "index.html" %}
+
+
+{% block topnav %}
+
+<li>
+<a href="/">home</a>
+</li>
+<li>
+<a href="/explore">explore</a>
+</li>
+<li class="active">
+<a href="/module/add">create</a>
+</li>
+
+{% endblock %}
+
+
+{% block content %}
+
+<h1>New Module (test)</h1>
+
+<form action="/create_formset/" method="post">{% csrf_token %}
+<ul>
+{{ formset.as_ul }}
+</ul>
+
+<button onclick="window.location='/modules/'; return false;">Cancel</button>
+<input type="submit" name="submit" value="Create">
+</form>
+
+{% endblock %}

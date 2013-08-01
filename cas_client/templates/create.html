@@ -10,7 +10,7 @@
 <a href="/explore">explore</a>
 </li>
 <li class="active">
-<a href="/create">create</a>
+<a href="/module/add">create</a>
 </li>
 
 {% endblock %}
@@ -20,18 +20,38 @@
 
 <h1>New Module</h1>
 
-<form action="/create/" method="post">{% csrf_token %}
+<form action="/module/add" method="post">{% csrf_token %}
 <ul>
-{{ form.as_ul }}
+{{ form.non_field_errors }}
+    <li>
+        {{ form.name.errors }}
+        <label for="id_name">Name:</label>
+        {{ form.name }}
+    </li>
+    <li>
+        {{ form.link.errors }}
+        <label for="id_link">Link:</label>
+        {{ form.link }}
+    </li>
+    <li>
+        {{ form.outcomes.errors }}
+        <label for="id_outcomes">Outcomes:</label>
+        {{ form.outcomes }}
+        <button type="button"><a href="/admin/cas_client/outcome/add/" class="add-another" id="add_id_outcomes" onclick="return showAddAnotherPopup(this);">Add Outcome</a></button>
+        <h4>outcome recommendations:</h4>
+        {% csrf_token %}
+        <ul id="outcome_recommendations"></ul>
+    </li>
+    <li>
+        {{ form.keywords.errors }}
+        <label for="id_keywords">Keywords:</label>
+        {{ form.keywords }}
+        <button type="button"><a href="/admin/cas_client/keyword/add/" class="add-another" id="add_id_keywords" onclick="return showAddAnotherPopup(this);">Add Keyword</a></button>
+        <h4>keyword recommendations:</h4>
+        {% csrf_token %}
+        <ul id="keyword_recommendations"></ul>
+    </li>
 </ul>
-
-<h4>outcome recommendations:</h4>
-{% csrf_token %}
-<ul id="outcome_recommendations"></ul>
-
-<h4>keyword recommendations:</h4>
-{% csrf_token %}
-<ul id="keyword_recommendations"></ul>
 
 <button onclick="window.location='/modules/'; return false;">Cancel</button>
 <input type="submit" name="submit" value="Create">

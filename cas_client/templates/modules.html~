@@ -10,20 +10,13 @@
 <a href="/explore">explore</a>
 </li>
 <li>
-<a href="/create">create</a>
+<a href="/module/add">create</a>
 </li>
 
 {% endblock %}
 
 
 {% block content %}
-
-<h1>Search</h1>
-{% csrf_token %}
-<input type="text" id="search" name="search"/>
-
-<ul id="search-results">
-</ul>
 
 <h1>Modules</h1>
 

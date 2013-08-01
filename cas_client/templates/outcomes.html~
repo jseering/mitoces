@@ -23,7 +23,7 @@
 <ul>
 {% for outcome in outcome_list %}
 	<li>
-	<a href="/outcomes/{{ outcome.id }}/"><b>{{ outcome.name }}</b>&nbsp;{{ outcome.description }}</a> 
+	<a href="/outcomes/{{ outcome.id }}/"><b>{{ outcome.name }}</b></a> &nbsp;{{ outcome.description }}
 	</li>
 {% endfor %}
 </ul>

@@ -22,7 +22,7 @@
 <h4>Students should be able to {{ outcome.description }}</h4>
 
 {% if module_list %}
-    <h3>This outcome appears in:</h3>
+    <h3>This outcome appears in...</h3>
     <ul>
 	    {% for module in module_list %}	
 		    <li><a href="/modules/{{ module.id }}/">{{ module.name }}</a> created by <a href="/users/{{ module.creator.id }}">{{ module.creator.first_name }} {{module.creator.last_name }}</a> on {{ module.date }}</li>

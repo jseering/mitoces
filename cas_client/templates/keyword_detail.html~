@@ -21,9 +21,9 @@
 <h1>Keyword: {{ keyword }}</h1>
 
 <ul>
-{% for keyword in keyword_list %}
+{% for module in module_list %}
 	<li>
-	<a href="/keywords/{{ keyword.id }}/">{{ keyword.name }}</a>
+	<a href="/modules/{{ module.id }}/">{{ module.name }}</a> created by <a href="/users/{{ module.creator.id }}/">{{ module.creator.first_name }} {{ module.creator.last_name }}</a> on {{ module.date }}
 	</li>
 {% endfor %}
 </ul>
