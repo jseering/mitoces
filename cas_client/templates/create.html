@@ -25,6 +25,10 @@
 {{ form.as_ul }}
 </ul>
 
+<h4>outcome recommendations:</h4>
+{% csrf_token %}
+<ul id="outcome_recommendations"></ul>
+
 <h4>keyword recommendations:</h4>
 {% csrf_token %}
 <ul id="keyword_recommendations"></ul>

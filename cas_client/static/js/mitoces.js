@@ -26,12 +26,23 @@ $(function(){
 
 		$.ajax({
 			type: "POST",
-			url: "/create_name/",
+			url: "/create_name_keyword/",
 			data: {
 				'name_text': $('#id_name').val(),
  				'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
 			},
 			success: keywordRecommendationSuccess,
+			dataType: 'html'
+		});
+
+		$.ajax({
+			type: "POST",
+			url: "/create_name_outcome/",
+			data: {
+				'name_text': $('#id_name').val(),
+ 				'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+			},
+			success: outcomeRecommendationSuccess,
 			dataType: 'html'
 		});
 	});
@@ -40,4 +51,9 @@ $(function(){
 function keywordRecommendationSuccess(data, textStatus, jqXHR)
 {
 	$('#keyword_recommendations').html(data);
+}
+
+function outcomeRecommendationSuccess(data, textStatus, jqXHR)
+{
+	$('#outcome_recommendations').html(data);
 }

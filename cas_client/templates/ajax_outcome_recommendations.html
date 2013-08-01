@@ -1,0 +1,14 @@
+{% if outcomes.count > 0 %}
+
+    {% for outcome in outcomes %}
+	    <li>
+	        <b>{{ outcome.name }}</b></a> &nbsp;{{ outcome.description }}
+	    </li>
+    {% endfor %}
+
+
+{% else %}
+
+<li>No outcomes to recommend.</li>
+
+{% endif %}
