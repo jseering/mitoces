@@ -17,6 +17,8 @@ urlpatterns = patterns('',
     url(r'^explore/$', 'cas_client.views.explore', name="explore"),
 
     url(r'^module/add/$', 'cas_client.views.create', name="create"),
+    url(r'^outcome/add/$', 'cas_client.views.add_outcome', name="add outcome"),
+    url(r'^keyword/add/$', 'cas_client.views.add_keyword', name="add keyword"),
 
 	url(r'^keywords/$', 'cas_client.views.keywords', name="keywords"),
 	url(r'^keywords/(?P<keyword_id>\d+)/$', 'cas_client.views.keyword', name="keyword"),

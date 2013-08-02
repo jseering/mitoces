@@ -1,6 +1,6 @@
 from django import forms
 from models import Module, Outcome, Keyword
-from django.contrib.auth import User
+from django.contrib.auth.models import User
 
 class ModuleForm(forms.ModelForm):
     
@@ -19,6 +19,17 @@ class ModuleForm(forms.ModelForm):
             inst.save()
             self.save_m2m()
         return inst
+
+class OutcomeForm(forms.ModelForm):
+    
+    class Meta:
+        model = Outcome
+        fields = ('name', 'description')
+
+class KeywordForm(forms.ModelForm):
+    
+    class Meta:
+        model = Keyword
 
 class UserForm(forms.ModelForm):
 

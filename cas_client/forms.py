@@ -20,6 +20,17 @@ class ModuleForm(forms.ModelForm):
             self.save_m2m()
         return inst
 
+class OutcomeForm(forms.ModelForm):
+    
+    class Meta:
+        model = Outcome
+        fields = ('name', 'description')
+
+class KeywordForm(forms.ModelForm):
+    
+    class Meta:
+        model = Keyword
+
 class UserForm(forms.ModelForm):
 
     class Meta:

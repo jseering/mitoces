@@ -6,12 +6,13 @@ from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
 from models import Module, Outcome, Keyword
 from django.contrib.auth.models import User
-from forms import ModuleForm, UserForm
+from forms import ModuleForm, UserForm, OutcomeForm, KeywordForm
 from django.core.context_processors import csrf
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from operator import *
 from django.forms.models import modelformset_factory
+from django.utils.html import escape, escapejs
 
 #-----------------------------------------------------------------------------
 # index
@@ -26,6 +27,36 @@ def index(request):
 def explore(request):
     context = {}
     return render_to_response('explore.html', RequestContext(request,context))
+
+def add_outcome(request):
+    context = {}
+    if request.POST:
+        form = OutcomeForm(request.POST)
+        if form.is_valid():
+            obj = form.save()
+            pk_value = obj._get_pk_val()
+            return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % (escape(pk_value), escapejs(obj)))
+    else:
+        form = OutcomeForm()
+    args = {}
+    args.update(csrf(request))
+    args['form'] = form
+    return render_to_response('add_outcome.html', args, RequestContext(request,context))
+
+def add_keyword(request):
+    context = {}
+    if request.POST:
+        form = KeywordForm(request.POST)
+        if form.is_valid():
+            obj = form.save()
+            pk_value = obj._get_pk_val()
+            return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % (escape(pk_value), escapejs(obj)))
+    else:
+        form = KeywordForm()
+    args = {}
+    args.update(csrf(request))
+    args['form'] = form
+    return render_to_response('add_keyword.html', args, RequestContext(request,context))
 
 def create(request):
     context = {}

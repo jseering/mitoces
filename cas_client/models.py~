@@ -9,7 +9,7 @@ class Outcome(models.Model):
 
 class Keyword(models.Model):
     name     = models.CharField(max_length=30)
-	class Meta:
+    class Meta:
 		ordering = ['name']
     def __unicode__(self):
         return self.name
