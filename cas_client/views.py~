@@ -99,6 +99,11 @@ def modules(request):
     args['module_list'] = module_list
     return render_to_response('modules.html', args, RequestContext(request,context))
 
+def keyword_search(request):
+    context = {}
+    if request.method == "POST":
+        
+
 def search(request):
     context = {}
     if request.method == "POST":

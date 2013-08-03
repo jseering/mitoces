@@ -99,6 +99,18 @@ def modules(request):
     args['module_list'] = module_list
     return render_to_response('modules.html', args, RequestContext(request,context))
 
+def keyword_search(request):
+    context = {}
+    if request.method == "POST":
+        keyword_search_text = request.POST['keyword_search_text']
+    else:
+        keyword_search_text = ''
+    if keyword_search_text == '':
+        keywords = {}
+    else:
+        keywords = Keyword.objects.filter(name__contains=keyword_search_text)
+    return render_to_response('ajax_keyword_search.html', {'keywords': keywords}, RequestContext(request,context))
+
 def search(request):
     context = {}
     if request.method == "POST":
