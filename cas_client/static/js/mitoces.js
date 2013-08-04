@@ -1,6 +1,8 @@
-$('#add_keyword_button').on('click',function() {
-    $(this).html('<input type="text" id="add_keyword_button_text" size="20" maxlength="30">');
-    $(this).prop('value',"input_text");
+$(document).on('click','#add_keyword_button',addKeywordButtonClick);
+
+function addKeywordButtonClick() {
+    $('#add_keyword_button').html('<input type="text" id="add_keyword_button_text" size="20" maxlength="30">');
+    $('#add_keyword_button').prop('value',"input_text");
     $("#add_keyword_button_text").focus();
     $('#add_keyword_button_text').keyup(function() {
         $.ajax({
@@ -14,19 +16,36 @@ $('#add_keyword_button').on('click',function() {
             datatype: 'html'
         });
     });
-    /*
-    $(".keyword_search_result_button").on('click',function() {
-        alert("Keyword search result button clicked.");
-            // $('#selected_keywords').prepend('<p>Hello</p>');
+    $('#add_keyword_button_text').keypress(function(e) {
+        if (e.which == 13) { // enter pressed
+            var kw = $(this).val()
+            var newbuttonhtml = '<button type="button" class="new_keyword">' + kw + '</button>';
+            $('#selected_keywords').append(newbuttonhtml);
+            hideKeywordButtonSearchMatches();
+            return false;
+        }
     });
-    */
-    $('#add_keyword_button_text').blur(function() {
-        $('#add_keyword_button').html('<i>Add Keyword</i>');
-        $('#add_keyword_button').prop('value',"add_keyword");
-        
-        $('#keyword_button_search_matches').html('');
-    });    
+}
+
+$(document).on('blur','#add_keyword_button',hideKeywordButtonSearchMatches);
+
+$(document).on('mousedown','.keyword_search_result_button', function() {
+    $("document").off('blur','#add_keyword_button',hideKeywordButtonSearchMatches);
+    $('#add_keyword_button').html('<i>Add Keyword</i>');
+    $('#add_keyword_button').prop('value',"add_keyword");
+    var keywordbuttonfromsearch = $(this);
+    keywordbuttonfromsearch.prop('class',"existing_keyword");
+    $('#selected_keywords').append(keywordbuttonfromsearch);
+    hideKeywordButtonSearchMatches();
+    $("document").on('blur','#add_keyword_button',hideKeywordButtonSearchMatches);
 });
+
+function hideKeywordButtonSearchMatches() {
+    $('#keyword_button_search_matches').html('');
+    $('#add_keyword_button').html('<i>Add Keyword</i>');
+    $('#add_keyword_button').prop('value',"add_keyword");
+}
+
 
 function keywordSearchSuccess(data, textStauts, jqXHR)
 {
