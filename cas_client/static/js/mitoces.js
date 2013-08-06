@@ -19,12 +19,47 @@ function addKeywordButtonClick() {
     $('#add_keyword_button_text').keypress(function(e) {
         if (e.which == 13) { // enter pressed
             var kw = $(this).val()
-            var newbuttonhtml = '<button type="button" class="new_keyword">' + kw + '</button>';
-            $('#selected_keywords').append(newbuttonhtml);
+            // check if this option is already selected
+            if ($('#id_keywords option:contains('+kw+')').length > 0) { // an option already exists that is this
+                alert(kw+' is already included as a keyword.');
+                return false;
+            }
+            // do an ajax post to add the new keyword to the db
+            createNewKeyword(kw);
             hideKeywordButtonSearchMatches();
             return false;
         }
+        /*
+        if (e.which == 32) { // spacebar pressed -- Right now, spacebar makes the input textfield get deleted completely
+            // alert("Spacebar pressed");
+            // $(this).val() = $(this).val + ' ';
+            return false;
+        }
+        */
     });
+}
+
+function createNewKeyword(kwname) {
+    $.ajax({
+	    type: "POST",
+	    url: "/keyword/new/",
+	    data: {
+		    'keyword_name': kwname,
+ 		    'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+	    },
+	    success: newKeywordSuccess,
+	    dataType: 'html'
+    });
+}
+
+function newKeywordSuccess(data, textStauts, jqXHR)
+{
+    $("#id_keywords").append(data);
+    // add the new keyword button to manually created keywords area
+    var kwval = $(data).filter('option').attr('value');
+    var kwname = $(data).filter('option').text();
+    var newbuttonhtml = '<button type="button" class="new_keyword" value="'+ kwval +'" title="Click to remove">' + kwname + '</button>';
+    $('#manually_added_keywords').append(newbuttonhtml);
 }
 
 $(document).on('blur','#add_keyword_button',hideKeywordButtonSearchMatches);
@@ -35,9 +70,30 @@ $(document).on('mousedown','.keyword_search_result_button', function() {
     $('#add_keyword_button').prop('value',"add_keyword");
     var keywordbuttonfromsearch = $(this);
     keywordbuttonfromsearch.prop('class',"existing_keyword");
-    $('#selected_keywords').append(keywordbuttonfromsearch);
+    keywordbuttonfromsearch.prop('title',"Click to remove");
+    var keywordbuttonfromsearchvalue = keywordbuttonfromsearch.attr('value');
+    $('#manually_added_keywords').append(keywordbuttonfromsearch);
+    // add and set this keyword to 'selected' in the selected html in the form
+    var new_keyword = '<option value="'+keywordbuttonfromsearchvalue+'" selected="selected">'+keywordbuttonfromsearch.text()+'</option>';
+    $('#id_keywords').append(new_keyword);
     hideKeywordButtonSearchMatches();
     $("document").on('blur','#add_keyword_button',hideKeywordButtonSearchMatches);
+});
+
+$(document).on('click','#manually_added_keywords button', function() {
+    // when a selected keyword is clicked, it should be removed from the selected_keywords section and 
+    // also should be removed as a selected option in the select section #id_keywords for the form
+    var kwval = $(this).attr('value');
+    $('#id_keywords option[value='+kwval+']').remove();
+    $(this).remove();
+});
+
+$(document).on('click','#automatic_keyword_recommendation button', function() {
+    // when a selected keyword is clicked, it should be removed from the selected_keywords section and 
+    // also should be removed as a selected option in the select section #id_keywords for the form
+    var kwval = $(this).attr('value');
+    $('#id_keywords option[value='+kwval+']').remove();
+    $(this).remove();
 });
 
 function hideKeywordButtonSearchMatches() {
@@ -49,7 +105,15 @@ function hideKeywordButtonSearchMatches() {
 
 function keywordSearchSuccess(data, textStauts, jqXHR)
 {
-    $("#keyword_button_search_matches").html(data)
+    // check to see if the returned matches already are in option before displaying them
+    $("#keyword_button_search_matches").html(data);
+    $('#keyword_button_search_matches button').each( function() {
+        var thiskwbutton = $(this);
+        var thiskwval = $(this).attr('value');
+        if ($('#id_keywords option[value='+thiskwval+']').length > 0) { // found it, so remove from results
+            thiskwbutton.remove();
+        }
+    });
 }
 
 $(function(){
@@ -72,11 +136,12 @@ $(function(){
 function searchSuccess(data, textStatus, jqXHR)
 {
 	$('#search-results').html(data);
+
 }
 
 $(function(){
 
-	$('#id_name').keyup(function() {
+	$('#id_name').blur(function() {
 
 		$.ajax({
 			type: "POST",
@@ -104,7 +169,24 @@ $(function(){
 
 function keywordRecommendationSuccess(data, textStatus, jqXHR)
 {
-	$('#keyword_recommendations').html(data);
+    // load everything, then immediately delete the repeats
+    $('#automatic_keyword_recommendation').html(data); 
+    $('#automatic_keyword_recommendation button').each( function() {
+        var thiskwbutton = $(this);
+        var thiskwval = $(this).attr('value');
+        if ($('#id_keywords option[value='+thiskwval+']').length > 0) { // found it, so remove from results
+            thiskwbutton.remove();
+        } else { // if it is not in select option, we must add it
+            var new_keyword = '<option value="'+thiskwval+'" selected="selected" class="from_auto_recommendation">'+thiskwbutton.text()+'</option>';
+            $('#id_keywords').append(new_keyword);
+        }
+    });
+    $('#id_keywords option.from_auto_recommendation').each( function() {
+        var optionval = $(this).attr('value');
+        if ($('#automatic_keyword_recommendation button[value='+optionval+']').length == 0) { 
+            $(this).remove();
+        }
+    });
 }
 
 function outcomeRecommendationSuccess(data, textStatus, jqXHR)

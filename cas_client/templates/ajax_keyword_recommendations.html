@@ -1,12 +1,5 @@
 {% if keywords.count > 0 %}
-
     {% for keyword in keywords %}
-	    <li>{{ keyword.name }}</li>
+	        <button type="button" value="{{ keyword.id }}" class="existing_keyword" title="Click to remove">{{ keyword }}</button>
     {% endfor %}
-
-
-{% else %}
-
-<li>No keywords to recommend.</li>
-
 {% endif %}

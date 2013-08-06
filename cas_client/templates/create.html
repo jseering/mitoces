@@ -20,7 +20,7 @@
 
 <h1>New Module</h1>
 
-<form action="/module/add" method="post">{% csrf_token %}
+<form action="/module/add/" method="post">{% csrf_token %}
 <ul>
 {{ form.non_field_errors }}
     <li>
@@ -46,17 +46,20 @@
     <li>
         {{ form.keywords.errors }}
         <label for="id_keywords">Keywords:</label>
-        {{ form.keywords }}
-        <button type="button"><a href="/keyword/add/" class="add-another" id="add_id_keywords" onclick="return showAddAnotherPopup(this);">Add Keyword</a></button>
+        <select multiple="multiple" name="keywords" id="id_keywords" style="display:none;"></select>
         <h4>keyword recommendations:</h4>
         {% csrf_token %}
         <ul id="keyword_recommendations"></ul>
     </li>
 
-    <h4>Testing out new keyword format</h4>
     {% csrf_token %}
     <p id="selected_keywords">
-    <button type="button" id="add_keyword_button" value="add_keyword"><i>Add Keyword</i></button></p>
+        <div id="add_keyword_div">
+            <button type="button" id="add_keyword_button" value="add_keyword"><i>Add Keyword</i></button>
+        </div>
+        <div id="manually_added_keywords"></div>
+        <div id="automatic_keyword_recommendation"></div>
+    </p>
     <p id="keyword_button_search_matches"></p>
 
 </ul>

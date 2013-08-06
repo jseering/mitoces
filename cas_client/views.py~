@@ -58,6 +58,14 @@ def add_keyword(request):
     args['form'] = form
     return render_to_response('add_keyword.html', args, RequestContext(request,context))
 
+def new_keyword(request):
+    context = {}
+    if request.POST:
+        k, created = Keyword.objects.get_or_create(name=request.POST['keyword_name'])
+    else:
+        k = {}
+    return render_to_response('ajax_new_keyword.html', {'keyword': k}, RequestContext(request,context))
+
 def create(request):
     context = {}
     if request.POST:
@@ -102,7 +110,14 @@ def modules(request):
 def keyword_search(request):
     context = {}
     if request.method == "POST":
-        
+        keyword_search_text = request.POST['keyword_search_text']
+    else:
+        keyword_search_text = ''
+    if keyword_search_text == '':
+        keywords = {}
+    else:
+        keywords = Keyword.objects.filter(name__contains=keyword_search_text)
+    return render_to_response('ajax_keyword_search.html', {'keywords': keywords}, RequestContext(request,context))
 
 def search(request):
     context = {}

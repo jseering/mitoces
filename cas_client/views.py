@@ -58,6 +58,14 @@ def add_keyword(request):
     args['form'] = form
     return render_to_response('add_keyword.html', args, RequestContext(request,context))
 
+def new_keyword(request):
+    context = {}
+    if request.POST:
+        kw, created = Keyword.objects.get_or_create(name=request.POST['keyword_name'])
+    else:
+        kw = {}
+    return render_to_response('ajax_new_keyword.html', {'keyword': kw}, RequestContext(request,context))
+
 def create(request):
     context = {}
     if request.POST:

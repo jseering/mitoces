@@ -1,12 +1,5 @@
 {% if keywords.count > 0 %}
-
-    {% for module in modules %}
-	    <li><a href="/modules/{{ module.id }}/">{{ module.name }}</a></li>
+    {% for keyword in keywords %}
+	        <button type="button" value="{{ keyword.id }}" class="keyword_search_result_button" title="Click to remove">{{ keyword }}</button>
     {% endfor %}
-
-
-{% else %}
-
-<li>No keywords to recommend.</li>
-
 {% endif %}
