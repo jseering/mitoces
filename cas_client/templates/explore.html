@@ -18,6 +18,215 @@
 
 {% block content %}
 
-<h1>Explore</h1>
+<canvas id="viewport" width="800" height="600" style="padding:5px"></canvas>
 
 {% endblock %}
+
+
+
+{% block js %}
+    <script src="{{ STATIC_URL }}js/arbor.js"></script>
+    <script src="{{ STATIC_URL }}js/arbor-tween.js"></script>
+    <script src="{{ STATIC_URL }}js/arbor-graphics.js"></script>
+    <script src="{{ STATIC_URL }}js/renderer.js"></script>
+
+    <script>
+        var module_all = "{{module_all}}";
+        var module_outcomes = "{{module_outcomes}}";
+        var module_keywords = "{{module_keywords}}";
+        var module_name = parse(module_all);
+        module_outcomes = parseObjects(module_outcomes);
+        module_keywords = parseObjects(module_keywords);
+        
+        var sys = arbor.ParticleSystem(1500,800,0.5);
+        var theUI;
+        sys.parameters({gravity:true});
+        sys.renderer = Renderer("#viewport");
+        createJSON();
+        
+        function createJSON(){
+            theUI = {"nodes":{},"edges":{}};
+            for (var i=0;i<module_name.length;i++){
+                addModule(theUI,module_name[i]);
+                for (var n=0; n<module_outcomes[module_name[i]].length;n++) {
+                    addOutcome(theUI,module_outcomes[module_name[i]][n]);
+                    addEdge(theUI,module_name[i],module_outcomes[module_name[i]][n]);
+                }
+                for (var m=0; m<module_keywords[module_name[i]].length;m++) {
+                    addKeyword(theUI,module_keywords[module_name[i]][m]);
+                    addEdge(theUI,module_name[i],module_keywords[module_name[i]][m]);
+                }
+            }
+            sys.graft(theUI);
+        }
+        
+        function addModule(theUI,number){
+            theUI["nodes"][number] = {};
+            theUI["nodes"][number]["color"] = "#CF9238";
+            theUI["nodes"][number]["shape"] = "rectangle";
+            theUI["nodes"][number]["type"] = "module";
+            theUI["nodes"][number]["label"] = number;
+        }
+        
+        function addOutcome(theUI,name){
+            theUI["nodes"][name] = {};
+            theUI["nodes"][name]["color"]="#41A565";
+            theUI["nodes"][name]["shape"]="rectangle";
+            theUI["nodes"][name]["type"]="outcome";
+            theUI["nodes"][name]["label"]=name;
+            theUI["nodes"][name]["link"] = "/explore_description/"+name;
+        }
+        
+        function addKeyword(theUI,name){
+            theUI["nodes"][name] = {};
+            theUI["nodes"][name]["color"]="#416DA5";
+            theUI["nodes"][name]["shape"]="rectangle";
+            theUI["nodes"][name]["type"]="topic";
+            theUI["nodes"][name]["label"]=name;
+        }
+        
+        function addEdge(theUI,from,to){
+            if (theUI["edges"][from] == undefined){
+                theUI["edges"][from] = {};
+            }
+            theUI["edges"][from][to] = {};
+            theUI["edges"][from][to]["length"] = 2;
+            theUI["edges"][from][to]["weight"] = 0.5;
+            theUI["edges"][from][to]["color"] = '#888888';
+            theUI["edges"][from][to]["directed"] = true;
+        }
+        
+        function parseObjects(string) {
+            string = string.replace(/u&#39;/g,'"');
+            string = string.replace(/&#39;/g,'"');
+            var object = JSON.parse(string);
+            return object;
+        }
+        
+        function parse(string){
+            var list = [];
+            var index = 0;
+            for (var i=0;i<string.length;i++){
+                var count = 2;
+                var append = '';
+                if (string[i]==':'){
+                    while (string[i+count] != '&'){
+                        append += string[i+count];
+                        count += 1;
+                    }
+                    list[index] = append;
+                    index += 1;
+                }
+            }
+            return list;
+        }
+        
+        function search(node,type){
+            if (type == "module"){
+                if (! node in module_name){
+                    console.log("The module specified does not exist in the database.");
+                }else{
+                    theUI = {"nodes":{},"edges":{}};
+                    addModule(theUI,node);
+                    for (i in module_outcomes[node]){
+                        addOutcome(theUI,module_outcomes[node][i]);
+                        addEdge(theUI,node,module_outcomes[node][i]);
+                    }
+                    for (j in module_keywords[node]) {
+                        addKeyword(theUI,module_keywords[node][j]);
+                        addEdge(theUI,node,module_keywords[node][j]);
+                    }
+                    sys = arbor.ParticleSystem(1500,800,0.5);
+                    sys.parameters({gravity:true});
+                    sys.renderer = Renderer("#viewport");
+                    sys.graft(theUI);
+                }
+            }
+            else if (type == "keyword"){
+                theUI = {"nodes":{},"edges":{}};
+                $.get("/explore_keyword/"+node,function(data){
+                    addKeyword(theUI,node);
+                    var module_outcomes = data['module_outcomes'];
+                    var modules = data['module_names'];
+                    for (i in modules) {
+                        addModule(theUI,modules[i]);
+                        addEdge(theUI,node,modules[i]);
+                        for (j in module_outcomes[modules[i]]) {
+                            addOutcome(theUI,module_outcomes[modules[i]][j]);
+                            addEdge(theUI,modules[i],module_outcomes[modules[i]][j]);
+                        }
+                    }
+                    sys = arbor.ParticleSystem(1500,800,0.5);
+                    sys.parameters({gravity:true});
+                    sys.renderer = Renderer("#viewport");
+                    sys.graft(theUI);
+                });
+            }
+            else if (type=="outcome"){
+                theUI = {"nodes":{},"edges":{}};
+                $.get("/explore_outcome/"+node,function(data){
+                    addOutcome(theUI,node);
+                    var module_keywords = data['module_keywords'];
+                    var modules = data['module_names'];
+                    for (i in modules) {
+                        addModule(theUI,modules[i]);
+                        addEdge(theUI,node,modules[i]);
+                        for (j in module_keywords[modules[i]]) {
+                            addKeyword(theUI,module_keywords[modules[i]][j]);
+                            addEdge(theUI,modules[i],module_keywords[modules[i]][j]);
+                        }
+                    }
+                    sys = arbor.ParticleSystem(1500,800,0.5);
+                    sys.parameters({gravity:true});
+                    sys.renderer = Renderer("#viewport");
+                    sys.graft(theUI);
+                });
+            }
+        }
+            
+        function toggleoffTopics(){
+            theUI = {"nodes":{},"edges":{}};
+            for (var i=0;i<module_number.length;i++){
+                addModule(theUI,module_number[i]);
+                for (j in module_outcomes[module_number[i]]){
+                    addOutcome(theUI,module_outcomes[module_number[i]][j]);
+                    addEdge(theUI,module_number[i],module_outcomes[module_number[i]][j])
+                }
+            }
+            sys = arbor.ParticleSystem(1500,800,0.5);
+            sys.parameters({gravity:true});
+            sys.renderer = Renderer("#viewport");
+            sys.graft(theUI);
+        }
+        
+        function toggleoffTopics1(){
+            for (node in theUI['nodes']){
+                if (theUI['nodes'][node]['type']=='topic'){
+                    delete theUI['nodes'][node];
+                }
+            }
+            sys = arbor.ParticleSystem(1500,800,0.5);
+            sys.parameters({gravity:true});
+            sys.renderer = Renderer("#viewport");
+            sys.graft(theUI);
+        }
+        
+        function toggleoffOutcome(){
+            theUI = {"nodes":{},"edges":{}};
+            for (var i=0;i<module_number.length;i++){
+                addModule(theUI,module_number[i]);
+                for (j in module_outcomes[module_number[i]]){
+                    for(k in outcome_topics[module_outcomes[module_number[i]][j]]){
+                        addTopic(theUI,outcome_topics[module_outcomes[module_number[i]][j]][k]);
+                        addEdge(theUI,module_number[i],outcome_topics[module_outcomes[module_number[i]][j]][k]);
+                    }
+                }
+            }
+            sys = arbor.ParticleSystem(1500,800,0.5);
+            sys.parameters({gravity:true});
+            sys.renderer = Renderer("#viewport");
+            sys.graft(theUI);
+        }
+    </script>
+{% endblock %}
+

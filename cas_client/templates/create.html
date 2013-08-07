@@ -18,17 +18,18 @@
 
 {% block content %}
 
-<h1>New Module</h1>
+
 
 <form action="/module/add/" method="post">{% csrf_token %}
-<ul>
 {{ form.non_field_errors }}
-    <li>
-        {{ form.name.errors }}
-        <label for="id_name">Name:</label>
-        {{ form.name }}
-    </li>
-   <li>
+{{ form.name.errors }}
+<h1><input id="id_name" type="text" name="name" maxlength="30" value="Module Name" style="font-size:38.5px;font-family:inherit;font-weight:bold;width:600px;height:44px;"></h1>
+<h3>This module is intended to teach and/or assess the ability to:</h3>
+<ul>
+	<li>
+        <button type="button" id="add_outcome_button" value="add_outcome"><i>Add Outcome</i></button>
+	</li>
+</ul>
         {{ form.outcomes.errors }}
         <label for="id_outcomes">Outcomes:</label>
         {{ form.outcomes }}
@@ -36,36 +37,30 @@
         <h4>outcome recommendations:</h4>
         {% csrf_token %}
         <ul id="outcome_recommendations"></ul>
-    </li>
-    <li>
         {{ form.link.errors }}
-        <label for="id_link">Link:</label>
-        {{ form.link }}
-    </li>
+        <input id="id_link" type="text" name="link" maxlength="100" value="Enter Module URL">
+    
+        <iframe id="module_iframe" width="100%" height="600"></iframe>
  
-    <li>
         {{ form.keywords.errors }}
-        <label for="id_keywords">Keywords:</label>
         <select multiple="multiple" name="keywords" id="id_keywords" style="display:none;"></select>
-        <h4>keyword recommendations:</h4>
         {% csrf_token %}
-        <ul id="keyword_recommendations"></ul>
-    </li>
 
     {% csrf_token %}
     <p id="selected_keywords">
-        <div id="add_keyword_div">
+        <div id="add_keyword_div" style="float:left">
             <button type="button" id="add_keyword_button" value="add_keyword"><i>Add Keyword</i></button>
         </div>
-        <div id="manually_added_keywords"></div>
-        <div id="automatic_keyword_recommendation"></div>
+        <div id="manually_added_keywords" style="float:left"></div>
+        <div id="automatic_keyword_recommendation" style="float:left"></div>
+        <div id="automatic_keyword_recommendation_from_outcomes" style="float:left"></div>
     </p>
-    <p id="keyword_button_search_matches"></p>
+    <p id="keyword_button_search_matches" style="clear:both"></p>
 
-</ul>
-
+<div id="submission_buttons" style="clear:both">
 <button onclick="window.location='/modules/'; return false;">Cancel</button>
 <input type="submit" name="submit" value="Save Module">
+</div>
 </form>
 
 {% endblock %}

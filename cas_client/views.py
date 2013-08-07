@@ -25,8 +25,42 @@ def index(request):
     return render_to_response('index.html', {'latest_module_list': latest_module_list, 'user_module_list': user_module_list},RequestContext(request,context))
 
 def explore(request):
-    context = {}
-    return render_to_response('explore.html', RequestContext(request,context))
+	context = {}
+	module_all = Module.objects.all()
+	module_outcomes = {}
+	module_keywords = {}
+	for module in module_all:
+		module_outcomes[module.name]=[]
+		module_keywords[module.name] = []
+		for outcome in module.outcomes.all():
+			module_outcomes[module.name].append(outcome.name)
+		for keyword in module.keywords.all():
+			module_keywords[module.name].append(keyword.name)
+	return render_to_response('explore.html',{"module_all":module_all,"module_outcomes":module_outcomes,"module_keywords":module_keywords},RequestContext(request,context))	
+
+def explore_keyword(request,keyword):
+	name = Keyword.objects.get(name=keyword)
+	modules = Module.objects.filter(keywords=name)
+	module_names = [x.name for x in modules]
+	module_outcomes = {}
+	for module in modules:
+		module_outcomes[module.name] = []
+		for outcome in module.outcomes.all():
+			module_outcomes[module.name].append(outcome.name)
+	context = {'module_names':module_names,'module_outcomes':module_outcomes}
+	return HttpResponse(simplejson.dumps(context),content_type="application/json")
+
+def explore_outcome(request,outcome):
+	name = Outcome.objects.get(name=outcome)
+	modules = Module.objects.filter(outcomes=name)
+	module_names = [x.name for x in modules]
+	module_keywords = {}
+	for module in modules:
+		module_keywords[module.name] = []
+		for keyword in module.keywords.all():
+			module_keywords[module.name].append(keyword.name)
+	context ={'module_names':module_names,'module_keywords':module_keywords}
+	return HttpResponse(simplejson.dumps(context),content_type="application/json")
 
 def add_outcome(request):
     context = {}
@@ -128,6 +162,7 @@ def search(request):
     if search_text == '':
         modules = {}
         keywords = {}
+        outcomes = {}
         users = {}
     else:
         modules = Module.objects.filter(name__contains=search_text)

@@ -1,7 +1,34 @@
+$(document).on('click','input#id_name', function() {
+    if ($(this).val() == "Module Name") {
+        $(this).val("");
+    }
+}).on('blur','input#id_name', function() {
+    if ($(this).val() == "") {
+        $(this).val("Module Name");
+    }
+});
+
+$(document).on('click','input#id_link', function() {
+    if ($(this).val() == "Enter Module URL") {
+        $(this).val("");
+    }
+}).on('blur','input#id_link', function() {
+    if ($(this).val() == "") {
+        $(this).val("Enter Module URL");
+        $('#module_iframe').removeAttr('src');
+    } else {
+        var val = $(this).val();
+        if (val && !val.match(/^http([s]?):\/\/.*/)) {
+            $(this).val('http://' + val);
+        }
+        $('#module_iframe').attr('src',$(this).val());
+    }
+});
+
 $(document).on('click','#add_keyword_button',addKeywordButtonClick);
 
 function addKeywordButtonClick() {
-    $('#add_keyword_button').html('<input type="text" id="add_keyword_button_text" size="20" maxlength="30">');
+    $('#add_keyword_button').html('<input type="text" id="add_keyword_button_text" maxlength="30" style="background:transparent;border:none;padding:0px;margin:4px;width:150px;">');
     $('#add_keyword_button').prop('value',"input_text");
     $("#add_keyword_button_text").focus();
     $('#add_keyword_button_text').keyup(function() {
