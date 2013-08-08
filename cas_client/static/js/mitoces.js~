@@ -1,4 +1,24 @@
 $('input[value="Save Module"]').on('click',function() { // double check that the selected options correspond to keyword buttons shown
+    // check to make sure the user has added at least one keyword tag and at least one outcome
+    var needsnewname = 0
+    $('#id_name').each( function() {
+        if ($(this).val() == "Module Name") {
+            alert("Please select a more informative module name.");
+            needsnewname = 1;
+        }
+    });
+    if (needsnewname == 1) {
+        $('#id_name').focus();
+        return false;
+    }
+    if ($('#id_keywords option[selected="selected"]').length == 0) {
+        alert("Please specify at least one keyword tag for your module.");
+        return false;
+    }    
+    if ($('#id_outcomes option[selected="selected"]').length == 0) {
+        alert("Please specify at least one outcome tag for your module.");
+        return false;
+    }    
     // first go through buttons and make sure there is corresponding select
     $('#manually_added_keywords button,#automatic_keyword_recommendation button, #automatic_keyword_recommendation_from_outcomes button').each( function() {
         var kwval = $(this).attr('value');
