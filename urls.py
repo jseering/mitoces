@@ -40,6 +40,7 @@ urlpatterns = patterns('',
 
     url(r'^create_name_keyword/$', 'cas_client.views.create_name_keyword'),
     url(r'^create_name_outcome/$', 'cas_client.views.create_name_outcome'),
+    url(r'^create_outcome_keyword/$', 'cas_client.views.create_outcome_keyword'),
     url(r'^search/$', 'cas_client.views.search'),
 
     url(r'^cas-test/login/$', 'django_cas.views.login', name="login"),

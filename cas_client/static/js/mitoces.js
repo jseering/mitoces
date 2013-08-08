@@ -1,3 +1,73 @@
+$('input[value="Save Module"]').on('click',function() { // double check that the selected options correspond to keyword buttons shown
+    // first go through buttons and make sure there is corresponding select
+    $('#manually_added_keywords button,#automatic_keyword_recommendation button, #automatic_keyword_recommendation_from_outcomes button').each( function() {
+        var kwval = $(this).attr('value');
+        if ($('#id_keywords option[value='+kwval+']').length == 0) { // should have selected option, but it's not there
+            alert("Missing selected option --- button exists, but select option doesn't.");
+            return false;
+        }
+    });
+    // then check that for each selected option in keywords, there is a corresponding button below
+    $('#id_keywords option[selected="selected"]').each( function() {
+        var optval = $(this).attr('value');
+        var inmanual = 0;
+        var inauto = 0;
+        var inautofromoutcome = 0;
+        if ($('#manually_added_keywords button[value='+optval+']').length > 0) { 
+            inmanual = 1;
+        }
+        if ($('#automatic_keyword_recommendation button[value='+optval+']').length > 0) { 
+            inauto = 1;
+        }
+        if ($('#automatic_keyword_recommendation_from_outcomes button[value='+optval+']').length > 0) { 
+            inautofromoutcome = 1;
+        }
+        if (inmanual + inauto + inautofromoutcome == 0) {
+            alert("There is a selected keyword option that does not appear as a tag below.");
+            return false;
+        }
+    });
+});
+
+$('#id_outcomes').change(function() { // when the selections in outcomes change
+    // Temporary solution to set selected outcomes to selected="selected"
+    $('#id_outcomes option:selected').attr('selected',"selected");
+    // redo keyword recommendations based on selected outcomes
+    // alert("Handler for outcome change called.");
+    var selected_outcome_ids = [];
+    $('#id_outcomes option[selected="selected"]').each( function() {
+        selected_outcome_ids.push($(this).attr('value')); // collect all selected_outcomes into array
+    });
+    $.ajax({
+        type: "POST",
+        url: "/create_outcome_keyword/",
+        data: {
+            'selected_outcome_ids': selected_outcome_ids,
+            'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+        },
+        success: outcomeBasedKeywordRecommendation,
+        datatype: 'html'
+    });
+});
+
+function outcomeBasedKeywordRecommendation(data, textStatus, jqXHR)
+{
+    // load everything, then immediately delete the repeats
+    $('#automatic_keyword_recommendation_from_outcomes').html(data); 
+    $('#automatic_keyword_recommendation_from_outcomes button').each( function() {
+        var thiskwbutton = $(this);
+        var thiskwval = $(this).attr('value');
+        if ($('#id_keywords option[value='+thiskwval+'][class!="from_outcome_auto_recommendation"]').length > 0) { // found it, so remove from results   
+            $(this).remove();
+        } else { // if it is not in select option, we must add it
+            if ($('#id_keywords option[value='+thiskwval+'][class="from_outcome_auto_recommendation"]').length == 0) {
+                var new_keyword = '<option value="'+thiskwval+'" selected="selected" class="from_outcome_auto_recommendation">'+thiskwbutton.text()+'</option>';
+                $('#id_keywords').append(new_keyword);
+            }
+        }
+    });
+}
+
 $(document).on('click','input#id_name', function() {
     if ($(this).val() == "Module Name") {
         $(this).val("");
@@ -122,6 +192,15 @@ $(document).on('click','#automatic_keyword_recommendation button', function() {
     $('#id_keywords option[value='+kwval+']').remove();
     $(this).remove();
 });
+
+$(document).on('click','#automatic_keyword_recommendation_from_outcomes button', function() {
+    // when a selected keyword is clicked, it should be removed from the selected_keywords section and 
+    // also should be removed as a selected option in the select section #id_keywords for the form
+    var kwval = $(this).attr('value');
+    $('#id_keywords option[value='+kwval+']').remove();
+    $(this).remove();
+});
+
 
 function hideKeywordButtonSearchMatches() {
     $('#keyword_button_search_matches').html('');

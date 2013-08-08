@@ -171,6 +171,31 @@ def search(request):
         users = User.objects.filter(username__contains=search_text)
     return render_to_response('ajax_search.html', {'modules': modules, 'outcomes': outcomes, 'keywords': keywords, 'users': users}, RequestContext(request,context))
 
+def create_outcome_keyword(request):
+    context = {}
+    if request.method == "POST":
+        selected_outcome_ids = request.POST.getlist('selected_outcome_ids[]')
+    else:
+        selected_outcome_ids = {}
+    print selected_outcome_ids
+    if not selected_outcome_ids:
+        keywords = {}
+    else:
+        # for each outcome in selected outcomes, find the modules that use that outcome, and get that modules keywords
+        keywords = []
+        for outcome_id in selected_outcome_ids:
+            print "outcome_id =",outcome_id
+            name = Outcome.objects.get(id=outcome_id)
+            modules = Module.objects.filter(outcomes=name)
+            for module in modules:
+                keywords.extend(module.keywords.all())
+        # get rid of duplicates using reduce
+        print "\n\n"
+        print "keywords =",keywords
+        keywords = list(set(keywords))
+        print "keywords after reduce =",keywords
+    return render_to_response('ajax_keyword_recommendations.html', {'keywords': keywords}, RequestContext(request,context))
+
 def create_name_keyword(request):
     context = {}
     if request.method == "POST":
