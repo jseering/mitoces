@@ -141,6 +141,27 @@ def modules(request):
     args['module_list'] = module_list
     return render_to_response('modules.html', args, RequestContext(request,context))
 
+def outcome_search(request):
+    context = {}
+    if request.method == "POST":
+        outcome_search_text = request.POST['outcome_search_text']
+    else:
+        outcome_search_text = ''
+    if outcome_search_text == '':
+        outcomes = {}
+    else:
+        # do some tricky searching/filtering
+        # first break the text into individual words
+        words = outcome_search_text.split(' ');
+        print "\n words = ", words, "\n"
+        # then remove inconsequential words from the list of words (e.g., and, the, or, but, etc.)
+        useless_words = ["the","and","if","but","between","over","through"]
+        important_words = list(set(words)-set(useless_words))
+        # then find all outcomes that contain at least two of the same words in the description
+        min_words_match = 2
+        outcomes = Outcome.objects.filter(description__contains=important_words[0]) # TODO: JUST DOING FIRST IMPORTANT WORD RIGHT NOW!!
+    return render_to_response('ajax_outcome_search.html', {'outcomes': outcomes}, RequestContext(request,context))
+
 def keyword_search(request):
     context = {}
     if request.method == "POST":
@@ -192,7 +213,7 @@ def create_outcome_keyword(request):
         # get rid of duplicates using reduce
         print "\n\n"
         print "keywords =",keywords
-        keywords = reduce(or_, keywords)
+        keywords = list(set(keywords))
         print "keywords after reduce =",keywords
     return render_to_response('ajax_keyword_recommendations.html', {'keywords': keywords}, RequestContext(request,context))
 

@@ -1,8 +1,15 @@
-{% if modules.count > 0 or keywords.count > 0 or users.count > 0 %}
     <li class="nav-header">Modules</li>
     {% if modules.count > 0 %}
         {% for module in modules %}
 	        <li><a href="/modules/{{ module.id }}/">{{ module.name }}</a></li>
+        {% endfor %}
+    {% endif %}
+
+    <li class="divider"></li>
+    <li class="nav-header">Outcomes</li>
+    {% if outcomes.count > 0 %}
+        {% for outcome in outcomes %}
+	        <li><a href="/outcomes/{{ outcome.id }}/">{{ outcome.name }}</a></li>
         {% endfor %}
     {% endif %}
 
@@ -22,4 +29,3 @@
 	        <li><a href="/users/{{ this_user.id }}/">{{ this_user }}</a></li>
         {% endfor %}
     {% endif %}
-{% endif %}

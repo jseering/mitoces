@@ -1,6 +1,6 @@
 $('input[value="Save Module"]').on('click',function() { // double check that the selected options correspond to keyword buttons shown
     // check to make sure the user has added at least one keyword tag and at least one outcome
-    var needsnewname = 0
+    var needsnewname = 0;
     $('#id_name').each( function() {
         if ($(this).val() == "Module Name") {
             alert("Please select a more informative module name.");
@@ -9,6 +9,17 @@ $('input[value="Save Module"]').on('click',function() { // double check that the
     });
     if (needsnewname == 1) {
         $('#id_name').focus();
+        return false;
+    }
+    var needsurl = 0;
+    $('#id_link').each( function() {
+        if ($(this).val() == "Enter Module URL") {
+            alert("Please link your module to MITx content.");
+            needsurl = 1;
+        }
+    });
+    if (needsurl == 1) {
+        $('#id_link').focus();
         return false;
     }
     if ($('#id_keywords option[selected="selected"]').length == 0) {
@@ -96,6 +107,12 @@ $(document).on('click','input#id_name', function() {
     if ($(this).val() == "") {
         $(this).val("Module Name");
     }
+}).bind('keydown','input#id_name', function(e) {
+    var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+    if(key == 13) {
+        e.preventDefault();
+        $(this).blur();
+    }
 });
 
 $(document).on('click','input#id_link', function() {
@@ -103,7 +120,7 @@ $(document).on('click','input#id_link', function() {
         $(this).val("");
     }
 }).on('blur','input#id_link', function() {
-    if ($(this).val() == "") {
+    if ($(this).val() == "" || $(this).val() == "http://Enter Module URL" || $(this).val() == "https://Enter Module URL") {
         $(this).val("Enter Module URL");
         $('#module_iframe').removeAttr('src');
     } else {
@@ -113,7 +130,15 @@ $(document).on('click','input#id_link', function() {
         }
         $('#module_iframe').attr('src',$(this).val());
     }
+}).bind('keydown','input#id_link', function(e) {
+    var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+    if(key == 13) {
+        // e.preventDefault();
+        $(this).blur();
+        e.preventDefault();
+    }
 });
+
 
 $(document).on('click','#add_keyword_button',addKeywordButtonClick);
 

@@ -1,4 +1,3 @@
-{% if modules.count > 0 or outcomes.count > 0 or keywords.count > 0 or users.count > 0 %}
     <li class="nav-header">Modules</li>
     {% if modules.count > 0 %}
         {% for module in modules %}
@@ -30,4 +29,3 @@
 	        <li><a href="/users/{{ this_user.id }}/">{{ this_user }}</a></li>
         {% endfor %}
     {% endif %}
-{% endif %}
