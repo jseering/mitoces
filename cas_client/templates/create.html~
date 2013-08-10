@@ -38,7 +38,7 @@
         {% csrf_token %}
         <ul id="outcome_recommendations"></ul>
         {{ form.link.errors }}
-        <input id="id_link" type="text" name="link" maxlength="100" value="Enter Module URL">
+        <input id="id_link" type="text" name="link" class="noEnterSubmit" maxlength="100" value="Enter Module URL">
     
         <iframe id="module_iframe" width="100%" height="600"></iframe>
  

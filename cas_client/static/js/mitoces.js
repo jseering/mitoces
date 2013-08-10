@@ -139,6 +139,126 @@ $(document).on('click','input#id_link', function() {
 });
 
 
+$(document).on('click','#add_outcome_button',addOutcomeButtonClick);
+
+function addOutcomeButtonClick() {
+    $('#add_outcome_button').remove(); 
+    $('#add_outcome_li').html('<div class="dropdown"><input class="dropdown-toggle" data-toggle="dropdown" type="text" id="add_outcome_text" maxlength="150" style="background:transparent;border:none;padding:0px;margin:4px;width:500px;"> &nbsp; <button type="button" id="save_new_outcome_button" class="no_name_yet">Save New Outcome</button><ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" id="outcome_search_matches"></ul></div>');
+    $('#add_outcome_text').focus();
+    $('#add_outcome_text').keyup(function() {
+        $.ajax({
+            type: "POST",
+            url: "/outcome/search/",
+            data: {
+                'outcome_search_text': $("#add_outcome_text").val(),
+                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+            },
+            success: outcomeSearchSuccess,
+            datatype: 'html'
+        });
+    });
+    /*
+    $('#add_outcome_text').keypress(function(e) {
+        //alert("Any old keypress on new outcome text field.");
+        if (e.which == 13) { // enter pressed
+            alert("You pressed ENTER from new outcome box.");
+            var outcome_description = $(this).val()
+            // check if this option is already selected
+            if ($('#id_outcomes option:contains('+outcome_description+')').length > 0) { // an option already exists that is this
+                alert('That outcome is already included.');
+                return false;
+            }
+            // ask for a short name for the outcome, then do an ajax post to add the new outcome to the db
+            showAddAnotherPopup('<a href="/outcome/add/" class="add-another" id="add_id_outcomes">Add Outcome</a>');            
+            //createNewOutcome(outcome_name,outcome_description);
+            hideOutcomeButtonSearchMatches();
+            return false;
+        }
+    }).blur(hideKeywordButtonSearchMatches); // TODO: not working, when the user clicks away, it should go back to being Add Outcome button
+    */
+    $('#save_new_outcome_button').on('click',function() {
+        $(this).before('<input type="text" id="new_outcome_name" maxlength="40" style="background:transparent;border:none;padding:0px;margin:4px;width:200px;" title="Provide a short outcome name" value="Outcome name">');
+        $(this).attr('id',"save_new_outcome_button_for_real_this_time");
+        $(this).off('click');
+        $('#new_outcome_name').focus();
+        $('#new_outcome_name').on('blur',function() {
+            if ($(this).val() == '') {
+                $(this).val("Outcome name");
+            }
+        });
+        $('#save_new_outcome_button_for_real_this_time').on('click',function() {
+            // do the ajax submission to create new outcome
+            var outcome_name = $('#new_outcome_name').val();
+            var outcome_description = $('#add_outcome_text').val();
+            if (outcome_name == "Outcome name") {
+                alert("Please give your new outcome a more appropriate name.");
+                $('#new_outcome_name').focus();
+                return false;
+            } 
+            // check if this outcome is already included:
+            var already_included = 0;
+            $('#id_outcomes option[selected="selected"]').each( function () {
+                if ($(this).text() == outcome_name) {
+                    already_included = 1;
+                }
+            });
+            if (already_included == 1) {
+                alert("That outcome is already included in this module.");
+                return false;
+            }   
+            createNewOutcome(outcome_name,outcome_description);
+        });
+    });
+    
+}
+
+
+function createNewOutcome(outcome_name,outcome_description) {
+    $.ajax({
+	    type: "POST",
+	    url: "/outcome/new/",
+	    data: {
+		    'outcome_description': outcome_description,
+            'outcome_name': outcome_name,
+ 		    'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+	    },
+	    success: newOutcomeSuccess,
+	    dataType: 'html'
+    });
+}
+
+function newOutcomeSuccess(data, textStatus, jqXHR)
+{
+    $("#id_outcomes").append(data);
+    // add the new outcome to the list of outcomes
+    var outcome_id = $(data).filter('option').attr('value');
+    var outcome_name = $(data).filter('option').text()
+    var outcome_description = $(data).filter('option').attr('title');
+    $('#add_outcome_li').before('<li value="'+ outcome_id+ '" title="' + outcome_name + '">'+ outcome_description +' &nbsp; &nbsp; <img src="/static/img/trash_can.png" alt="delete" class="deleteOutcome"></li> ');
+    // remove the input fields and put the "Add Outcome" button back in its place
+    $('#add_outcome_li').html('<button type="button" id="add_outcome_button" value="add_outcome"><i>Add Outcome</i></button>');
+}
+
+
+function outcomeSearchSuccess(data, textStatus, jqXHR)
+{
+    $("#outcome_search_matches").html(data);
+    // TODO: check to see if the returned matches already are in option before displaying them
+    // what comes back: <li><a href="#" class="outcome_search_result" value="{{ outcome.id }}" title="{{ outcome.name }}">{{ outcome.description }}</a></li>
+    $('#outcomes_ul li a').each( function() {
+        var thisocval = $(this).attr('value');
+        if ($('#id_outcomes option[value='+thisocval+'][selected="selected"]').length > 0) { // found it, so remove from results
+            $(this).parent().remove();
+        }
+    });
+}
+
+
+function hideOutcomeButtonSearchMatches() {
+    $('#outcome_search_matches').html('');
+    $('#add_outcome_li').html('<button type="button" id="add_outcome_button" value="add_outcome"><i>Add Outcome</i></button>');
+}
+
 $(document).on('click','#add_keyword_button',addKeywordButtonClick);
 
 function addKeywordButtonClick() {
@@ -180,6 +300,7 @@ function addKeywordButtonClick() {
     });
 }
 
+
 function createNewKeyword(kwname) {
     $.ajax({
 	    type: "POST",
@@ -193,7 +314,7 @@ function createNewKeyword(kwname) {
     });
 }
 
-function newKeywordSuccess(data, textStauts, jqXHR)
+function newKeywordSuccess(data, textStatus, jqXHR)
 {
     $("#id_keywords").append(data);
     // add the new keyword button to manually created keywords area
@@ -204,6 +325,24 @@ function newKeywordSuccess(data, textStauts, jqXHR)
 }
 
 $(document).on('blur','#add_keyword_button',hideKeywordButtonSearchMatches);
+
+$(document).on('mousedown','a.outcome_search_result', function() {
+    var outcome_id = $(this).attr('value');
+    var outcome_name = $(this).attr('title');
+    var outcome_description = $(this).text();
+    $('#add_outcome_li').before('<li value="'+ outcome_id+ '" title="' + outcome_name + '">'+ outcome_description +' &nbsp; &nbsp; <img src="/static/img/trash_can.png" alt="delete" class="deleteOutcome"></li> ');
+    var new_outcome = '<option value="'+outcome_id+'" selected="selected">'+outcome_name+'</option>';
+    $('#id_outcomes').append(new_outcome);
+    hideOutcomeButtonSearchMatches();
+    $('.deleteOutcome').css('cursor', 'pointer');
+});
+
+$(document).on('mousedown','.deleteOutcome', function() {
+    var outcome_li = $(this).parent();
+    var outcome_id = outcome_li.attr('value');
+    $('#id_outcomes option[value="'+outcome_id+'"]').remove();
+    $(this).parent().remove();
+});
 
 $(document).on('mousedown','.keyword_search_result_button', function() {
     $("document").off('blur','#add_keyword_button',hideKeywordButtonSearchMatches);
@@ -253,7 +392,7 @@ function hideKeywordButtonSearchMatches() {
 }
 
 
-function keywordSearchSuccess(data, textStauts, jqXHR)
+function keywordSearchSuccess(data, textStatus, jqXHR)
 {
     // check to see if the returned matches already are in option before displaying them
     $("#keyword_button_search_matches").html(data);

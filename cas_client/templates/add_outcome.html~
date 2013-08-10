@@ -1,35 +1,16 @@
 <!DOCTYPE html>
-<html lang="en-us" >
+<html>
 <head>
-<title>Add Outcome</title>
-<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
-<link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css" />
-<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/admin/css/ie.css" /><![endif]-->
+<title>Create New Outcome</title>
 
-<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/mitoces.js"></script>
 
-
-<script type="text/javascript" src="/admin/jsi18n/"></script>
-<script type="text/javascript" src="/static/admin/js/core.js"></script>
-<script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
-<script type="text/javascript" src="/static/admin/js/jquery.js"></script>
-<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
-<script type="text/javascript" src="/static/admin/js/actions.js"></script>
-
-<meta name="robots" content="NONE,NOARCHIVE" />
 </head>
 
 
 <body class="popup cas_client-outcome change-form">
-
-<!-- Container -->
-<div id="container">
-
-
-    <!-- Content -->
-    <div id="content" class="colM">
         
-        <h1>Add Outcome</h1>
+        <h1>Create New Outcome</h1>
         <div id="content-main">
 
 <form action="" method="post" id="outcome_form">{% csrf_token %}
@@ -38,24 +19,13 @@
 <input type="submit" name="submit" value="Save Outcome">
 </form>
 
-   <script type="text/javascript">document.getElementById("id_name").focus();</script>
-
-
+<script type="text/javascript">document.getElementById("id_name").focus();</script>
 
 <script type="text/javascript">
 (function($) {
     var field;
-
-
 })(django.jQuery);
 </script>
-
-    </div>
-    <!-- END Content -->
-
-    <div id="footer"></div>
-</div>
-<!-- END Container -->
 
 </body>
 </html>

@@ -22,8 +22,10 @@ urlpatterns = patterns('',
     url(r'^outcome/add/$', 'cas_client.views.add_outcome', name="add outcome"),
     url(r'^keyword/add/$', 'cas_client.views.add_keyword', name="add keyword"),
     url(r'^keyword/new/$', 'cas_client.views.new_keyword', name="new keyword"),
+    url(r'^outcome/new/$', 'cas_client.views.new_outcome', name="new outcome"),
 
     url(r'^keyword/search/$', 'cas_client.views.keyword_search', name="keyword search"),
+    url(r'^outcome/search/$', 'cas_client.views.outcome_search', name="outcome search"),
 
 	url(r'^keywords/$', 'cas_client.views.keywords', name="keywords"),
 	url(r'^keywords/(?P<keyword_id>\d+)/$', 'cas_client.views.keyword', name="keyword"),
