@@ -234,7 +234,7 @@ function newOutcomeSuccess(data, textStatus, jqXHR)
     var outcome_id = $(data).filter('option').attr('value');
     var outcome_name = $(data).filter('option').text()
     var outcome_description = $(data).filter('option').attr('title');
-    $('#add_outcome_li').before('<li value="'+ outcome_id+ '" title="' + outcome_name + '">'+ outcome_description +' &nbsp; &nbsp; <img src="/static/img/trash_can.png" alt="delete" class="deleteOutcome"></li> ');
+    $('#add_outcome_li').before('<li value="'+ outcome_id+ '" title="' + outcome_name + '">'+ outcome_description +' &nbsp; &nbsp; <img src="/static/img/trash_can.png" alt="delete" class="deleteOutcome" title="delete"></li> ');
     // remove the input fields and put the "Add Outcome" button back in its place
     $('#add_outcome_li').html('<button type="button" id="add_outcome_button" value="add_outcome"><i>Add Outcome</i></button>');
 }
@@ -330,7 +330,7 @@ $(document).on('mousedown','a.outcome_search_result', function() {
     var outcome_id = $(this).attr('value');
     var outcome_name = $(this).attr('title');
     var outcome_description = $(this).text();
-    $('#add_outcome_li').before('<li value="'+ outcome_id+ '" title="' + outcome_name + '">'+ outcome_description +' &nbsp; &nbsp; <img src="/static/img/trash_can.png" alt="delete" class="deleteOutcome"></li> ');
+    $('#add_outcome_li').before('<li value="'+ outcome_id+ '" title="' + outcome_name + '">'+ outcome_description +' &nbsp; &nbsp; <img src="/static/img/trash_can.png" alt="delete" class="deleteOutcome" title="delete"></li> ');
     var new_outcome = '<option value="'+outcome_id+'" selected="selected">'+outcome_name+'</option>';
     $('#id_outcomes').append(new_outcome);
     hideOutcomeButtonSearchMatches();
@@ -480,7 +480,35 @@ function keywordRecommendationSuccess(data, textStatus, jqXHR)
 
 function outcomeRecommendationSuccess(data, textStatus, jqXHR)
 {
-	$('#outcome_recommendations').html(data);
+    // get outcome recommendations, and if they are already in the outcome_ul list, delete them
+    $('#add_outcome_li').before(data);
+    $('#outcomes_ul li').not('#add_outcome_li').each( function() {
+        // for each outcome in the li list, check that it is selected (only once!) in the select #id_outcomes
+        var outcome_id = $(this).attr('value');
+        var outcome_name = $(this).attr('title');
+        var num_appearances = 0;
+        $('#id_outcomes option').each( function() {
+            if (($(this).attr('value')==outcome_id) && ($(this).attr('selected')=="selected")) {
+                num_appearances++;
+            }
+        });
+        if (num_appearances == 0) { // need to add it
+            $('#id_outcomes').prepend('<option value="'+outcome_id+'" selected="selected">'+outcome_name+'</option>');
+        } else { // need to make just one of them
+            $('#id_outcomes option[value="'+outcome_id+'"]').remove(); // remove all
+            $('#id_outcomes').prepend('<option value="'+outcome_id+'" selected="selected">'+outcome_name+'</option>'); // add one back
+        }
+    });
+    $('#outcomes_ul li').not('#add_outcome_li').each( function() { // make only one for outcomes_ul as well
+        alert("debug alert 1");
+        var outcome_id = $(this).attr('value');
+        $('#outcomes_ul li').not('#add_outcome_li').not('[value="'+outcome_id+'"]').each( function() { // loop over all others
+            alert("debug alert 2");
+            if ($(this).attr('value')==outcome_id) {
+                $(this).remove();
+            }
+        });
+    });
 }
 
 // Handles related-objects functionality: lookup link for raw_id_fields

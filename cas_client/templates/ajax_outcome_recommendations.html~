@@ -1,14 +1,9 @@
-{% if outcome.count > 0 %}
+{% if outcomes.count > 0 %}
 
     {% for outcome in outcomes %}
-	    <li>
-	        <b>{{ outcome.name }}</b></a> &nbsp;{{ outcome.description }}
+	    <li value="{{ outcome.id }}" title="{{ outcome.name }}">
+	        {{ outcome.description }} &nbsp; &nbsp; <img src="{{ STATIC_URL }}img/trash_can.png" alt="delete" class="deleteOutcome">
 	    </li>
     {% endfor %}
-
-
-{% else %}
-
-<li>No outcomes to recommend.</li>
 
 {% endif %}

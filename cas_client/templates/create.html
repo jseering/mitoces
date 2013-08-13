@@ -31,12 +31,8 @@
 	</li>
 </ul>
         {{ form.outcomes.errors }}
-        <label for="id_outcomes">Outcomes:</label>
-        {{ form.outcomes }}
-        <button type="button"><a href="/outcome/add/" class="add-another" id="add_id_outcomes" onclick="return showAddAnotherPopup(this);">Add Outcome</a></button>
-        <h4>outcome recommendations:</h4>
-        {% csrf_token %}
-        <ul id="outcome_recommendations"></ul>
+        <select multiple="multiple" name="outcomes" id="id_outcomes" style="display:none;"></select>
+
         {{ form.link.errors }}
         <input id="id_link" type="text" name="link" class="noEnterSubmit" maxlength="100" value="Enter Module URL">
     
