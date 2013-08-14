@@ -25,10 +25,10 @@
 </div>
 <div class="btn-group" data-toggle="buttons">
   <label class="btn btn-default">
-    <input type="checkbox" name="options" id="outcome_off" onclick="javascript:toggleOutcome()"> Toggle Off Outcome
+    <input type="checkbox" name="options" id="outcome_toggle" onclick="javascript:toggleOutcome()" checked> Outcomes
   </label>
   <label class="btn btn-default">
-    <input type="checkbox" name="options" id="keyword_off" onclick="javascript:toggleKeyword()"> Toggle Off Keyword
+    <input type="checkbox" name="options" id="keyword_toggle" onclick="javascript:toggleKeyword()" checked> Keywords
   </label>
 </div>
 <canvas id="viewport" width="800" height="600" style="padding:5px"></canvas>
@@ -73,29 +73,31 @@
             sys.graft(theUI);
         }
         
-        function addModule(theUI,number){
-            theUI["nodes"][number] = {};
-            theUI["nodes"][number]["color"] = "#CF9238";
-            theUI["nodes"][number]["shape"] = "dot";
-            theUI["nodes"][number]["type"] = "module";
-            theUI["nodes"][number]["label"] = number;
+        function addModule(theUI,name,id){
+            theUI["nodes"][name] = {};
+            theUI["nodes"][name]["color"] = "#CF9238";
+            theUI["nodes"][name]["shape"] = "rectangle";
+            theUI["nodes"][name]["type"] = "module";
+            theUI["nodes"][name]["label"] = name;
+            theUI["nodes"][name]["id"] = id;
         }
         
-        function addOutcome(theUI,name){
+        function addOutcome(theUI,name,id){
             theUI["nodes"][name] = {};
             theUI["nodes"][name]["color"]="#41A565";
             theUI["nodes"][name]["shape"]="rectangle";
             theUI["nodes"][name]["type"]="outcome";
             theUI["nodes"][name]["label"]=name;
-            theUI["nodes"][name]["link"] = "/explore_description/"+name;
+            theUI["nodes"][name]["id"] = id;
         }
         
-        function addKeyword(theUI,name){
+        function addKeyword(theUI,name,id){
             theUI["nodes"][name] = {};
             theUI["nodes"][name]["color"]="#416DA5";
             theUI["nodes"][name]["shape"]="rectangle";
             theUI["nodes"][name]["type"]="keyword";
             theUI["nodes"][name]["label"]=name;
+            theUI["nodes"][name]["id"] = id;
         }
         
         function addEdge(theUI,from,to){
@@ -156,7 +158,7 @@
             }
             else if (type == "keyword"){
                 theUI = {"nodes":{},"edges":{}};
-                $.get("/explore_keyword/"+node,function(data){
+                $.get("/explore_keyword/"+node+"/",function(data){
                     addKeyword(theUI,node);
                     var module_outcomes = data['module_outcomes'];
                     var modules = data['module_names'];
@@ -173,7 +175,7 @@
             }
             else if (type=="outcome"){
                 theUI = {"nodes":{},"edges":{}};
-                $.get("/explore_outcome/"+node,function(data){
+                $.get("/explore_outcome/"+node+"/",function(data){
                     addOutcome(theUI,node);
                     var module_keywords = data['module_keywords'];
                     var modules = data['module_names'];
@@ -190,15 +192,11 @@
             }
         }
             
-        var keywordoff = false;
-        
         function toggleKeyword() {
-            if (keywordoff) {
-                toggleonKeyword();
-                keywordoff = false;
-            } else{
-                toggleoffKeyword();
-                keywordoff = true;
+            if ($('#keyword_toggle:checked').length == 0) {
+               toggleoffKeyword();
+            } else {
+               toggleonKeyword();
             }
         }
             
@@ -223,14 +221,11 @@
             sys.merge(theUI);
         }
         
-        var outcomeoff = false;
         function toggleOutcome() {
-            if (outcomeoff) {
-                toggleonOutcome();
-                outcomeoff =false;
-            }else{
-                toggleoffOutcome();
-                outcomeoff=true;
+            if ($('#outcome_toggle:checked').length == 0) {
+               toggleoffOutcome();
+            } else {
+               toggleonOutcome();
             }
         }
         

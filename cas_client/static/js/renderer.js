@@ -153,21 +153,21 @@
               var name=dragged.node.name;
               var type = dragged.node.data.type;
               if (type=='module') {
-                $.get('/module_id/'+name, function(data){
+                $.get('/module_id/'+name+'/', function(data){
                   var id = data
-                  window.open('/modules/'+id)
+                  window.open('/modules/'+id+'/')
                 })
               }
               else if (type=='outcome') {
-                $.get('/outcome_id/'+name,function(data){
+                $.get('/outcome_id/'+name+'/',function(data){
                   var id = data
-                  window.open('/outcomes/'+id)
+                  window.open('/outcomes/'+id+'/')
                 })
               }
               else if (type=='keyword') {
-                $.get('/keyword_id/'+name,function(data){
+                $.get('/keyword_id/'+name+'/',function(data){
                   var id = data
-                  window.open('/keywords/'+id)
+                  window.open('/keywords/'+id+'/')
                 })
               }
             $(canvas).unbind('mousemove',handler.dragged)

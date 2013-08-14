@@ -13,6 +13,7 @@ from django.db.models import Q
 from operator import *
 from django.forms.models import modelformset_factory
 from django.utils.html import escape, escapejs
+from django.utils import simplejson
 
 #-----------------------------------------------------------------------------
 # index

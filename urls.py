@@ -15,12 +15,12 @@ urlpatterns = patterns('',
     url(r'^$', 'cas_client.views.index', name="root"),
 
     url(r'^explore/$', 'cas_client.views.explore', name="explore"),
-    url(r'^explore_outcome/$', 'cas_client.views.explore_outcome', name="explore outcome"),
-    url(r'^explore_keyword/$', 'cas_client.views.explore_keyword', name="explore keyword"),
+    url(r'^explore_outcome/(?P<outcome>[- \w]+)/$', 'cas_client.views.explore_outcome', name="explore outcome"),
+    url(r'^explore_keyword/(?P<keyword>[- \w]+)/$', 'cas_client.views.explore_keyword', name="explore keyword"),
 
-    url(r'^module_id/(?P<module>[a-zA-Z0-9. ]+)/$','cas_client.views.module_id'),
-    url(r'^outcome_id/(?P<outcome>[a-zA-Z0-9 ]+)/$','cas_client.views.outcome_id'),
-    url(r'^keyword_id/(?P<keyword>[a-zA-Z0-9 ]+)/$','cas_client.views.keyword_id'),
+    url(r'^module_id/(?P<module>[- \w]+)/$','cas_client.views.module_id'),
+    url(r'^outcome_id/(?P<outcome>[- \w]+)/$','cas_client.views.outcome_id'),
+    url(r'^keyword_id/(?P<keyword>[- \w]+)/$','cas_client.views.keyword_id'),
 
     url(r'^exploresearch/$','cas_client.views.exploresearch'),
 
