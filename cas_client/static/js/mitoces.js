@@ -1,3 +1,22 @@
+$(function(){
+    $('#exploresearch').keyup(function(){
+        $.ajax({
+            type:"POST",
+            url:"/exploresearch/",
+            data:{
+                'search_text':$('#exploresearch').val(),
+                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+            },
+            success: exploreSearchSuccess,
+            dataType:'html'
+        });
+    });
+});
+
+function exploreSearchSuccess(data,textStatus,jqXHR) {
+    $('#exploresearch-results').html(data);
+}
+
 $('input[value="Save Module"]').on('click',function() { // double check that the selected options correspond to keyword buttons shown
     // check to make sure the user has added at least one keyword tag and at least one outcome
     var needsnewname = 0;

@@ -499,16 +499,6 @@ function outcomeRecommendationSuccess(data, textStatus, jqXHR)
             $('#id_outcomes').prepend('<option value="'+outcome_id+'" selected="selected">'+outcome_name+'</option>'); // add one back
         }
     });
-    $('#outcomes_ul li').not('#add_outcome_li').each( function() { // make only one for outcomes_ul as well
-        alert("debug alert 1");
-        var outcome_id = $(this).attr('value');
-        $('#outcomes_ul li').not('#add_outcome_li').not('[value="'+outcome_id+'"]').each( function() { // loop over all others
-            alert("debug alert 2");
-            if ($(this).attr('value')==outcome_id) {
-                $(this).remove();
-            }
-        });
-    });
 }
 
 // Handles related-objects functionality: lookup link for raw_id_fields

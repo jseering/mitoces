@@ -136,17 +136,44 @@
 
             $(canvas).bind('mousemove', handler.dragged)
             $(window).bind('mouseup', handler.dropped)
-            $(canvas).bind('dblclick',handler.double_clicked)
+            $(canvas).bind('mouseup',handler.single_clicked)
+            $(canvas).unbind('dblclick',handler.double_clicked)
             return false
+          },
+          single_clicked:function(e){
+            $(canvas).unbind('mousemove',handler.dragged)
+            $(window).unbind('mouseup',handler.dropped)
+            $(canvas).unbind('mouseup',handler.single_clicked)
+            $(canvas).bind('dblclick',handler.double_clicked)
+            return false;
           },
           double_clicked:function(e){
             if (dragged===null || dragged.node===undefined) return
-            if (dragged.node !== null){
-              dragged.node.fixed = false                  
-              var id=dragged.node.name;
-              alert('Node selected: ' + id);
-            }            
-            return false;
+            if (dragged.node !== null) dragged.node.fixed = false                  
+              var name=dragged.node.name;
+              var type = dragged.node.data.type;
+              if (type=='module') {
+                $.get('/module_id/'+name, function(data){
+                  var id = data
+                  window.open('/modules/'+id)
+                })
+              }
+              else if (type=='outcome') {
+                $.get('/outcome_id/'+name,function(data){
+                  var id = data
+                  window.open('/outcomes/'+id)
+                })
+              }
+              else if (type=='keyword') {
+                $.get('/keyword_id/'+name,function(data){
+                  var id = data
+                  window.open('/keywords/'+id)
+                })
+              }
+            $(canvas).unbind('mousemove',handler.dragged)
+            $(window).unbind('mouseup',handler.dropped)
+            $(canvas).unbind('dblclick',handler.double_clicked)
+            return false
           },
           dragged:function(e){
             var old_nearest = nearest && nearest.node._id
@@ -158,7 +185,7 @@
               var p = particleSystem.fromScreen(s)
               dragged.node.p = p
             }
-
+            $(canvas).unbind('mouseup',handler.single_clicked)
             return false
           },
 
@@ -170,6 +197,8 @@
             selected = null
             $(canvas).unbind('mousemove', handler.dragged)
             $(window).unbind('mouseup', handler.dropped)
+            $(canvas).unbind('mouseup',handler.single_clicked)
+            $(canvas).unbind('dblclick',handler.double_clicked)
             _mouseP = null
             return false
           }

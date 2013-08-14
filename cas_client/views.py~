@@ -101,7 +101,6 @@ def new_keyword(request):
     return render_to_response('ajax_new_keyword.html', {'keyword': kw}, RequestContext(request,context))
 
 def new_outcome(request):
-    print "\nMade it to new outcome!!\n"
     context = {}
     if request.POST:
         oc, created = Outcome.objects.get_or_create(name=request.POST['outcome_name'],description=request.POST['outcome_description'])

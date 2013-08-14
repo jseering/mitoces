@@ -62,6 +62,39 @@ def explore_outcome(request,outcome):
 	context ={'module_names':module_names,'module_keywords':module_keywords}
 	return HttpResponse(simplejson.dumps(context),content_type="application/json")
 
+def module_id(request,module):
+    name = Module.objects.get(name=module)
+    id = name.id
+    return HttpResponse(id)
+
+def outcome_id(request,outcome):
+    name = Outcome.objects.get(name=outcome)
+    id = name.id
+    return HttpResponse(id)
+
+def keyword_id(request,keyword):
+    name = Keyword.objects.get(name=keyword)
+    id = name.id
+    return HttpResponse(id)
+
+def exploresearch(request):
+    context = {}
+    if request.method == "POST":
+        search_text = request.POST['search_text']
+    else:
+        search_text = ''
+    if search_text == '':
+        modules = {}
+        outcomes = {}
+        keywords = {}
+        users = {}
+    else:
+        modules = Module.objects.filter(name__contains=search_text)
+        outcomes = Outcome.objects.filter(name__contains=search_text)
+        keywords = Keyword.objects.filter(name__contains=search_text)
+        users = User.objects.filter(username__contains=search_text)
+    return render_to_response('explore_search.html', {'modules': modules, 'outcomes': outcomes, 'keywords': keywords}, context_instance=RequestContext(request))
+
 def add_outcome(request):
     context = {}
     if request.POST:
