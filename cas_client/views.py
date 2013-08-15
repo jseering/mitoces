@@ -170,6 +170,17 @@ def create_formset(request):
     args['formset'] = formset   
     return render_to_response('create_formset.html', args, RequestContext(request,context))
 
+def delete_module(request):
+    context = {}
+    if request.method == "POST":
+        module_id = request.POST['module_id']
+        module = Module.objects.get(pk=module_id).delete()
+    return render_to_response('modules.html', RequestContext(request,context))
+
+def edit_module(request, module_id):
+    context = {}
+    return render_to_response('edit_module.html', {'module': module}, RequestContext(request,context))
+
 def module(request, module_id):
     context = {}
     module = get_object_or_404(Module, id=module_id)

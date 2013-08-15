@@ -40,7 +40,9 @@ urlpatterns = patterns('',
     url(r'^outcomes/(?P<outcome_id>\d+)/$', 'cas_client.views.outcome', name="outcome"),
 
     url(r'^modules/$', 'cas_client.views.modules', name="modules"),
+    url(r'^module/delete/$', 'cas_client.views.delete_module', name="delete module"),
     url(r'^modules/(?P<module_id>\d+)/$', 'cas_client.views.module', name="module"),
+    url(r'^module/edit/(?P<module_id>\d+)/$', 'cas_client.views.edit_module', name="edit module"),
 
     url(r'^users/$', 'cas_client.views.users', name="users"),
     url(r'^users/(?P<user_id>\d+)/$', 'cas_client.views.user', name="user"),

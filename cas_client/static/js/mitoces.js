@@ -1,4 +1,34 @@
 $(function(){
+    $('[id^=delete_module_]').click(function() {
+        // click to delete a module
+        var idstr = $(this).attr('id');
+        var module_num_str = idstr.substring(14);
+        var module_id = parseInt(module_num_str);
+        var module_name = $('#module_name').text();
+        var result = confirm('Are you sure you want to delete the module "' + module_name + '"?');
+        if (result == true) {
+            // perform an ajax post to delete the module
+            $.ajax({
+                type: "POST",
+                url: "/module/delete/",
+                data: {
+                    'module_id': module_id,
+                    'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: deletionSuccess, 
+                datatype: 'html'
+            });
+        } else {
+            return false;
+        }
+    });
+});
+
+function deletionSuccess(data,textStatus,jqXHR) {
+    document.location.href = "/modules/";
+}
+
+$(function(){
     $('#exploresearch').keyup(function(){
         $.ajax({
             type:"POST",
@@ -162,7 +192,7 @@ $(document).on('click','#add_outcome_button',addOutcomeButtonClick);
 
 function addOutcomeButtonClick() {
     $('#add_outcome_button').remove(); 
-    $('#add_outcome_li').html('<div class="dropdown"><input class="dropdown-toggle" data-toggle="dropdown" type="text" id="add_outcome_text" maxlength="150" style="background:transparent;border:none;padding:0px;margin:4px;width:500px;"> &nbsp; <button type="button" id="save_new_outcome_button" class="no_name_yet">Save New Outcome</button><ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" id="outcome_search_matches"></ul></div>');
+    $('#add_outcome_li').html('<div class="dropdown"><input class="dropdown-toggle" data-toggle="dropdown" type="text" id="add_outcome_text" maxlength="150" style="background:transparent;border:none;padding:0px;margin:4px;width:500px;"> &nbsp; <button type="button" id="save_new_outcome_button" class="no_name_yet">Save New Outcome</button><button type="button" id="cancel_new_outcome_button">Cancel</button><ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" id="outcome_search_matches"></ul></div>');
     $('#add_outcome_text').focus();
     $('#add_outcome_text').keyup(function() {
         $.ajax({
@@ -228,7 +258,10 @@ function addOutcomeButtonClick() {
             createNewOutcome(outcome_name,outcome_description);
         });
     });
-    
+    $('#cancel_new_outcome_button').on('click',function() {
+        // set this li back to the Add Outcome button
+        $('#add_outcome_li').html('<button type="button" id="add_outcome_button" value="add_outcome"><i>Add Outcome</i></button>');
+    });
 }
 
 

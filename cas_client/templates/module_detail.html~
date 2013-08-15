@@ -10,7 +10,7 @@
 <a href="/explore">explore</a>
 </li>
 <li>
-<a href="/create">create</a>
+<a href="/module/add/">create</a>
 </li>
 
 {% endblock %}
@@ -18,7 +18,7 @@
 
 {% block content %}
 
-<h1>{{ module.name }}</h1>
+<h1 id="module_name">{{ module.name }}</h1>
 <h3>This module is intended to teach and/or assess the ability to:</h3>
 
 <ul>
@@ -36,5 +36,11 @@
 	<button type="button" onclick="window.location.href='/keywords/{{ keyword.id }}'">{{ keyword.name }}</button>
 {% endfor %}
 </p>
+
+{% if module.creator == user %}
+<p>
+   <button type="button" onclick="window.location.href='/module/edit/{{ module.id }}'">Edit Module</button> &nbsp; {% csrf_token %}<button type="button"  id="delete_module_{{ module.id }}">Delete Module</button>
+</p>
+{% endif %}
 
 {% endblock %}
