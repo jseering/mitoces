@@ -22,7 +22,7 @@ from django.utils import simplejson
 def index(request):
     context ={}
     latest_module_list = Module.objects.all().order_by('-date')[:10]
-    user_module_list   = Module.objects.filter(creator=request.user).order_by('-date')[:5]
+    user_module_list   = Module.objects.filter(creator=request.user).order_by('-date')
     return render_to_response('index.html', {'latest_module_list': latest_module_list, 'user_module_list': user_module_list},RequestContext(request,context))
 
 def explore(request):
@@ -142,6 +142,24 @@ def new_outcome(request):
         oc = {}
     return render_to_response('ajax_new_outcome.html', {'outcome': oc}, RequestContext(request,context))
 
+def edit_module(request, module_id):
+    context = {}
+    if request.POST:
+        instance = get_object_or_404(Module, id=module_id)
+        if (request.user != instance.creator):
+            return HttpResponseRedirect('/modules/' + module_id + '/')
+        else:
+            form = ModuleForm(request.POST, user=request.user, instance=instance)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect('/modules/')
+    else:
+        module = get_object_or_404(Module, id=module_id)
+        if (request.user != module.creator):
+            return HttpResponseRedirect('/modules/' + module_id + '/')
+        else:
+            return render_to_response('edit_module.html', {'module': module}, RequestContext(request,context))
+
 def create(request):
     context = {}
     if request.POST:
@@ -177,11 +195,7 @@ def delete_module(request):
         module = Module.objects.get(pk=module_id).delete()
     return render_to_response('modules.html', RequestContext(request,context))
 
-def edit_module(request, module_id):
-    context = {}
-    return render_to_response('edit_module.html', {'module': module}, RequestContext(request,context))
-
-def module(request, module_id):
+def module_detail(request, module_id):
     context = {}
     module = get_object_or_404(Module, id=module_id)
     return render_to_response('module_detail.html', {'module': module}, RequestContext(request,context))

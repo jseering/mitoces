@@ -33,13 +33,14 @@
 
 <p>
 {% for keyword in module.keywords.all %}
-	<button type="button" onclick="window.location.href='/keywords/{{ keyword.id }}'">{{ keyword.name }}</button>
+	<button type="button" onclick="window.location.href='/keywords/{{ keyword.id }}/'">{{ keyword.name }}</button>
 {% endfor %}
 </p>
 
 {% if module.creator == user %}
+{% csrf_token %}
 <p>
-   <button type="button" onclick="window.location.href='/module/edit/{{ module.id }}'">Edit Module</button> &nbsp; {% csrf_token %}<button type="button"  id="delete_module_{{ module.id }}">Delete Module</button>
+   <button type="button" onclick="window.location.href='/module/edit/{{ module.id }}/'">Edit Module</button> &nbsp; <button type="button"  id="delete_module_{{ module.id }}">Delete Module</button>
 </p>
 {% endif %}
 

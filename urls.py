@@ -41,7 +41,7 @@ urlpatterns = patterns('',
 
     url(r'^modules/$', 'cas_client.views.modules', name="modules"),
     url(r'^module/delete/$', 'cas_client.views.delete_module', name="delete module"),
-    url(r'^modules/(?P<module_id>\d+)/$', 'cas_client.views.module', name="module"),
+    url(r'^modules/(?P<module_id>\d+)/$', 'cas_client.views.module_detail', name="module detail"),
     url(r'^module/edit/(?P<module_id>\d+)/$', 'cas_client.views.edit_module', name="edit module"),
 
     url(r'^users/$', 'cas_client.views.users', name="users"),
