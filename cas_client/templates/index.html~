@@ -64,10 +64,10 @@
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{user}}<b class="caret"></b></a>
 							<ul class="dropdown-menu">
 								<li>
-									<a href="/user/profile/edit">Edit Profile</a>
+									<a href="/user/profile/edit/">Edit Profile</a>
 								</li>
 								<li>
-									<a href="/cas-test/logout">Logout</a>
+									<a href="/cas-test/logout/">Logout</a>
 								</li>
 							</ul>
 							</li>

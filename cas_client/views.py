@@ -236,10 +236,13 @@ def keyword_search(request):
         keyword_search_text = request.POST['keyword_search_text']
     else:
         keyword_search_text = ''
+    print "\n\nkeyword search text =", keyword_search_text
+    print "LENGTH(keyword search text) =", len(keyword_search_text)
     if keyword_search_text == '':
         keywords = {}
     else:
         keywords = Keyword.objects.filter(name__contains=keyword_search_text)
+        print "keywords =", keywords
     return render_to_response('ajax_keyword_search.html', {'keywords': keywords}, RequestContext(request,context))
 
 def search(request):

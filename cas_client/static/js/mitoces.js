@@ -83,7 +83,7 @@ $('input[value="Save Module"]').on('click',function() { // double check that the
     $('#manually_added_keywords button,#automatic_keyword_recommendation button, #automatic_keyword_recommendation_from_outcomes button').each( function() {
         var kwval = $(this).attr('value');
         if ($('#id_keywords option[value='+kwval+']').length == 0) { // should have selected option, but it's not there
-            alert("Missing selected option --- button exists, but select option doesn't.");
+            alert("Missing selected keyword option --- button exists, but select option doesn't.");
             return false;
         }
     });
@@ -104,6 +104,26 @@ $('input[value="Save Module"]').on('click',function() { // double check that the
         }
         if (inmanual + inauto + inautofromoutcome == 0) {
             alert("There is a selected keyword option that does not appear as a tag below.");
+            return false;
+        }
+    });
+    // first go through the list of outcomes on the page and make sure there is a corresponding select
+    $('#outcomes_ul li').not('#add_outcome_li').each(function() {
+        var ocval = $(this).attr('value');
+        if ($('#id_outcomes option[value='+ocval+']').length == 0) { // should have it, but don't
+            alert("Missing selected outcome option --- li exists, but select option doesn't.");
+            return false;
+        }
+    });
+    // then check that each of the selected options is actually represented in the ul
+    $('#id_outcomes option[selected="selected"]').each(function() {
+        var optval = $(this).attr('value');
+        var inul = 0;
+        if ($('#outcomes_ul li[value='+optval+']').length > 0) {
+            inul = 1;        
+        }
+        if (inul == 0) {
+            alert("There is a selected outcome option that does not appear in the ul.");
             return false;
         }
     });
@@ -192,7 +212,7 @@ $(document).on('click','#add_outcome_button',addOutcomeButtonClick);
 
 function addOutcomeButtonClick() {
     $('#add_outcome_button').remove(); 
-    $('#add_outcome_li').html('<div class="dropdown"><input class="dropdown-toggle" data-toggle="dropdown" type="text" id="add_outcome_text" maxlength="150" style="background:transparent;border:none;padding:0px;margin:4px;width:500px;"> &nbsp; <button type="button" id="save_new_outcome_button" class="no_name_yet">Save New Outcome</button><button type="button" id="cancel_new_outcome_button">Cancel</button><ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" id="outcome_search_matches"></ul></div>');
+    $('#add_outcome_li').html('<div id="add_outcome_text_dropdown_div" class="dropdown"><input class="dropdown-toggle" data-toggle="dropdown" type="text" id="add_outcome_text" maxlength="150" style="background:transparent;border:none;padding:0px;margin:4px;width:500px;"> &nbsp; <button type="button" id="save_new_outcome_button" class="no_name_yet">Save New Outcome</button><button type="button" id="cancel_new_outcome_button">Cancel</button><ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" id="outcome_search_matches"></ul></div>');
     $('#add_outcome_text').focus();
     $('#add_outcome_text').keyup(function() {
         $.ajax({
@@ -303,6 +323,11 @@ function outcomeSearchSuccess(data, textStatus, jqXHR)
             $(this).parent().remove();
         }
     });
+    if ($('#outcome_search_matches li a').length > 0) {    
+        $('#add_outcome_text_dropdown_div').attr('class',"dropdown open");
+    } else {
+        $('#add_outcome_text_dropdown_div').attr('class',"dropdown");
+    }
 }
 
 
@@ -317,20 +342,10 @@ function addKeywordButtonClick() {
     $('#add_keyword_button').html('<input type="text" id="add_keyword_button_text" maxlength="30" style="background:transparent;border:none;padding:0px;margin:4px;width:150px;">');
     $('#add_keyword_button').prop('value',"input_text");
     $("#add_keyword_button_text").focus();
-    $('#add_keyword_button_text').keyup(function() {
-        $.ajax({
-            type: "POST",
-            url: "/keyword/search/",
-            data: {
-                'keyword_search_text': $("#add_keyword_button_text").val(),
-                'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
-            },
-            success: keywordSearchSuccess,
-            datatype: 'html'
-        });
-    });
-    $('#add_keyword_button_text').keypress(function(e) {
-        if (e.which == 13) { // enter pressed
+    $("#add_keyword_button").attr('disabled',"disabled");
+    $('#add_keyword_button_text').keyup(function(e) {
+        var code = (e.KeyCode ? e.keyCode : e.which);
+        if (code == 13) { // enter pressed
             var kw = $(this).val()
             // check if this option is already selected
             if ($('#id_keywords option:contains('+kw+')').length > 0) { // an option already exists that is this
@@ -341,17 +356,20 @@ function addKeywordButtonClick() {
             createNewKeyword(kw);
             hideKeywordButtonSearchMatches();
             return false;
+        } else { // make some recommendations
+            $.ajax({
+                type: "POST",
+                url: "/keyword/search/",
+                data: {
+                    'keyword_search_text': $("#add_keyword_button_text").val(),
+                    'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: keywordSearchSuccess,
+                datatype: 'html'
+            });
         }
-        /*
-        if (e.which == 32) { // spacebar pressed -- Right now, spacebar makes the input textfield get deleted completely
-            // alert("Spacebar pressed");
-            // $(this).val() = $(this).val + ' ';
-            return false;
-        }
-        */
     });
 }
-
 
 function createNewKeyword(kwname) {
     $.ajax({
@@ -439,7 +457,7 @@ $(document).on('click','#automatic_keyword_recommendation_from_outcomes button',
 
 function hideKeywordButtonSearchMatches() {
     $('#keyword_button_search_matches').html('');
-    $('#add_keyword_button').html('<i>Add Keyword</i>');
+    $('#add_keyword_button').html('<i>Add Keyword</i>').removeAttr('disabled');
     $('#add_keyword_button').prop('value',"add_keyword");
 }
 
@@ -539,16 +557,13 @@ function outcomeRecommendationSuccess(data, textStatus, jqXHR)
         var outcome_id = $(this).attr('value');
         var outcome_name = $(this).attr('title');
         var num_appearances = 0;
-        $('#id_outcomes option').each( function() {
-            if (($(this).attr('value')==outcome_id) && ($(this).attr('selected')=="selected")) {
-                num_appearances++;
+        if ($('#id_outcomes option[value='+outcome_id+']').length > 0) { // found it, so remove from results
+            if ($('#outcomes_ul li[value='+outcome_id+']').length > 1) {            
+                $(this).remove();
             }
-        });
-        if (num_appearances == 0) { // need to add it
-            $('#id_outcomes').prepend('<option value="'+outcome_id+'" selected="selected">'+outcome_name+'</option>');
-        } else { // need to make just one of them
-            $('#id_outcomes option[value="'+outcome_id+'"]').remove(); // remove all
-            $('#id_outcomes').prepend('<option value="'+outcome_id+'" selected="selected">'+outcome_name+'</option>'); // add one back
+        } else { // it is not a selected option, we gotta add it
+            var new_outcome = '<option value="'+outcome_id+'" selected="selected">' + outcome_name + '</option>';
+            $('#id_outcomes').append(new_outcome);
         }
     });
 }
