@@ -313,7 +313,7 @@ def create_name_outcome(request):
         outcomes = {}
     else:
         words_in_name_text = name_text.split(' ');
-        outcomes = Outcome.objects.filter(reduce(or_, (Q(name__contains=word.strip()) for word in words_in_name_text)))
+        outcomes = Outcome.objects.filter(reduce(or_, (Q(name__contains=word.strip()) for word in words_in_name_text)))[:5]
     return render_to_response('ajax_outcome_recommendations.html', {'outcomes': outcomes}, RequestContext(request,context))
 
 def outcome(request, outcome_id):

@@ -54,7 +54,7 @@
 								<a href="/">home</a>
 							</li>
 							<li>
-								<a href="/explore">explore</a>
+								<a href="/explore/">explore</a>
 							</li>
 							<li>
 								<a href="/module/add">create</a>
@@ -91,7 +91,7 @@
 				{% if latest_module_list %}
 					<ul>
 						{% for module in latest_module_list %}	
-						<li><a href="/modules/{{ module.id }}/">{{ module.name }}</a> created by <a href="/users/{{ module.creator.id }}">{{ module.creator.first_name }} {{module.creator.last_name }}</a> on {{ module.date }}</li>
+						<li><a href="/modules/{{ module.id }}/">{{ module.name }}</a> created by <a href="/users/{{ module.creator.id }}">{{ module.creator }}</a> on {{ module.date }}</li>
 						{% endfor %}
 					</ul>
 				{% else %}

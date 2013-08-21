@@ -6,7 +6,7 @@ class ModuleForm(forms.ModelForm):
     
     class Meta:
         model = Module
-        fields = ('name', 'outcomes', 'link', 'keywords')
+        fields = ('name', 'description', 'outcomes', 'link', 'keywords')
 
     def __init__(self, *args, **kwargs):
         self._user = kwargs.pop('user')

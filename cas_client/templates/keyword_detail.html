@@ -23,7 +23,7 @@
 <ul>
 {% for module in module_list %}
 	<li>
-	<a href="/modules/{{ module.id }}/">{{ module.name }}</a> created by <a href="/users/{{ module.creator.id }}/">{{ module.creator.first_name }} {{ module.creator.last_name }}</a> on {{ module.date }}
+	<a href="/modules/{{ module.id }}/">{{ module.name }}</a> created by <a href="/users/{{ module.creator.id }}/">{{ module.creator }}</a> on {{ module.date }}
 	</li>
 {% endfor %}
 </ul>

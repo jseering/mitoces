@@ -339,7 +339,7 @@ function hideOutcomeButtonSearchMatches() {
 $(document).on('click','#add_keyword_button',addKeywordButtonClick);
 
 function addKeywordButtonClick() {
-    $('#add_keyword_button').html('<input type="text" id="add_keyword_button_text" maxlength="30" style="background:transparent;border:none;padding:0px;margin:4px;width:150px;">');
+    $('#add_keyword_button').html('<input type="text" id="add_keyword_button_text" maxlength="40" style="background:transparent;border:none;padding:0px;margin:4px;width:150px;">');
     $('#add_keyword_button').prop('value',"input_text");
     $("#add_keyword_button_text").focus();
     $("#add_keyword_button").attr('disabled',"disabled");

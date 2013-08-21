@@ -91,7 +91,7 @@
 				{% if latest_module_list %}
 					<ul>
 						{% for module in latest_module_list %}	
-						<li><a href="/modules/{{ module.id }}/">{{ module.name }}</a> created by <a href="/users/{{ module.creator.id }}">{{ module.creator.first_name }} {{module.creator.last_name }}</a> on {{ module.date }}</li>
+						<li><a href="/modules/{{ module.id }}/">{{ module.name }}</a> created by <a href="/users/{{ module.creator.id }}">{{ module.creator }}</a> on {{ module.date }}</li>
 						{% endfor %}
 					</ul>
 				{% else %}
@@ -102,7 +102,7 @@
 				{% if user_module_list %}
 					<ul>
 						{% for module in user_module_list %}
-						<li><a href="/modules/{{ module.id }}/">{{ module.name }}</a> created by <a href="/users/{{ module.creator.id }}">{{ module.creator.first_name }} {{ module.creator.last_name }}</a> on {{ module.date }}</li>
+						<li><a href="/modules/{{ module.id }}/">{{ module.name }}</a> created by <a href="/users/{{ module.creator.id }}">{{ module.creator }}</a> on {{ module.date }}</li>
 						{% endfor %}
 					</ul>
 				{% else %}

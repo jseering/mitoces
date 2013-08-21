@@ -23,7 +23,11 @@
 <form action="/module/add/" method="post">{% csrf_token %}
 {{ form.non_field_errors }}
 {{ form.name.errors }}
-<h1><input id="id_name" type="text" name="name" class="noEnterSubmit" maxlength="30" value="Module Name" style="font-size:38.5px;font-family:inherit;font-weight:bold;width:600px;height:44px;"></h1>
+<h1><input id="id_name" type="text" name="name" class="noEnterSubmit" maxlength="60" value="Module Name" style="font-size:38.5px;font-family:inherit;font-weight:bold;width:100%;height:44px;"></h1>
+
+{{ form.description.errors }}
+<textarea id="id_description" rows="5" cols="100" name="description" style="width:100%"></textarea>
+
 <h3>This module is intended to teach and/or assess the ability to:</h3>
 <ul id="outcomes_ul">
 	<li id="add_outcome_li">
@@ -34,7 +38,7 @@
         <select multiple="multiple" name="outcomes" id="id_outcomes" style="display:none;"></select>
 
         {{ form.link.errors }}
-        <input id="id_link" type="text" name="link" class="noEnterSubmit" maxlength="100" value="Enter Module URL">
+        <input id="id_link" type="text" name="link" class="noEnterSubmit" maxlength="180" style="width:60%" value="Enter Module URL">
     
         <iframe id="module_iframe" width="100%" height="600"></iframe>
  
