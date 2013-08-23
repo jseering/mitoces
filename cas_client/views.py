@@ -153,6 +153,9 @@ def edit_module(request, module_id):
             if form.is_valid():
                 form.save()
                 return HttpResponseRedirect('/modules/')
+            else: # form is not valid for some reason
+                request.POST = None
+                return HttpResponseRedirect('/module/edit/'+module_id+'/')
     else:
         module = get_object_or_404(Module, id=module_id)
         if (request.user != module.creator):
@@ -284,7 +287,7 @@ def create_outcome_keyword(request):
         # get rid of duplicates using reduce
         print "\n\n"
         print "keywords =",keywords
-        keywords = list(set(keywords))
+        keywords = list(set(keywords))[:10]
         print "keywords after reduce =",keywords
     return render_to_response('ajax_keyword_recommendations.html', {'keywords': keywords}, RequestContext(request,context))
 
@@ -299,7 +302,7 @@ def create_name_keyword(request):
         keywords = {}
     else:
         words_in_name_text = name_text.split(' ');
-        keywords = Keyword.objects.filter(reduce(or_, (Q(name__contains=word.strip()) for word in words_in_name_text)))
+        keywords = Keyword.objects.filter(reduce(or_, (Q(name__contains=word.strip()) for word in words_in_name_text)))[:10]
     return render_to_response('ajax_keyword_recommendations.html', {'keywords': keywords}, RequestContext(request,context))
 
 def create_name_outcome(request):
