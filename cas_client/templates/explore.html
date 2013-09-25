@@ -48,8 +48,9 @@
         var module_keywords = "{{module_keywords}}";
         var module_outcomes = "{{module_outcomes}}";
         var module_name = parse(module_all);
-        module_outcomes = parseObjects(module_outcomes);
         module_keywords = parseObjects(module_keywords);
+        module_outcomes = parseObjects(module_outcomes);
+        
         
         var sys = arbor.ParticleSystem(1500,800,0.5);
         var theUI;
@@ -112,8 +113,11 @@
         }
         
         function parseObjects(string) {
+            var pattern = new RegExp('u&quot;(.*?)&#39;(.*?)&quot;');
+            string = string.replace(pattern,"u&#39;$1\'$2&#39;");
             string = string.replace(/u&#39;/g,'"');
             string = string.replace(/&#39;/g,'"');
+            console.log(string)
             var object = JSON.parse(string);
             return object;
         }
