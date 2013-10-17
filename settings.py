@@ -8,6 +8,7 @@ TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     ('ichuang', 'ichuang@mit.edu'),
+    ('celieber', 'celieber@mit.edu'),
 )
 
 MANAGERS = ADMINS
@@ -15,7 +16,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db',                      # Or path to database file if using sqlite3.
+        'NAME': 'mitoces.db',                      # Or path to database file if using sqlite3.
     }
 }
 
@@ -124,7 +125,7 @@ INSTALLED_APPS = (
     #'bootstrap_toolkit',
     # 'demo_app',
     'cas_client',
-    
+    'mitoces',
     'django_cas',
 )
 
@@ -163,7 +164,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')        # django
 #-----------------------------------------------------------------------------
 # CAS settings
 
-LOGIN_URL = '/cas-test/login/'
+LOGIN_URL = '/cas_test/login/'
 LOGIN_REDIRECT_URL = '/'
 
 CAS_SERVER_URL = 'https://auth.mitx.mit.edu/cas'

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Create New Outcome</title>
+
+<script type="text/javascript" src="{{ STATIC_URL }}js/mitoces.js"></script>
+
+</head>
+
+
+<body class="popup cas_client-outcome change-form">
+        
+        <h1>Create New Outcome</h1>
+        <h4>Please identify your new outcome with an appropriate short name (e.g., "Calculate normal strain", "Determine flow rotationality", "Describe boundary layer", etc.).</h4>
+        <div id="content-main">
+
+<form action="" method="post" id="outcome_form">{% csrf_token %}
+<input type="hidden" name="_popup" value="1" />
+{{ form.as_ul }}
+<input type="submit" name="submit" value="Save Outcome">
+</form>
+
+<script type="text/javascript">document.getElementById("id_name").focus();</script>
+
+<script type="text/javascript">
+(function($) {
+    var field;
+})(django.jQuery);
+</script>
+
+</body>
+</html>

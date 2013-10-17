@@ -12,6 +12,10 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 
+    url(r'^$', 'mitoces.views.index', name="root"),
+
+    '''
+    CAS_CLIENT URLCONF BELOW --- FROM THE OLD MITOCES
     url(r'^$', 'cas_client.views.index', name="root"),
 
     url(r'^explore/$', 'cas_client.views.explore', name="explore"),
@@ -52,9 +56,10 @@ urlpatterns = patterns('',
     url(r'^create_name_outcome/$', 'cas_client.views.create_name_outcome'),
     url(r'^create_outcome_keyword/$', 'cas_client.views.create_outcome_keyword'),
     url(r'^search/$', 'cas_client.views.search'),
+    '''
 
-    url(r'^cas-test/login/$', 'django_cas.views.login', name="login"),
-    url(r'^cas-test/logout/$', 'django_cas.views.logout', name="logout"),
+    url(r'^cas_test/login/$', 'django_cas.views.login', name="login"),
+    url(r'^cas_test/logout/$', 'django_cas.views.logout', name="logout"),
 
-    url(r'^cas-test$', 'cas_client.views.index', name="home"),
+    url(r'^cas_test$', 'cas_client.views.index', name="home"),
 )

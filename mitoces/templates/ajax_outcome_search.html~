@@ -1,0 +1,5 @@
+    {% if outcomes.count > 0 %}
+        {% for outcome in outcomes %}
+	        <li><a href="#" class="outcome_search_result" value="{{ outcome.id }}" title="{{ outcome.name }}>{{ outcome.description }}</a></li>
+        {% endfor %}
+    {% endif %}
