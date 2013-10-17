@@ -20,10 +20,11 @@ from django.utils import simplejson
 
 @login_required
 def index(request):
-    context ={}
-    latest_module_list = Module.objects.all().order_by('-date')[:10]
-    user_module_list   = Module.objects.filter(creator=request.user).order_by('-date')
-    return render_to_response('index.html', {'latest_module_list': latest_module_list, 'user_module_list': user_module_list},RequestContext(request,context))
+    context = {}
+    departments = Department.objects.all()
+    subjects = Subject.objects.all()
+    modules = Module.objects.all()
+    return render_to_response('index.html', {'departments': departments, 'subjects': subjects, 'modules': modules},RequestContext(request,context))
 
 def explore(request):
 	context = {}

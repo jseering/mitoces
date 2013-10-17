@@ -90,6 +90,8 @@ class Department(models.Model):
                             choices = DEPARTMENT_CHOICES,
                             blank=True,
                             null=True)
+    def __unicode__(self):
+        return self.name + DEPARTMENT_CHOICES[self.name]
 
 class Keyword(models.Model):
     name     = models.CharField(max_length=40)
