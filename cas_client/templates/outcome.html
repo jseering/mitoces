@@ -1,0 +1,50 @@
+{% extends "index.html" %}
+
+{% block textinfo %}
+
+<h4>{{ focusoutcome }}</h4>
+<p>{{ focusoutcome.description }}</p>
+{% if focusoutcome.prerequisites.count == 0 %}
+<h5>Prerequisites: <i>None</i></h5>
+{% else %}
+<h5>Prerequisites:</h5>
+<ul>
+{% for outcome in focusoutcome.prerequisites.all %}
+<li>
+    <a href="/outcomes/{{ outcome.id }}">{{ outcome }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+{% if focusoutcome.modules %}
+<h5>Modules:</h5>
+<ul>
+{% for module in focusoutcome.modules.all %}
+<li>
+    <a href="/modules/{{ module.id }}">{{ module }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+{% if focusoutcome.subjects %}
+<h5>Subjects:</h5>
+<ul>
+    {% for subject in focusoutcome.subjects.all %}
+<li>
+    <a href="/subjects/{{ subject.id }}">{{ subject }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+{% if focusoutcome.departments %}
+<h5>Departments:</h5>
+<ul>
+    {% for department in focusoutcome.departments.all %}
+<li>
+    <a href="/departments/{{ department.id }}">{{ department }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

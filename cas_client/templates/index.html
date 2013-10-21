@@ -18,6 +18,7 @@
         <link rel="icon" type="image/png" href="{{ STATIC_URL }}img/favicon.png">
 		<link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet" media="screen">
 		<link href="{{ STATIC_URL }}css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="{{ STATIC_URL }}css/bootstrap-adjustments.css" rel="stylesheet">
         {% block header %}
         {% endblock %}
 	</head>
@@ -25,51 +26,45 @@
 		<div class="navbar navbar-inverse navbar-fixed-top">
 			<div class="navbar-inner">
 				<div class="container">
-					<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-					</button>
-
-										<div class="nav-collapse collapse">
+                    <div class="nav-collapse collapse">
 						<ul class="nav">
 							<li class="dropdown">
-		<a class="dropdown-toggle" href="#" data-toggle="dropdown">MIToces<b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li>
-								<a href="/modules/">Modules</a>
+		                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">Departments<b class="caret"></b></a>
+						            <ul class="dropdown-menu scroll-menu">
+                                        {% for department in departments %}
+							            <li>
+								            <a href="/departments/{{ department.id }}/">{{ department }}</a>
+							            </li>
+                                        {% endfor %}
+						            </ul>
 							</li>
-                            <li>
-                                <a href="/outcomes/">Outcomes</a>
-                            </li>
-                            <li>
-                                <a href="/keywords/">Keywords</a>
-                            </li>
-							<li>
-								<a href="/users/">Users</a>
+                            <li class="dropdown">
+		                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">Subjects<b class="caret"></b></a>
+						            <ul class="dropdown-menu scroll-menu">
+                                        {% for subject in subjects %}
+							            <li>
+								            <a href="/subjects/{{ subject.id }}/">{{ subject }}</a>
+							            </li>
+                                        {% endfor %}
+						            </ul>
 							</li>
-						</ul>
-					
-
+                            <li class="dropdown">
+		                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">Modules<b class="caret"></b></a>
+						            <ul class="dropdown-menu scroll-menu">
+                                        {% for module in modules %}
+							            <li>
+								            <a href="/modules/{{ module.id }}/">{{ module }}</a>
+							            </li>
+                                        {% endfor %}
+						            </ul>
 							</li>
-							{% block topnav %}
-							<li class="active">
-								<a href="/">home</a>
-							</li>
-							<li>
-								<a href="/explore/">explore</a>
-							</li>
-							<li>
-								<a href="/module/add">create</a>
-							</li>
-							{% endblock %}
-							<li class="dropdown pull-right">
+							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{user}}<b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li>
-									<a href="/user/profile/edit/">Edit Profile</a>
-								</li>
-								<li>
-									<a href="/cas-test/logout/">Logout</a>
-								</li>
-							</ul>
+							        <ul class="dropdown-menu">
+								        <li>
+									        <a href="/cas_test/logout/">Logout</a>
+								        </li>
+							        </ul>
 							</li>
 						</ul>
 					</div>
@@ -77,44 +72,43 @@
 			</div>
 		</div>
 		<div class="container">
-<div class="dropdown">
-{% csrf_token %}
-<input class="dropdown-toggle" data-toggle="dropdown" type="text" id="search" name="search" width="400"/>
 
-<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" id="search-results">
-</ul>
-</div>
+			<div class="textinfo">
+                {% block textinfo %}
 
-			{% block content %}
+                <h4>{{ focusmodule }}</h4>
+                {% if focusmodule.outcomes %}
+                <h5>Outcomes:</h5>
+                <ul>
+                    {% for outcome in focusmodule.outcomes %}
+                    <li>
+                        <a href="/outcomes/{{ outcome.id }}" title="{{ outcome }}">{{ outcome.description }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% if focusmodule.subjects %}
+                <h5>Subjects:</h5>
+                <ul>
+                    {% for subject in focusmodule.subjects.all %}
+                    <li>
+                        <a href="/subjects/{{ subject.id }}">{{ subject }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% endblock %}
+            </div>
 			
-				<h1>New Modules</h1>
-				{% if latest_module_list %}
-					<ul>
-						{% for module in latest_module_list %}	
-						<li><a href="/modules/{{ module.id }}/">{{ module.name }}</a> created by <a href="/users/{{ module.creator.id }}">{{ module.creator }}</a> on {{ module.date }}</li>
-						{% endfor %}
-					</ul>
-				{% else %}
-					<p>No new modules created.</p>
-				{% endif %}
+            <div class="arborview">
+                
+            </div>				
 
-				<h1>My Modules</h1>
-				{% if user_module_list %}
-					<ul>
-						{% for module in user_module_list %}
-						<li><a href="/modules/{{ module.id }}/">{{ module.name }}</a> created by <a href="/users/{{ module.creator.id }}">{{ module.creator }}</a> on {{ module.date }}</li>
-						{% endfor %}
-					</ul>
-				{% else %}
-					<p>You have not created any new modules.</p>
-				{% endif %}				
-
-			{% endblock %}
 		</div>
-	<script src="{{ STATIC_URL }}js/jquery-2.0.3.min.js"></script>
-	<script src="{{ STATIC_URL }}js/mitoces.js"></script>
-	<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
-    {% block js %}
-    {% endblock %}
+	    <script src="{{ STATIC_URL }}js/jquery-2.0.3.min.js"></script>
+	    <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+        {% block js %}
+        {% endblock %}
 	</body>
 </html>

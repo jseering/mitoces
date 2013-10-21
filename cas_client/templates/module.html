@@ -1,0 +1,27 @@
+{% extends "index.html" %}
+
+{% block textinfo %}
+
+<h4>{{ focusmodule }}</h4>
+{% if focusmodule.outcomes %}
+<h5>Outcomes:</h5>
+<ul>
+{% for outcome in focusmodule.outcomes %}
+<li>
+    <a href="/outcomes/{{ outcome.id }}" title="{{ outcome }}">{{ outcome.description }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+{% if focusmodule.subjects %}
+<h5>Subjects:</h5>
+<ul>
+    {% for subject in focusmodule.subjects.all %}
+<li>
+    <a href="/subjects/{{ subject.id }}">{{ subject }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

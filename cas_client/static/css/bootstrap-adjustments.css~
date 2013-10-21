@@ -1,0 +1,19 @@
+.dropdown-menu {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.container{
+    width:100%;
+}
+
+.textinfo{
+    width:30%;
+    float:left;
+    margin-left:20px;
+    margin-top:20px;
+}
+
+.arborview{
+    width:70%;
+}

@@ -1,0 +1,16 @@
+{% extends "index.html" %}
+
+{% block textinfo %}
+
+<h4>{{ focusdepartment }}</h4>
+{% if focusdepartment.subjects %}
+<ul>
+{% for subject in focusdepartment.subjects %}
+<li>
+    <a href="/subjects/{{ subject.id }}">{{ subject }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

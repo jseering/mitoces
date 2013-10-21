@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+
+{% block textinfo %}
+
+<h4>{{ focussubject }}</h4>
+<p>{{ focussubject.description }}</p>
+
+{% if focussubject.modules %}
+<h5>Modules:</h5>
+<ul>
+{% for module in focussubject.modules %}
+<li>
+    <a href="/modules/{{ module.id }}">{{ module }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% if focussubject.prerequisites.count == 0 %}
+<h5>Prerequisites: <i>None</i></h5>
+{% else %}
+<ul>
+{% for subject in focussubject.prerequisites.all %}
+<li>
+    <a href="/subjects/{{ subject.id }}">{{ subject }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}
