@@ -16,7 +16,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mitoces.db',                      # Or path to database file if using sqlite3.
+        'NAME': 'db',                      # Or path to database file if using sqlite3.
     }
 }
 
@@ -125,7 +125,6 @@ INSTALLED_APPS = (
     #'bootstrap_toolkit',
     # 'demo_app',
     'cas_client',
-    'mitoces',
     'django_cas',
 )
 

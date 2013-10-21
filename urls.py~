@@ -14,45 +14,6 @@ urlpatterns = patterns('',
 
     url(r'^$', 'mitoces.views.index', name="root"),
 
-    url(r'^explore/$', 'mitoces.views.explore', name="explore"),
-    url(r'^explore_outcome/(?P<outcome>[- \w]+)/$', 'mitoces.views.explore_outcome', name="explore outcome"),
-    url(r'^explore_keyword/(?P<keyword>[- \w]+)/$', 'mitoces.views.explore_keyword', name="explore keyword"),
-
-    url(r'^module_id/(?P<module>[- \w]+)/$','mitoces.views.module_id'),
-    url(r'^outcome_id/(?P<outcome>[- \w]+)/$','mitoces.views.outcome_id'),
-    url(r'^keyword_id/(?P<keyword>[- \w]+)/$','mitoces.views.keyword_id'),
-
-    url(r'^exploresearch/$','mitoces.views.exploresearch'),
-
-    url(r'^module/add/$', 'mitoces.views.create', name="create"),
-    url(r'^outcome/add/$', 'mitoces.views.add_outcome', name="add outcome"),
-    url(r'^keyword/add/$', 'mitoces.views.add_keyword', name="add keyword"),
-    url(r'^keyword/new/$', 'mitoces.views.new_keyword', name="new keyword"),
-    url(r'^outcome/new/$', 'mitoces.views.new_outcome', name="new outcome"),
-
-    url(r'^keyword/search/$', 'mitoces.views.keyword_search', name="keyword search"),
-    url(r'^outcome/search/$', 'mitoces.views.outcome_search', name="outcome search"),
-
-	url(r'^keywords/$', 'mitoces.views.keywords', name="keywords"),
-	url(r'^keywords/(?P<keyword_id>\d+)/$', 'mitoces.views.keyword', name="keyword"),
-
-	url(r'^outcomes/$', 'mitoces.views.outcomes', name="outcomes"),
-    url(r'^outcomes/(?P<outcome_id>\d+)/$', 'mitoces.views.outcome', name="outcome"),
-
-    url(r'^modules/$', 'mitoces.views.modules', name="modules"),
-    url(r'^module/delete/$', 'mitoces.views.delete_module', name="delete module"),
-    url(r'^modules/(?P<module_id>\d+)/$', 'mitoces.views.module_detail', name="module detail"),
-    url(r'^module/edit/(?P<module_id>\d+)/$', 'mitoces.views.edit_module', name="edit module"),
-
-    url(r'^users/$', 'mitoces.views.users', name="users"),
-    url(r'^users/(?P<user_id>\d+)/$', 'mitoces.views.user', name="user"),
-    url(r'^user/profile/edit/$', 'mitoces.views.edit_profile', name="edit_profile"),
-
-    url(r'^create_name_keyword/$', 'mitoces.views.create_name_keyword'),
-    url(r'^create_name_outcome/$', 'mitoces.views.create_name_outcome'),
-    url(r'^create_outcome_keyword/$', 'mitoces.views.create_outcome_keyword'),
-    url(r'^search/$', 'mitoces.views.search'),
-
     '''
     CAS_CLIENT URLCONF BELOW --- FROM THE OLD MITOCES
     url(r'^$', 'cas_client.views.index', name="root"),
