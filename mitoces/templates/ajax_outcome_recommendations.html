@@ -1,9 +1,0 @@
-{% if outcomes.count > 0 %}
-
-    {% for outcome in outcomes %}
-	    <li value="{{ outcome.id }}" title="{{ outcome.name }}">
-	        {{ outcome.description }} &nbsp; &nbsp; <img src="{{ STATIC_URL }}img/trash_can.png" alt="delete" class="deleteOutcome" title="delete">
-	    </li>
-    {% endfor %}
-
-{% endif %}
