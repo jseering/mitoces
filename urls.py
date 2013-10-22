@@ -12,17 +12,23 @@ urlpatterns = patterns('',
     # Admin:
     url(r'^admin/', include(admin.site.urls)),
 
+    # Users
+    url(r'^users/(?P<user_id>\d+)/$', 'cas_client.views.profile', name="profile"),
+
     # Home
     url(r'^$', 'cas_client.views.index', name="root"),
 
     # Module
     url(r'^modules/(?P<module_id>\d+)/$', 'cas_client.views.module', name="module"),
+    url(r'^modules/(?P<module_id>\d+)/edit/$', 'cas_client.views.edit_module', name="edit module"),
 
     # Outcome
     url(r'^outcomes/(?P<outcome_id>\d+)/$', 'cas_client.views.outcome', name="outcome"),
+    url(r'^outcomes/(?P<outcome_id>\d+)/edit/$', 'cas_client.views.edit_outcome', name="edit outcome"),
 
     # Subject
     url(r'^subjects/(?P<subject_id>\d+)/$', 'cas_client.views.subject', name="subject"),
+    url(r'^subjects/(?P<subject_id>\d+)/edit/$', 'cas_client.views.edit_subject', name="edit subject"),
 
     # Department
     url(r'^departments/(?P<department_id>\d+)/$', 'cas_client.views.department', name="department"),

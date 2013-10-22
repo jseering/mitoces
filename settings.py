@@ -126,6 +126,7 @@ INSTALLED_APPS = (
     # 'demo_app',
     'cas_client',
     'django_cas',
+    'south',
 )
 
 AUTHENTICATION_BACKENDS = (

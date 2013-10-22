@@ -1,6 +1,8 @@
 {% extends "index.html" %}
 
-<h4>{{ focusmodule }}</h4>
+{% block textinfo %}
+
+<h4>Module: {{ focusmodule }}</h4>
 {% if focusmodule.outcomes %}
 <h5>Outcomes:</h5>
 <ul>
@@ -22,3 +24,8 @@
 </ul>
 {% endif %}
 
+{% if user in focusmodule.instructors.all %}
+<button class="edit_button" onclick="location.href='/modules/{{ focusmodule.id }}/edit/';">edit module</button>
+{% endif %}
+
+{% endblock %}

@@ -84,7 +84,8 @@ class Subject(models.Model):
     number        = models.CharField(max_length=10)
     name          = models.CharField(max_length=60)
     description   = models.CharField(max_length=1200, blank=True, null=True)
-    creator       = models.ForeignKey(User)
+    creator       = models.ForeignKey(User, related_name='subjects_creator')
+    instructors   = models.ManyToManyField(User, related_name='subjects_instructors', blank=True, null=True)
     TERM_CHOICES = (
         ('S', 'Spring'),
         ('F', 'Fall'),
@@ -122,7 +123,8 @@ class Keyword(models.Model):
 class Module(models.Model):
     name          = models.CharField(max_length=60)
     description   = models.CharField(max_length=600, blank=True, null=True)
-    creator       = models.ForeignKey(User)
+    creator       = models.ForeignKey(User, related_name='modules_creator')
+    instructors   = models.ManyToManyField(User, related_name='modules_instructors', blank=True, null=True)
     subjects      = models.ManyToManyField(Subject, blank=True, null=True)
     def __unicode__(self):
         return self.name
@@ -130,7 +132,8 @@ class Module(models.Model):
 class Outcome(models.Model):
     name          = models.CharField(max_length=40)
     description   = models.CharField(max_length=400)
-    creator       = models.ForeignKey(User)
+    creator       = models.ForeignKey(User, related_name='outcomes_creator')
+    instructors   = models.ManyToManyField(User, related_name='outcomes_intructors', blank=True, null=True)
     prerequisites = models.ManyToManyField('self', related_name='postrequisites', blank=True, null=True, symmetrical=False)
     modules       = models.ManyToManyField(Module, blank=True, null=True)
     subjects      = models.ManyToManyField(Subject, blank=True, null=True)

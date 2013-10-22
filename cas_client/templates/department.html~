@@ -4,7 +4,6 @@
 
 <h4>{{ focusdepartment }}</h4>
 {% if focusdepartment.subjects %}
-<h5>Subjects:</h5>
 <ul>
 {% for subject in focusdepartment.subjects %}
 <li>

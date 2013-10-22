@@ -17,19 +17,19 @@ urlpatterns = patterns('',
 
     # Module
     url(r'^modules/(?P<module_id>\d+)/$', 'cas_client.views.module', name="module"),
+    url(r'^modules/(?P<module_id>\d+)/edit/$', 'cas_client.views.edit_module', name="edit module"),
 
     # Outcome
     url(r'^outcomes/(?P<outcome_id>\d+)/$', 'cas_client.views.outcome', name="outcome"),
+    url(r'^outcomes/(?P<outcome_id>\d+)/edit/$', 'cas_client.views.edit_outcome', name="edit outcome"),
 
     # Subject
     url(r'^subjects/(?P<subject_id>\d+)/$', 'cas_client.views.subject', name="subject"),
+    url(r'^subjects/(?P<subject_id>\d+)/edit/$', 'cas_client.views.edit_subject', name="edit subject"),
 
     # Department
     url(r'^departments/(?P<department_id>\d+)/$', 'cas_client.views.department', name="department"),
 
-    # Keyword
-    url(r'^keywords/(?P<keyword_id>\d+)/$', 'cas_client.views.keyword', name="keyword"),
-    
     # Authentication
     url(r'^cas_test/login/$', 'django_cas.views.login', name="login"),
     url(r'^cas_test/logout/$', 'django_cas.views.logout', name="logout"),

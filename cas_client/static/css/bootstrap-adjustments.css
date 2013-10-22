@@ -1,5 +1,5 @@
 .dropdown-menu {
-    max-height: 500px;
+    max-height: 600px;
     overflow-y: auto;
 }
 
@@ -13,6 +13,8 @@
     margin-left:20px;
     margin-top:0px;
     min-width:500px;
+    padding:4px;
+    overflow-y:auto;
 }
 
 .arborview{
@@ -21,4 +23,5 @@
 
 a.dropdown-toggle{
     font-size:120%;
+    font-weight:bold;
 }

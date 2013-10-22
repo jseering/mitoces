@@ -1,0 +1,40 @@
+{% extends "index.html" %}
+
+{% block textinfo %}
+
+<h4>{{ thisuser }}</h4>
+{% if thisuser.subjects %}
+<h5>Subjects:</h5>
+<ul>
+{% for subject in thisuser.subjects.all %}
+<li>
+    <a href="/subjects/{{ subject.id }}/">{{ subject }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% if thisuser.modules %}
+<h5>Modules:</h5>
+<ul>
+{% for module in thisuser.modules %}
+<li>
+    <a href="/modules/{{ module.id }}/">{{ module }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% if thisuser.outcomes %}
+<h5>Outcomes:</h5>
+<ul>
+{% for outcome in thisuser.outcomes %}
+<li>
+    <a href="/outcomes/{{ outcome.id }}/" title="{{ outcome }}">{{ outcome.description }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+
+{% endblock %}
