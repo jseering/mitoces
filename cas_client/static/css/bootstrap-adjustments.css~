@@ -11,9 +11,13 @@
     width:30%;
     float:left;
     margin-left:20px;
-    margin-top:20px;
+    margin-top:10px;
 }
 
 .arborview{
     width:70%;
+}
+
+a.dropdown-toggle{
+    font-size:120%;
 }
