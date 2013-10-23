@@ -4,7 +4,7 @@
 
 <h4 id="header" object_id="{{ focusoutcome.id }}" class="edit" title="click to edit">Outcome: {{ focusoutcome }}</h4>
 {% csrf_token %}
-<p class="edit" title="click to edit">{{ focusoutcome.description }}</p>
+<p id="description" class="edit" title="click to edit">{{ focusoutcome.description }}</p>
 {% if focusoutcome.prerequisites.count == 0 %}
 <h5>Prerequisites: </h5>
 <ul class="editing" object_type="outcome" object_id="{{ focusoutcome.id }}">
@@ -67,7 +67,7 @@
 </ul>
 
 {% if user in focusoutcome.instructors.all %}
-<br><button class="delete" object_id="{{ focusoutcome.id }}">delete outcome</button>
+<br><button onclick="location.href='/outcomes/{{ focusoutcome.id }}'">done</button>&nbsp;&nbsp;<button class="delete" object_id="{{ focusoutcome.id }}">delete outcome</button>
 {% endif %}
 
 
@@ -76,4 +76,5 @@
 
 {% block js %}
  <script src="{{ STATIC_URL }}js/delete.js"></script>
+ <script src="{{ STATIC_URL }}js/click_to_edit.js"></script>
 {% endblock %}

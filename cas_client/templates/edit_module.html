@@ -46,7 +46,7 @@
 </ul>
 
 {% if user in focusmodule.instructors.all %}
-<br><button onclick="location.href='/modules/{{ focusmodule.id }}'">done</button><button class="delete" object_id="{{ focusmodule.id }}">delete module</button>
+<br><button onclick="location.href='/modules/{{ focusmodule.id }}'">done</button>&nbsp;&nbsp;<button class="delete" object_id="{{ focusmodule.id }}">delete module</button>
 {% endif %}
 
 {% endblock %}

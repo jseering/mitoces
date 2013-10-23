@@ -48,7 +48,12 @@ def module(request,module_id):
     modules = Module.objects.all()
     focusmodule = Module.objects.get(id=module_id)
     focusmodule.outcomes = Outcome.objects.filter(modules__id=focusmodule.id)
-    return render_to_response('module.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focusmodule': focusmodule}, RequestContext(request,context))
+    outcome_prereqs = {}
+    for outcome in focusmodule.outcomes.all():
+        outcome_prereqs[outcome.name] = []
+        for prereq in outcome.prerequisites.all():
+            outcome_prereqs[outcome.name].append(prereq.name)
+    return render_to_response('module.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focusmodule': focusmodule, 'outcome_prereqs': outcome_prereqs}, RequestContext(request,context))
 
 @login_required
 def outcome(request,outcome_id):

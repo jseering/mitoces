@@ -17,7 +17,6 @@
 
 <br><h5>This module appears in...</h5>
 {% if focusmodule.subjects %}
-<h5>Subjects:</h5>
 <ul>
     {% for subject in focusmodule.subjects.all %}
 <li>
@@ -39,5 +38,107 @@
 {% if user in focusmodule.instructors.all %}
 <br><button class="edit_button" onclick="location.href='/modules/{{ focusmodule.id }}/edit/';">edit module</button>
 {% endif %}
+
+{% endblock %}
+
+{% block js %}
+<script>
+	var outcome_all = "{{focusmodule.outcomes}}";
+	var outcome_prereqs = "{{outcome_prereqs}}";
+	var outcomes = parse(outcome_all);
+	var outcome_prereqs = parseObjects(outcome_prereqs);
+
+    var sys = arbor.ParticleSystem(1500,800,0.5);
+    var theUI;
+    sys.parameters({gravity:true});
+    sys.renderer = Renderer("#viewport");
+    init();
+    
+    function init(){
+        theUI = {"nodes":{},"edges":{}};
+        for (var i=0;i<outcomes.length;i++){
+            addOutcome(theUI,outcomes[i]);
+            for (var j=0;j<outcome_prereqs[outcomes[i]].length;j++){
+            	addOutcomePrereq(theUI, outcome_prereqs[outcomes[i]][j]);
+            	addEdge(theUI, outcome_prereqs[outcomes[i]][j], outcomes[i]);
+            }
+        }
+        sys.graft(theUI);
+    }
+    
+    function addModule(theUI,name,id){
+        theUI["nodes"][name] = {};
+        theUI["nodes"][name]["color"] = "#CF9238";
+        theUI["nodes"][name]["shape"] = "rectangle";
+        theUI["nodes"][name]["type"] = "module";
+        theUI["nodes"][name]["label"] = name;
+        theUI["nodes"][name]["id"] = id;
+    }
+    
+    function addOutcome(theUI,name,id){
+        theUI["nodes"][name] = {};
+        theUI["nodes"][name]["color"]="#41A565";
+        theUI["nodes"][name]["shape"]="rectangle";
+        theUI["nodes"][name]["type"]="outcome";
+        theUI["nodes"][name]["label"]=name;
+        theUI["nodes"][name]["id"] = id;
+    }
+
+    function addOutcomePrereq(theUI,name,id){
+    	theUI["nodes"][name] = {};
+        theUI["nodes"][name]["color"]="#41A565";
+        theUI["nodes"][name]["shape"]="rectangle";
+        theUI["nodes"][name]["type"]="outcome";
+        theUI["nodes"][name]["label"]=name;
+    }
+    
+    function addKeyword(theUI,name,id){
+        theUI["nodes"][name] = {};
+        theUI["nodes"][name]["color"]="#416DA5";
+        theUI["nodes"][name]["shape"]="rectangle";
+        theUI["nodes"][name]["type"]="keyword";
+        theUI["nodes"][name]["label"]=name;
+        theUI["nodes"][name]["id"] = id;
+    }
+    
+    function addEdge(theUI,from,to){
+        if (theUI["edges"][from] == undefined){
+            theUI["edges"][from] = {};
+        }
+        theUI["edges"][from][to] = {};
+        theUI["edges"][from][to]["length"] = 2;
+        theUI["edges"][from][to]["weight"] = 0.5;
+        theUI["edges"][from][to]["color"] = '#888888';
+        theUI["edges"][from][to]["directed"] = true;
+    }
+    
+    function parseObjects(string) {
+        var pattern = new RegExp('u&quot;(.*?)&#39;(.*?)&quot;');
+        string = string.replace(pattern,"u&#39;$1\'$2&#39;");
+        string = string.replace(/u&#39;/g,'"');
+        string = string.replace(/&#39;/g,'"');
+        console.log(string);
+        var object = JSON.parse(string);
+        return object;
+    }
+    
+    function parse(string){
+        var list = [];
+        var index = 0;
+        for (var i=0;i<string.length;i++){
+            var count = 2;
+            var append = '';
+            if (string[i]==':'){
+                while (string[i+count] != '&'){
+                    append += string[i+count];
+                    count += 1;
+                }
+                list[index] = append;
+                index += 1;
+            }
+        }
+        return list;
+    }
+</script>
 
 {% endblock %}

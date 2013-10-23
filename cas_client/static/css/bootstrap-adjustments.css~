@@ -20,6 +20,7 @@
 
 .arborview{
     width:70%;
+    float:right;
 }
 
 a.dropdown-toggle{
@@ -34,10 +35,6 @@ img.delete, img.add{
 
 ul.editing{
     list-style-type:none;
-}
-
-button.delete{
-    margin-left:150px;
 }
 
 h4.edit, p.edit{

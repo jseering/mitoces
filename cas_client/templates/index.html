@@ -103,12 +103,16 @@
             </div>
 			
             <div class="arborview">
-                
+                <canvas id="viewport" width="800px" height="600px" style="padding:5px;"></canvas>
             </div>				
 
 		</div>
 	    <script src="{{ STATIC_URL }}js/jquery-2.0.3.min.js"></script>
 	    <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+        <script src="{{ STATIC_URL }}js/arbor.js"></script>
+        <script src="{{ STATIC_URL }}js/arbor-graphic.js"></script>
+        <script src="{{ STATIC_URL }}js/arbor-tween.js"></script>
+        <script src="{{ STATIC_URL }}js/renderer.js"></script>
         {% block js %}
         {% endblock %}
 	</body>

@@ -48,7 +48,12 @@ def module(request,module_id):
     modules = Module.objects.all()
     focusmodule = Module.objects.get(id=module_id)
     focusmodule.outcomes = Outcome.objects.filter(modules__id=focusmodule.id)
-    return render_to_response('module.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focusmodule': focusmodule}, RequestContext(request,context))
+    outcome_prereqs = {}
+    for outcome in focusmodule.outcomes.all():
+        outcome_prereqs[outcome.name] = []
+        for prereq in outcome.prerequisites.all():
+            outcome_prereqs[outcome.name].append(prereq)
+    return render_to_response('module.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focusmodule': focusmodule, 'outcome_prereqs': outcome_prereqs}, RequestContext(request,context))
 
 @login_required
 def outcome(request,outcome_id):
@@ -163,6 +168,7 @@ def remove_outcome_from_module(request,module_id,outcome_id):
     outcome = Outcome.objects.get(id=outcome_id)
     module = Module.objects.get(id=module_id)   
     outcome.modules.remove(module)
+    # TODO: Figure out how to check if this fails, and return 'result': 'failed'
     to_json = {
         'result': 'succeeded'
     }
