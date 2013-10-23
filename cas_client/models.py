@@ -109,7 +109,7 @@ class Subject(models.Model):
                                      null=True)
     prerequisites = models.ManyToManyField('self', related_name='postrequisites', blank=True, null=True, symmetrical=False)
     def __unicode__(self):
-        return str(self.number).ljust(7) + self.name
+        return str(self.number).ljust(8) + self.name
 
 
 

@@ -7,15 +7,17 @@
 {% if focusoutcome.prerequisites.count == 0 %}
 <h5>Prerequisites: <i>None</i></h5>
 {% else %}
-<h5>Prerequisites:</h5>
+<h5>Prerequisite outcomes:</h5>
 <ul>
 {% for outcome in focusoutcome.prerequisites.all %}
 <li>
-    <a href="/outcomes/{{ outcome.id }}/">{{ outcome }}</a>
+    <a href="/outcomes/{{ outcome.id }}/" title="{{ outcome }}">{{ outcome.description }}</a>
 </li>
 {% endfor %}
 </ul>
 {% endif %}
+
+<br><h5>This outcome appears in...</h5>
 {% if focusoutcome.modules %}
 <h5>Modules:</h5>
 <ul>
@@ -36,19 +38,21 @@
 {% endfor %}
 </ul>
 {% endif %}
-{% if focusoutcome.departments %}
-<h5>Departments:</h5>
+
+<br><h5>Instructors:</h5>
 <ul>
-    {% for department in focusoutcome.departments.all %}
+{% for instructor in focusoutcome.instructors.all %}
 <li>
-    <a href="/departments/{{ department.id }}/">{{ department }}</a>
+    <a href="/users/{{ instructor.id }}/">{{ instructor }}</a>
 </li>
 {% endfor %}
 </ul>
-{% endif %}
 
 {% if user in focusoutcome.instructors.all %}
-<button class="edit_button" onclick="location.href='/outcomes/{{ focusoutcome.id }}/edit/';">edit outcome</button>
+<br><button class="edit_button" onclick="location.href='/outcomes/{{ focusoutcome.id }}/edit/';">edit outcome</button>
 {% endif %}
+
+
+
 
 {% endblock %}

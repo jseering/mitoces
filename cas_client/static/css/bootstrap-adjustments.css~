@@ -13,7 +13,9 @@
     margin-left:20px;
     margin-top:0px;
     min-width:500px;
+    padding:4px;
     overflow-y:auto;
+    padding-bottom:20px;
 }
 
 .arborview{
@@ -24,3 +26,24 @@ a.dropdown-toggle{
     font-size:120%;
     font-weight:bold;
 }
+
+img.delete, img.add{
+    cursor:pointer;
+    margin-left:-25px;
+}
+
+ul.editing{
+    list-style-type:none;
+}
+
+button.delete{
+    margin-left:150px;
+}
+
+h4.edit, p.edit{
+    cursor:pointer;
+}
+
+
+
+

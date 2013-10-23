@@ -38,7 +38,7 @@ def profile(request,user_id):
     departments = Department.objects.all()
     subjects = Subject.objects.all()
     modules = Module.objects.all()
-    return render_to_response('profile.html', {'departments': departments, 'subjects': subjects, 'thisuser': thisuser}, RequestContext(request,context))
+    return render_to_response('profile.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'thisuser': thisuser}, RequestContext(request,context))
 
 @login_required
 def module(request,module_id):
@@ -79,6 +79,7 @@ def department(request,department_id):
     focusdepartment.subjects = Subject.objects.filter(number__startswith=focusdepartment.name)
     return render_to_response('department.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focusdepartment': focusdepartment}, RequestContext(request,context))
 
+# === Editing ===
 @login_required
 def edit_outcome(request,outcome_id):
     focusoutcome = Outcome.objects.get(id=outcome_id)
@@ -88,7 +89,7 @@ def edit_outcome(request,outcome_id):
     departments = Department.objects.all()
     subjects = Subject.objects.all()
     modules = Module.objects.all()
-    return render_to_response('outcome.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focusoutcome': focusoutcome}, RequestContext(request,context))
+    return render_to_response('edit_outcome.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focusoutcome': focusoutcome}, RequestContext(request,context))
 
 @login_required
 def edit_module(request,module_id):
@@ -100,7 +101,7 @@ def edit_module(request,module_id):
     subjects = Subject.objects.all()
     modules = Module.objects.all()
     focusmodule.outcomes = Outcome.objects.filter(modules__id=focusmodule.id)
-    return render_to_response('module.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focusmodule': focusmodule}, RequestContext(request,context))
+    return render_to_response('edit_module.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focusmodule': focusmodule}, RequestContext(request,context))
 
 @login_required
 def edit_subject(request,subject_id):
@@ -112,7 +113,60 @@ def edit_subject(request,subject_id):
     subjects = Subject.objects.all()
     modules = Module.objects.all()
     focussubject.modules = Module.objects.filter(subjects__id=focussubject.id)
-    return render_to_response('subject.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focussubject': focussubject}, RequestContext(request,context))
+    return render_to_response('edit_subject.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focussubject': focussubject}, RequestContext(request,context))
+
+# === Deleting (via AJAX) ===
+@login_required
+def delete_outcome(request,outcome_id):
+    focusoutcome = Outcome.objects.get(id=outcome_id)
+    if not(request.user in focusoutcome.instructors.all()): # unauthorized access
+        to_json = {
+            'result': 'failed'
+        }
+        return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+    focusoutcome.delete()
+    to_json = {
+        'result': 'succeeded'
+    }
+    return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+
+@login_required
+def delete_module(request,module_id):
+    focusmodule = Module.objects.get(id=module_id)
+    if not(request.user in focusmodule.instructors.all()): # unauthorized access
+        to_json = {
+            'result': 'failed'
+        }
+        return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+    focusmodule.delete()
+    to_json = {
+        'result': 'succeeded'
+    }
+    return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+
+@login_required
+def delete_subject(request,subject_id):
+    focussubject = Subject.objects.get(id=subject_id)
+    if not(request.user in focussubject.instructors.all()): # unauthorized access
+        to_json = {
+            'result': 'failed'
+        }
+        return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+    focussubject.delete()
+    to_json = {
+        'result': 'succeeded'
+    }
+    return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+
+@login_required
+def remove_outcome_from_module(request,module_id,outcome_id):
+    outcome = Outcome.objects.get(id=outcome_id)
+    module = Module.objects.get(id=module_id)   
+    outcome.modules.remove(module)
+    to_json = {
+        'result': 'succeeded'
+    }
+    return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
 
 
 

@@ -1,0 +1,56 @@
+{% extends "index.html" %}
+
+{% block textinfo %}
+
+<h4 id="header" object_id="{{ focussubject.id }}" class="edit" title="click to edit">{{ focussubject }}</h4>
+{% csrf_token %}
+<p class="edit" title="click to edit">{{ focussubject.description }}</p>
+
+{% if focussubject.modules %}
+<h5>Modules:</h5>
+<ul class="editing">
+{% for module in focussubject.modules %}
+<li>
+    <img src="{{ STATIC_URL }}img/redx.png" class="delete" title="delete"> &nbsp; <a href="/modules/{{ module.id }}/">{{ module }}</a>
+</li>
+{% endfor %}
+<li>
+    <img src="{{ STATIC_URL }}img/greenplus.png" class="add" title="add module"> &nbsp; Add module
+</li>
+</ul>
+{% endif %}
+
+{% if focussubject.prerequisites.count == 0 %}
+<h5>Prerequisite subjects:</h5>
+<ul class="editing">
+<li>
+    <img src="{{ STATIC_URL }}img/greenplus.png" class="add" title="add prerequisite subject"> &nbsp; Add prerequisite subject
+</li>
+</ul>
+{% else %}
+<h5>Prerequisite subjects: </h5>
+<ul class="editing">
+{% for subject in focussubject.prerequisites.all %}
+<li>
+    <img src="{{ STATIC_URL }}img/redx.png" class="delete" title="delete"> &nbsp; <a href="/subjects/{{ subject.id }}/">{{ subject }}</a>
+</li>
+{% endfor %}
+<li>
+    <img src="{{ STATIC_URL }}img/greenplus.png" class="add" title="add prerequisite subject"> &nbsp; Add prerequisite subject
+</li>
+</ul>
+{% endif %}
+
+
+{% if user in focussubject.instructors.all %}
+<br><button class="cancel" onclick="location.href='/subjects/{{ focussubject.id }}/';">cancel</button>&nbsp;<button class="delete" object_id="{{ focussubject.id }}">delete subject</button>
+{% endif %}
+
+
+{% endblock %}
+
+
+{% block js %}
+ <script src="{{ STATIC_URL }}js/delete.js"></script>
+{% endblock %}
+

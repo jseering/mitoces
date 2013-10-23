@@ -21,14 +21,18 @@ urlpatterns = patterns('',
     # Module
     url(r'^modules/(?P<module_id>\d+)/$', 'cas_client.views.module', name="module"),
     url(r'^modules/(?P<module_id>\d+)/edit/$', 'cas_client.views.edit_module', name="edit module"),
+    url(r'^modules/(?P<module_id>\d+)/delete/$', 'cas_client.views.delete_module', name="delete module"),
+    url(r'^modules/(?P<module_id>\d+)/remove/outcome/(?P<outcome_id>\d+)/$', 'cas_client.views.remove_outcome_from_module', name="remove outcome from module"),
 
     # Outcome
     url(r'^outcomes/(?P<outcome_id>\d+)/$', 'cas_client.views.outcome', name="outcome"),
     url(r'^outcomes/(?P<outcome_id>\d+)/edit/$', 'cas_client.views.edit_outcome', name="edit outcome"),
+    url(r'^outcomes/(?P<outcome_id>\d+)/delete/$', 'cas_client.views.delete_outcome', name="delete outcome"),
 
     # Subject
     url(r'^subjects/(?P<subject_id>\d+)/$', 'cas_client.views.subject', name="subject"),
     url(r'^subjects/(?P<subject_id>\d+)/edit/$', 'cas_client.views.edit_subject', name="edit subject"),
+    url(r'^subjects/(?P<subject_id>\d+)/delete/$', 'cas_client.views.delete_subject', name="delete subject"),
 
     # Department
     url(r'^departments/(?P<department_id>\d+)/$', 'cas_client.views.department', name="department"),

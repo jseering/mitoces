@@ -1,81 +1,56 @@
 {% extends "index.html" %}
 
+{% block textinfo %}
 
-{% block topnav %}
+<h4 id="header" object_type="module" object_id="{{ focusmodule.id }}" class="edit" title="click to edit">Module: {{ focusmodule }}</h4>
+{% csrf_token %}
+{% if focusmodule.outcomes %}
+<h5>Outcomes:</h5>
+<ul class="editing" >
+{% for outcome in focusmodule.outcomes %}
+<li object_type="outcome" object_id="{{ outcome.id }}">
+    <img src="{{ STATIC_URL }}img/redx.png" class="delete" title="delete"> &nbsp; <a href="/outcomes/{{ outcome.id }}/" title="{{ outcome }}">{{ outcome.description }}</a> 
+</li>
+{% endfor %}
+<li>
+    <img src="{{ STATIC_URL }}img/greenplus.png" class="add" title="add outcome"> &nbsp; Add outcome
+</li>
+</ul>
+{% endif %}
 
+
+<br><h5>This module appears in...</h5>
+{% if focusmodule.subjects %}
+<ul class="editing">
+    {% for subject in focusmodule.subjects.all %}
 <li>
-<a href="/">home</a>
+    <img src="{{ STATIC_URL }}img/redx.png" class="delete" title="delete"> &nbsp; <a href="/subjects/{{ subject.id }}/">{{ subject }}</a>
 </li>
 <li>
-<a href="/explore">explore</a>
+    <img src="{{ STATIC_URL }}img/greenplus.png" class="add" title="add subject"> &nbsp; Add subject
 </li>
+{% endfor %}
+</ul>
+{% endif %}
+
+<br><h5>Instructors:</h5>
+<ul class="editing">
+{% for instructor in focusmodule.instructors.all %}
 <li>
-<a href="/module/add">create</a>
+    <img src="{{ STATIC_URL }}img/redx.png" class="delete" title="delete"> &nbsp; <a href="/users/{{ instructor.id }}/">{{ instructor }}</a>
 </li>
+{% endfor %}
+<li>
+    <img src="{{ STATIC_URL }}img/greenplus.png" class="add" title="add instructor"> &nbsp; Add instructor
+</li>
+</ul>
+
+{% if user in focusmodule.instructors.all %}
+<br><button onclick="location.href='/modules/{{ focusmodule.id }}'">delete module</button><button class="delete" object_id="{{ focusmodule.id }}">delete module</button>
+{% endif %}
 
 {% endblock %}
 
-
-{% block content %}
-
-
-
-<form action="/module/edit/{{ module.id }}/" method="post">{% csrf_token %}
-{{ form.non_field_errors }}
-{{ form.name.errors }}
-<h1><input id="id_name" type="text" name="name" class="noEnterSubmit" maxlength="60" value="{{ module.name }}" style="font-size:38.5px;font-family:inherit;font-weight:bold;width:100%;height:44px;"></h1>
-
-{{ form.description.errors }}
-<textarea id="id_description" rows="5" cols="100" name="description" style="width:100%"></textarea>
-
-<h3>This module is intended to teach and/or assess the ability to:</h3>
-<ul id="outcomes_ul">
-    {% for outcome in module.outcomes.all %}
-    <li value="{{ outcome.id }}" title="{{ outcome.name }}"> {{ outcome.description }} &nbsp; &nbsp; <img src="/static/img/trash_can.png" alt="delete" class="deleteOutcome" title="delete"> </li>
-    {% endfor %}
-	<li id="add_outcome_li">
-        <button type="button" id="add_outcome_button" value="add_outcome"><i>Add Outcome</i></button>
-	</li>
-</ul>
-        {{ form.outcomes.errors }}
-        <select multiple="multiple" name="outcomes" id="id_outcomes" style="display:none;">
-        {% for outcome in module.outcomes.all %}
-            <option value="{{ outcome.id }}" selected="selected">{{ outcome.name }}</option>
-        {% endfor %}  
-        </select>
-
-        {{ form.link.errors }}
-        <input id="id_link" type="text" name="link" class="noEnterSubmit" maxlength="180" style="width:60%" value="{{ module.link }}">
-    
-        <iframe id="module_iframe" src="{{ module.link }}" width="100%" height="600"></iframe>
- 
-        {{ form.keywords.errors }}
-        <select multiple="multiple" name="keywords" id="id_keywords" style="display:none;">
-        {% for keyword in module.keywords.all %}
-            <option value="{{ keyword.id }}" selected="selected">{{ keyword.name }}</option>
-        {% endfor %}
-        </select>
-        {% csrf_token %}
-
-    {% csrf_token %}
-    <p id="selected_keywords">
-        <div id="add_keyword_div" style="float:left">
-            <button type="button" id="add_keyword_button" value="add_keyword"><i>Add Keyword</i></button>
-        </div>
-        <div id="manually_added_keywords" style="float:left">
-        {% for keyword in module.keywords.all %}
-            <button type="button" value="{{ keyword.id }}" title="Click to remove">{{ keyword.name }}</button>
-        {% endfor %}
-        </div>
-        <div id="automatic_keyword_recommendation" style="float:left"></div>
-        <div id="automatic_keyword_recommendation_from_outcomes" style="float:left"></div>
-    </p>
-    <p id="keyword_button_search_matches" style="clear:both"></p>
-
-<div id="submission_buttons" style="clear:both">
-<button onclick="window.location='/modules/'; return false;">Cancel</button>
-<input type="submit" name="submit" value="Save Module">
-</div>
-</form>
-
+{% block js %}
+ <script src="{{ STATIC_URL }}js/delete.js"></script>
 {% endblock %}

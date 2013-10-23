@@ -17,9 +17,9 @@
 {% endif %}
 
 {% if focussubject.prerequisites.count == 0 %}
-<h5>Prerequisites: <i>None</i></h5>
+<h5>Prerequisite subjects: <i>None</i></h5>
 {% else %}
-<h5>Prerequisites: </h5>
+<h5>Prerequisite subjects: </h5>
 <ul>
 {% for subject in focussubject.prerequisites.all %}
 <li>
@@ -31,7 +31,7 @@
 
 
 {% if user in focussubject.instructors.all %}
-<button class="edit_button" onclick="location.href='/subjects/{{ focussubject.id }}/edit/';">edit subject</button>
+<br><button class="edit_button" onclick="location.href='/subjects/{{ focussubject.id }}/edit/';">edit subject</button>
 {% endif %}
 
 

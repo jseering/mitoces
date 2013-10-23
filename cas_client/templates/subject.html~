@@ -10,7 +10,7 @@
 <ul>
 {% for module in focussubject.modules %}
 <li>
-    <a href="/modules/{{ module.id }}">{{ module }}</a>
+    <a href="/modules/{{ module.id }}/">{{ module }}</a>
 </li>
 {% endfor %}
 </ul>
@@ -23,7 +23,7 @@
 <ul>
 {% for subject in focussubject.prerequisites.all %}
 <li>
-    <a href="/subjects/{{ subject.id }}">{{ subject }}</a>
+    <a href="/subjects/{{ subject.id }}/">{{ subject }}</a>
 </li>
 {% endfor %}
 </ul>
@@ -31,7 +31,7 @@
 
 
 {% if user in focussubject.instructors.all %}
-<button class="edit_button" onclick="location.href='/subjects/{{ focussubject.id }}/edit/';">edit subject</button>
+<br><button class="edit_button" onclick="location.href='/subjects/{{ focussubject.id }}/edit/';">edit subject</button>
 {% endif %}
 
 

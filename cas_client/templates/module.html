@@ -13,8 +13,10 @@
 {% endfor %}
 </ul>
 {% endif %}
+
+
+<br><h5>This module appears in...</h5>
 {% if focusmodule.subjects %}
-<h5>Subjects:</h5>
 <ul>
     {% for subject in focusmodule.subjects.all %}
 <li>
@@ -24,8 +26,17 @@
 </ul>
 {% endif %}
 
+<br><h5>Instructors:</h5>
+<ul>
+{% for instructor in focusmodule.instructors.all %}
+<li>
+    <a href="/users/{{ instructor.id }}/">{{ instructor }}</a>
+</li>
+{% endfor %}
+</ul>
+
 {% if user in focusmodule.instructors.all %}
-<button class="edit_button" onclick="location.href='/modules/{{ focusmodule.id }}/edit/';">edit module</button>
+<br><button class="edit_button" onclick="location.href='/modules/{{ focusmodule.id }}/edit/';">edit module</button>
 {% endif %}
 
 {% endblock %}
