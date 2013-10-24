@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+	<head>
+		<title>New Module</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+		body {
+			padding-top: 60px;
+		}
+		@media (max-width: 979px) {
+			body {
+				padding-top: 0px;
+			}
+		}
+		.container {
+			overflow: visible !important
+		}
+		</style>
+        <link rel="icon" type="image/png" href="{{ STATIC_URL }}img/favicon.png">
+        <link href="{{ STATIC_URL }}css/new_object.css" rel="stylesheet">
+        {% block header %}
+        {% endblock %}
+	</head>
+	<body>
+
+        <h1>New Module</h1>
+        {% csrf_token %}
+        
+        <h3>Title:<span>(e.g., Integration Methods for ODEs)</span></h3>
+        <input id="id_name" type="text" name="name" maxlength="60">
+        
+        <h3>Description:</h3>
+        <textarea id="id_description"></textarea>
+
+        <select name="creator" id="id_creator" style="display:none;">
+            <option value="{{ user.id }}" selected="selected">{{ user }}</option>
+        </select>
+
+        <select name="creator" id="id_creator" style="display:none;">
+            <option value="{{ user.id }}" selected="selected">{{ user }}</option>
+        </select>
+
+        </select multiple="multiple" name="instructors" id="id_instructors" style="display:none;">
+            <option value="{{ user.id }}" selected="selected">{{ user }}</option>
+        </select>
+
+        <br><br><br>
+        <button id="save">save module</button>
+        <button onclick="window.close();">cancel</button>        
+
+    </body>
+
+    <script src="{{ STATIC_URL }}js/jquery-2.0.3.min.js"></script>
+    <script src="{{ STATIC_URL }}js/add_module.js"></script>
+</html>

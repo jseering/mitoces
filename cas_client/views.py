@@ -174,5 +174,121 @@ def remove_outcome_from_module(request,module_id,outcome_id):
     }
     return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
 
+@login_required
+def remove_subject_from_outcome(request,outcome_id,subject_id):
+    outcome = Outcome.objects.get(id=outcome_id)
+    subject = Subject.objects.get(id=subject_id)   
+    outcome.subjects.remove(subject)
+    # TODO: Figure out how to check if this fails, and return 'result': 'failed'
+    to_json = {
+        'result': 'succeeded'
+    }
+    return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+
+@login_required
+def remove_instructor_from_outcome(request,outcome_id,instructor_id):
+    outcome = Outcome.objects.get(id=outcome_id)
+    instructor = User.objects.get(id=instructor_id)   
+    outcome.instructors.remove(instructor)
+    # TODO: Figure out how to check if this fails, and return 'result': 'failed'
+    to_json = {
+        'result': 'succeeded'
+    }
+    return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+
+@login_required
+def remove_prereq_from_outcome(request,outcome_id,prereq_id):
+    outcome = Outcome.objects.get(id=outcome_id)
+    prereq = Outcome.objects.get(id=prereq_id)   
+    outcome.prerequisites.remove(prereq)
+    # TODO: Figure out how to check if this fails, and return 'result': 'failed'
+    to_json = {
+        'result': 'succeeded'
+    }
+    return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+
+# Edit name
+@login_required
+def edit_outcome_name(request,outcome_id):
+    outcome = Outcome.objects.get(id=outcome_id)
+    if request.method=="POST":
+        newname = request.POST.get('newname','')
+        if newname=='': # we don't allow empty names
+            to_json = {
+                'result': 'failed'
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+        else:
+            outcome.name = newname
+            outcome.save()
+            to_json = {
+                'result': 'succeeded'
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+
+@login_required
+def edit_module_name(request,module_id):
+    module = Module.objects.get(id=module_id)
+    if request.method=="POST":
+        newname = request.POST.get('newname','')
+        if newname=='': # we don't allow empty names
+            to_json = {
+                'result': 'failed'
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+        else:
+            module.name = newname
+            module.save()
+            to_json = {
+                'result': 'succeeded'
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+
+# Edit description
+@login_required
+def edit_outcome_description(request,outcome_id):
+    outcome = Outcome.objects.get(id=outcome_id)
+    if request.method=="POST":
+        newdescription = request.POST.get('newdescription','')
+        if newdescription=='': # we don't allow empty names
+            to_json = {
+                'result': 'failed'
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+        else:
+            outcome.description = newdescription
+            outcome.save()
+            to_json = {
+                'result': 'succeeded'
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+
+# Add 
+@login_required
+def add_module(request):
+    context = {}
+    context['user'] = request.user
+    if request.method=="POST":
+        module_name = request.POST.get('module_name','')
+        module_description = request.POST.get('module_description','')
+        module_creator_id = request.POST.get('module_creator_id','')
+        if module_name=='' or module_description=='' or module_creator_id=='':
+            to_json = {
+                'result': 'failed'
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+        else:
+            module_creator = User.objects.get(id=module_creator_id)
+            module = Module(name=module_name,description=module_description,creator=module_creator)
+            module.save()
+            module.instructors.add(module_creator)
+            to_json = {
+                'result': 'succeeded',
+                'new_module_id': module.id
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+    return render_to_response('add_module.html', context, RequestContext(request,context))
+
+
 
 

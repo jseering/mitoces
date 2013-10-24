@@ -30,6 +30,9 @@
 							<li class="dropdown">
 		                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">Departments<b class="caret"></b></a>
 						            <ul class="dropdown-menu scroll-menu">
+                                        <li>
+                                            <a link_type="new" object_type="department" style="cursor:pointer;">New Department</a>
+                                        </li>
                                         {% for department in departments %}
 							            <li>
 								            <a href="/departments/{{ department.id }}/">{{ department }}</a>
@@ -40,6 +43,9 @@
                             <li class="dropdown">
 		                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">Subjects<b class="caret"></b></a>
 						            <ul class="dropdown-menu scroll-menu">
+                                        <li>
+                                            <a link_type="new" object_type="subject" style="cursor:pointer;">New Subject</a>
+                                        </li>
                                         {% for subject in subjects %}
 							            <li>
 								            <a href="/subjects/{{ subject.id }}/">{{ subject }}</a>
@@ -50,6 +56,9 @@
                             <li class="dropdown">
 		                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">Modules<b class="caret"></b></a>
 						            <ul class="dropdown-menu scroll-menu">
+                                        <li>
+                                            <a link_type="new" object_type="module" style="cursor:pointer;">New Module</a>
+                                        </li>
                                         {% for module in modules %}
 							            <li>
 								            <a href="/modules/{{ module.id }}/">{{ module }}</a>
@@ -113,6 +122,7 @@
         <script src="{{ STATIC_URL }}js/arbor-graphic.js"></script>
         <script src="{{ STATIC_URL }}js/arbor-tween.js"></script>
         <script src="{{ STATIC_URL }}js/renderer.js"></script>
+        <script src="{{ STATIC_URL }}js/new_object.js"></script>
         {% block js %}
         {% endblock %}
 	</body>

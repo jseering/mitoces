@@ -4,7 +4,15 @@
 
 <h4 id="header" object_type="module" object_id="{{ focusmodule.id }}" class="edit" title="click to edit">Module: {{ focusmodule }}</h4>
 {% csrf_token %}
-{% if focusmodule.outcomes %}
+<p class="edit" title="click to edit">{{ focusmodule.description }}</p>
+{% if focusmodule.outcomes.count == 0 %}
+<h5>Outcomes:</h5>
+<ul class="editing" >
+<li>
+    <img src="{{ STATIC_URL }}img/greenplus.png" class="add" title="add outcome"> &nbsp; Add outcome
+</li>
+</ul>
+{% else %}
 <h5>Outcomes:</h5>
 <ul class="editing" >
 {% for outcome in focusmodule.outcomes %}
@@ -20,7 +28,13 @@
 
 
 <br><h5>This module appears in...</h5>
-{% if focusmodule.subjects %}
+{% if focusmodule.subjects.count == 0 %}
+<ul class="editing">
+<li>
+    <img src="{{ STATIC_URL }}img/greenplus.png" class="add" title="add subject"> &nbsp; Add subject
+</li>
+</ul>
+{% else %}
 <ul class="editing">
     {% for subject in focusmodule.subjects.all %}
 <li>
@@ -53,96 +67,5 @@
 
 {% block js %}
  <script src="{{ STATIC_URL }}js/delete.js"></script>
-<script>
-	var outcome_all = "{{focusmodule.outcomes}}";
-	var outcomes = parse(outcome_all);
-
-    var sys = arbor.ParticleSystem(1500,800,0.5);
-    var theUI;
-    sys.parameters({gravity:true});
-    sys.renderer = Renderer("#viewport");
-    init();
-    
-    function init(){
-        theUI = {"nodes":{},"edges":{}};
-        for (var i=0;i<outcomes.length;i++){
-            addOutcome(theUI,outcomes[i]);
-        }
-        sys.graft(theUI);
-    }
-    
-    function addModule(theUI,name,id){
-        theUI["nodes"][name] = {};
-        theUI["nodes"][name]["color"] = "#CF9238";
-        theUI["nodes"][name]["shape"] = "rectangle";
-        theUI["nodes"][name]["type"] = "module";
-        theUI["nodes"][name]["label"] = name;
-        theUI["nodes"][name]["id"] = id;
-    }
-    
-    function addOutcome(theUI,name,id){
-        theUI["nodes"][name] = {};
-        theUI["nodes"][name]["color"]="#41A565";
-        theUI["nodes"][name]["shape"]="rectangle";
-        theUI["nodes"][name]["type"]="outcome";
-        theUI["nodes"][name]["label"]=name;
-        theUI["nodes"][name]["id"] = id;
-    }
-
-    function addOutcomePrereq(theUI,name,id){
-    	theUI["nodes"][name] = {};
-        theUI["nodes"][name]["color"]="#6DB9CB";
-        theUI["nodes"][name]["shape"]="rectangle";
-        theUI["nodes"][name]["type"]="outcome";
-        theUI["nodes"][name]["label"]=name;
-    }
-    
-    function addKeyword(theUI,name,id){
-        theUI["nodes"][name] = {};
-        theUI["nodes"][name]["color"]="#416DA5";
-        theUI["nodes"][name]["shape"]="rectangle";
-        theUI["nodes"][name]["type"]="keyword";
-        theUI["nodes"][name]["label"]=name;
-        theUI["nodes"][name]["id"] = id;
-    }
-    
-    function addEdge(theUI,from,to){
-        if (theUI["edges"][from] == undefined){
-            theUI["edges"][from] = {};
-        }
-        theUI["edges"][from][to] = {};
-        theUI["edges"][from][to]["length"] = 2;
-        theUI["edges"][from][to]["weight"] = 0.5;
-        theUI["edges"][from][to]["color"] = '#888888';
-        theUI["edges"][from][to]["directed"] = true;
-    }
-    
-    function parseObjects(string) {
-        var pattern = new RegExp('u&quot;(.*?)&#39;(.*?)&quot;');
-        string = string.replace(pattern,"u&#39;$1\'$2&#39;");
-        string = string.replace(/u&#39;/g,'"');
-        string = string.replace(/&#39;/g,'"');
-        console.log(string)
-        var object = JSON.parse(string);
-        return object;
-    }
-    
-    function parse(string){
-        var list = [];
-        var index = 0;
-        for (var i=0;i<string.length;i++){
-            var count = 2;
-            var append = '';
-            if (string[i]==':'){
-                while (string[i+count] != '&'){
-                    append += string[i+count];
-                    count += 1;
-                }
-                list[index] = append;
-                index += 1;
-            }
-        }
-        return list;
-    }
-</script>
+ <script src="{{ STATIC_URL }}js/click_to_edit.js"></script>
 {% endblock %}

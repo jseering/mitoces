@@ -2,12 +2,12 @@
 
 {% block textinfo %}
 
-<h4 id="header" object_id="{{ focusoutcome.id }}" class="edit" title="click to edit">Outcome: {{ focusoutcome }}</h4>
+<h4 id="header" object_type="outcome" object_id="{{ focusoutcome.id }}" class="edit" title="click to edit">Outcome: {{ focusoutcome }}</h4>
 {% csrf_token %}
 <p id="description" class="edit" title="click to edit">{{ focusoutcome.description }}</p>
 {% if focusoutcome.prerequisites.count == 0 %}
 <h5>Prerequisites: </h5>
-<ul class="editing" object_type="outcome" object_id="{{ focusoutcome.id }}">
+<ul class="editing">
 <li>
     <img src="{{ STATIC_URL }}img/greenplus.png" class="add" title="add prerequisite outcome"> &nbsp; Add prerequisite outcome
 </li>
@@ -16,7 +16,7 @@
 <h5>Prerequisite outcomes:</h5>
 <ul class="editing">
 {% for outcome in focusoutcome.prerequisites.all %}
-<li>
+<li object_type="outcome" object_id="{{ outcome.id }}">
     <img src="{{ STATIC_URL }}img/redx.png" class="delete" title="delete"> &nbsp; <a href="/outcomes/{{ outcome.id }}/" title="{{ outcome }}">{{ outcome.description }}</a>
 </li>
 {% endfor %}
@@ -31,7 +31,7 @@
 <h5>Modules:</h5>
 <ul class="editing">
 {% for module in focusoutcome.modules.all %}
-<li>
+<li object_type="module" object_id="{{ module.id }}">
     <img src="{{ STATIC_URL }}img/redx.png" class="delete" title="delete"> &nbsp; <a href="/modules/{{ module.id }}/">{{ module }}</a>
 </li>
 {% endfor %}
@@ -44,7 +44,7 @@
 <h5>Subjects:</h5>
 <ul class="editing">
     {% for subject in focusoutcome.subjects.all %}
-<li>
+<li object_type="subject" object_id="{{ subject.id }}">
     <img src="{{ STATIC_URL }}img/redx.png" class="delete" title="delete"> &nbsp; <a href="/subjects/{{ subject.id }}/">{{ subject }}</a>
 </li>
 {% endfor %}
@@ -57,7 +57,7 @@
 <br><h5>Instructors:</h5>
 <ul class="editing">
 {% for instructor in focusoutcome.instructors.all %}
-<li>
+<li object_type="user" object_id="{{ instructor.id }}">
     <img src="{{ STATIC_URL }}img/redx.png" class="delete" title="delete"> &nbsp; <a href="/users/{{ instructor.id }}/">{{ instructor }}</a>
 </li>
 {% endfor %}
@@ -67,7 +67,7 @@
 </ul>
 
 {% if user in focusoutcome.instructors.all %}
-<br><button onclick="location.href='/outcomes/{{ focusoutcome.id }}'">done</button>&nbsp;<button class="delete" object_id="{{ focusoutcome.id }}">delete outcome</button>
+<br><button onclick="location.href='/outcomes/{{ focusoutcome.id }}'">done</button>&nbsp;&nbsp;<button class="delete" object_id="{{ focusoutcome.id }}">delete outcome</button>
 {% endif %}
 
 

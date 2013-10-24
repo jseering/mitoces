@@ -4,7 +4,15 @@
 
 <h4 id="header" object_type="module" object_id="{{ focusmodule.id }}" class="edit" title="click to edit">Module: {{ focusmodule }}</h4>
 {% csrf_token %}
-{% if focusmodule.outcomes %}
+<p class="edit" title="click to edit">{{ focusmodule.description }}</p>
+{% if focusmodule.outcomes.count == 0 %}
+<h5>Outcomes:</h5>
+<ul class="editing" >
+<li>
+    <img src="{{ STATIC_URL }}img/greenplus.png" class="add" title="add outcome"> &nbsp; Add outcome
+</li>
+</ul>
+{% else %}
 <h5>Outcomes:</h5>
 <ul class="editing" >
 {% for outcome in focusmodule.outcomes %}
@@ -20,7 +28,13 @@
 
 
 <br><h5>This module appears in...</h5>
-{% if focusmodule.subjects %}
+{% if focusmodule.subjects.count == 0 %}
+<ul class="editing">
+<li>
+    <img src="{{ STATIC_URL }}img/greenplus.png" class="add" title="add subject"> &nbsp; Add subject
+</li>
+</ul>
+{% else %}
 <ul class="editing">
     {% for subject in focusmodule.subjects.all %}
 <li>
@@ -53,4 +67,5 @@
 
 {% block js %}
  <script src="{{ STATIC_URL }}js/delete.js"></script>
+ <script src="{{ STATIC_URL }}js/click_to_edit.js"></script>
 {% endblock %}

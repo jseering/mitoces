@@ -43,7 +43,7 @@
 
 
 {% if user in focussubject.instructors.all %}
-<br><button onclick="location.href='/subjects/{{ focussubject.id }}'">done</button><button class="delete" object_id="{{ focussubject.id }}">delete subject</button>
+<br><button onclick="location.href='/subjects/{{ focussubject.id }}'">done</button>&nbsp;&nbsp;<button class="delete" object_id="{{ focussubject.id }}">delete subject</button>
 {% endif %}
 
 
