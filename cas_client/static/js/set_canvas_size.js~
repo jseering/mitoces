@@ -1,0 +1,18 @@
+$(function(){
+
+    // === set canvas size to take up remainder of screen === //
+    var ctx = $('canvas#viewport');
+    var width_percent = ctx.attr('width_percent');
+    var adj = 0.95;
+    var canvas_width = adj*(width_percent/100.0)*window.innerWidth;
+    var canvas_height = adj*window.innerHeight;
+    /*
+    ctx.width  = (width_percent/100.0)*window.innerWidth;
+    ctx.height = window.innerHeight;
+    */
+
+   
+    $('canvas#viewport').attr('width',canvas_width.toString()+"px").attr('height',canvas_height.toString()+"px");
+
+});
+

@@ -4,7 +4,7 @@
 
 <h4 id="header" object_type="module" object_id="{{ focusmodule.id }}" class="edit" title="click to edit">Module: {{ focusmodule }}</h4>
 {% csrf_token %}
-<p class="edit" title="click to edit">{{ focusmodule.description }}</p>
+<p id="description" object_type="module" object_id="{{ focusmodule.id }}" class="edit" title="click to edit">{{ focusmodule.description }}</p>
 {% if focusmodule.outcomes.count == 0 %}
 <h5>Outcomes:</h5>
 <ul class="editing" >

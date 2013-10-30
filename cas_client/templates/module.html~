@@ -18,8 +18,11 @@
 {% endif %}
 
 
-<br><h5>This module appears in...</h5>
-{% if focusmodule.subjects %}
+<br>
+{% if focusmodule.subjects.count == 0 %}
+<h5>This module does not appear in any subjects.</h5>
+{% else %}
+<h5>This module appears in...</h5>
 <ul>
     {% for subject in focusmodule.subjects.all %}
 <li>
@@ -46,12 +49,13 @@
 
 {% block js %}
 <script>
-	var outcome_all = "{{focusmodule.outcomes}}";
-	var outcome_prereqs = "{{outcome_prereqs}}";
+	var outcome_all = "{{ outcome_all }}";
+	var outcome_prereqs = "{{ outcome_prereqs }}";
+    console.log("outcome_all = " + outcome_all);
 	var outcomes = parse(outcome_all);
 	var outcome_prereqs = parseObjects(outcome_prereqs);
 
-    var sys = arbor.ParticleSystem(1500,800,0.5);
+    var sys = arbor.ParticleSystem(500,500,0.8);
     var theUI;
     sys.parameters({gravity:true});
     sys.renderer = Renderer("#viewport");
@@ -59,8 +63,10 @@
     
     function init(){
         theUI = {"nodes":{},"edges":{}};
+        console.log("here1");
         for (var i=0;i<outcomes.length;i++){
             addOutcome(theUI,outcomes[i]);
+            console.log(outcomes[i])
             for (var j=0;j<outcome_prereqs[outcomes[i]].length;j++){
             	addOutcomePrereq(theUI, outcome_prereqs[outcomes[i]][j]);
             	addEdge(theUI, outcome_prereqs[outcomes[i]][j], outcomes[i]);
@@ -116,28 +122,40 @@
     }
     
     function parseObjects(string) {
-        var pattern = new RegExp('u&quot;(.*?)&#39;(.*?)&quot;');
-        string = string.replace(pattern,"u&#39;$1\'$2&#39;");
         string = string.replace(/u&#39;/g,'"');
         string = string.replace(/&#39;/g,'"');
+        var pattern = new RegExp('u&quot;(.*?)\"(.*?)&quot;','g');
+        string = string.replace(pattern,"\"$1\'$2\"");
         console.log(string);
         var object = JSON.parse(string);
         return object;
     }
     
-    function parse(string){
+    function parseString(string){
+        string = string.replace(/u&#39;/g,'"');
+        string = string.replace(/&#39;/g,'"');
+        var pattern = new RegExp('u&quot;(.*?)\"(.*?)&quot;','g');
+        string = string.replace(pattern,"\"$1\'$2\"");
+        console.log("string in parse = " + string);
         var list = [];
-        var index = 0;
+        var index = -1;
+        var transcribe = false;
         for (var i=0;i<string.length;i++){
-            var count = 2;
-            var append = '';
-            if (string[i]==':'){
-                while (string[i+count] != '&'){
-                    append += string[i+count];
-                    count += 1;
+            var count = 1;
+            if (string[i]=='"'){ // beginning on new list item
+                if (transcribe) {
+                    transcribe = false;
+                    console.log("set transcribe to false");
+                    console.log(list[index])
+                } else {
+                    transcribe = true;
+                    console.log("set transcribe to true");
+                    index = index + 1;
+                    list[index] = '';
                 }
-                list[index] = append;
-                index += 1;
+            }
+            if (transcribe && string[i+1]!='"') {
+                list[index] += string[i+1];
             }
         }
         return list;

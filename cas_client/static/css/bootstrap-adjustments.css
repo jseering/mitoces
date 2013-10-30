@@ -5,6 +5,7 @@
 
 .container{
     width:100%;
+    overflow:hidden;
 }
 
 .textinfo{
@@ -16,11 +17,6 @@
     padding:4px;
     overflow-y:auto;
     padding-bottom:20px;
-}
-
-.arborview{
-    width:70%;
-    float:left;
 }
 
 a.dropdown-toggle{
@@ -40,7 +36,6 @@ ul.editing{
 h4.edit, p.edit{
     cursor:pointer;
 }
-
 
 
 

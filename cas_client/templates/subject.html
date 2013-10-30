@@ -30,6 +30,15 @@
 {% endif %}
 
 
+<br><h5>Instructors:</h5>
+<ul>
+{% for instructor in focussubject.instructors.all %}
+<li>
+    <a href="/users/{{ instructor.id }}/">{{ instructor }}</a>
+</li>
+{% endfor %}
+</ul>
+
 {% if user in focussubject.instructors.all %}
 <br><button class="edit_button" onclick="location.href='/subjects/{{ focussubject.id }}/edit/';">edit subject</button>
 {% endif %}

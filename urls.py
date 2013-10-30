@@ -25,6 +25,8 @@ urlpatterns = patterns('',
     url(r'^modules/(?P<module_id>\d+)/remove/outcome/(?P<outcome_id>\d+)/$', 'cas_client.views.remove_outcome_from_module', name="remove outcome from module"),
     url(r'^modules/(?P<module_id>\d+)/editname/$', 'cas_client.views.edit_module_name', name="edit module name"),
     url(r'^modules/add/$', 'cas_client.views.add_module', name="add module"),
+    url(r'^modules/(?P<module_id>\d+)/editdescription/$', 'cas_client.views.edit_module_description', name="edit module description"),
+    url(r'^modules/(?P<module_id>\d+)/add/outcome/$', 'cas_client.views.add_outcome_to_module', name="add outcome to module"),
 
     # Outcome
     url(r'^outcomes/(?P<outcome_id>\d+)/$', 'cas_client.views.outcome', name="outcome"),

@@ -1,31 +1,54 @@
 <!DOCTYPE html>
-<html>
-<head>
-<title>Create New Outcome</title>
+	<head>
+		<title>New Module</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+		body {
+			padding-top: 60px;
+		}
+		@media (max-width: 979px) {
+			body {
+				padding-top: 0px;
+			}
+		}
+		.container {
+			overflow: visible !important
+		}
+		</style>
+        <link rel="icon" type="image/png" href="{{ STATIC_URL }}img/favicon.png">
+        <link href="{{ STATIC_URL }}css/new_object.css" rel="stylesheet">
+        {% block header %}
+        {% endblock %}
+	</head>
+	<body style="margin-left:20px;">
 
-<script type="text/javascript" src="{{ STATIC_URL }}js/mitoces.js"></script>
-
-</head>
-
-
-<body class="popup cas_client-outcome change-form">
+        <h1 id="header" module_id="{{ module.id }}">Add Outcome to Module: {{ module }}</h1>
+        {% csrf_token %}
         
-        <h1>Create New Outcome</h1>
-        <div id="content-main">
+        <h3>Title:<span>(e.g., Define eigenvalue stability)</span></h3>
+        <input id="id_name" type="text" name="name" maxlength="40" style="font-size:20px;width:500px;">
+        
+        <h3>Description:</h3>
+        <textarea id="id_description" style="width:500px;height:100px;" maxlength="400"></textarea>
 
-<form action="" method="post" id="outcome_form">{% csrf_token %}
-<input type="hidden" name="_popup" value="1" />
-{{ form.as_ul }}
-<input type="submit" name="submit" value="Save Outcome">
-</form>
+        <select name="creator" id="id_creator" style="display:none;">
+            <option value="{{ user.id }}" selected="selected">{{ user }}</option>
+        </select>
 
-<script type="text/javascript">document.getElementById("id_name").focus();</script>
+        <select name="creator" id="id_creator" style="display:none;">
+            <option value="{{ user.id }}" selected="selected">{{ user }}</option>
+        </select>
 
-<script type="text/javascript">
-(function($) {
-    var field;
-})(django.jQuery);
-</script>
+        </select multiple="multiple" name="instructors" id="id_instructors" style="display:none;">
+            <option value="{{ user.id }}" selected="selected">{{ user }}</option>
+        </select>
 
-</body>
+        <br><br><br>
+        <button id="save" style="font-size:16px;">save outcome</button>
+        <button onclick="window.close();" style="font-size:16px;">cancel</button>        
+
+    </body>
+
+    <script src="{{ STATIC_URL }}js/jquery-2.0.3.min.js"></script>
+    <script src="{{ STATIC_URL }}js/add_module.js"></script>
 </html>

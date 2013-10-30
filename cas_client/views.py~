@@ -26,6 +26,13 @@ def index(request):
     modules = Module.objects.all()
     focusmodule = choice(modules)
     focusmodule.outcomes = Outcome.objects.filter(modules__name=focusmodule)
+    outcome_prereqs = {}
+    outcome_all = list()
+    for outcome in focusmodule.outcomes.all():
+        outcome_all.append(outcome.name)
+        outcome_prereqs[outcome.name] = []
+        for prereq in outcome.prerequisites.all():
+            outcome_prereqs[outcome.name].append(prereq.name)
     return render_to_response('index.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focusmodule': focusmodule}, RequestContext(request,context))
 
 @login_required
@@ -49,11 +56,13 @@ def module(request,module_id):
     focusmodule = Module.objects.get(id=module_id)
     focusmodule.outcomes = Outcome.objects.filter(modules__id=focusmodule.id)
     outcome_prereqs = {}
+    outcome_all = list()
     for outcome in focusmodule.outcomes.all():
+        outcome_all.append(outcome.name)
         outcome_prereqs[outcome.name] = []
         for prereq in outcome.prerequisites.all():
             outcome_prereqs[outcome.name].append(prereq.name)
-    return render_to_response('module.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focusmodule': focusmodule, 'outcome_prereqs': outcome_prereqs}, RequestContext(request,context))
+    return render_to_response('module.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focusmodule': focusmodule, 'outcome_prereqs': outcome_prereqs, 'outcome_all': outcome_all}, RequestContext(request,context))
 
 @login_required
 def outcome(request,outcome_id):
@@ -263,6 +272,24 @@ def edit_outcome_description(request,outcome_id):
             }
             return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
 
+@login_required
+def edit_module_description(request,module_id):
+    module = Module.objects.get(id=module_id)
+    if request.method=="POST":
+        newdescription = request.POST.get('newdescription','')
+        if newdescription=='': # we don't allow empty names
+            to_json = {
+                'result': 'failed'
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+        else:
+            module.description = newdescription
+            module.save()
+            to_json = {
+                'result': 'succeeded'
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+
 # Add 
 @login_required
 def add_module(request):
@@ -280,14 +307,41 @@ def add_module(request):
         else:
             module_creator = User.objects.get(id=module_creator_id)
             module = Module(name=module_name,description=module_description,creator=module_creator)
-            module.instructors.add(module_creator)
             module.save()
+            module.instructors.add(module_creator)
             to_json = {
                 'result': 'succeeded',
                 'new_module_id': module.id
             }
             return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
     return render_to_response('add_module.html', context, RequestContext(request,context))
+
+def add_outcome_to_module(request,module_id):
+    context = {}
+    context['user'] = request.user
+    this_module = Module.objects.get(id=module_id)
+    context['module'] = this_module
+    if request.method=="POST":
+        module_id = request.POST.get('module_id','')
+        outcome_name = request.POST.get('outcome_name','')
+        outcome_description = request.POST.get('outcome_description','')
+        outcome_creator_id = request.POST.get('outcome_creator_id','')
+        if outcome_name=='' or outcome_description=='' or outcome_creator_id=='' or module_id=='':
+            to_json = {
+                'result': 'failed'
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+        else:
+            outcome_creator = User.objects.get(id=outcome_creator_id)
+            outcome = Outcome(name=outcome_name,description=outcome_description,creator=outcome_creator)
+            outcome.save()
+            outcome.instructors.add(outcome_creator)
+            outcome.modules.add(this_module)
+            to_json = {
+                'result': 'succeeded',
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+    return render_to_response('add_outcome.html', context, RequestContext(request,context))
 
 
 

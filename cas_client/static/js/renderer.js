@@ -1,7 +1,7 @@
 (function(){
   
   Renderer = function(canvas){
-    canvas = $(canvas).get(0)
+    var canvas = $(canvas).get(0)
     var ctx = canvas.getContext("2d");
     var gfx = arbor.Graphics(canvas)
     var particleSystem = null
@@ -10,16 +10,16 @@
       init:function(system){
         particleSystem = system
         particleSystem.screenSize(canvas.width, canvas.height) 
-        particleSystem.screenPadding(40)
+        particleSystem.screen({padding:[50, 150, 50, 150], // leave some space at the bottom for the param sliders
+                              step:.02}) // have the ‘camera’ zoom somewhat slowly as the graph unfolds 
 
         that.initMouseHandling()
       },
 
       redraw:function(){
         if (!particleSystem) return
-
-        gfx.clear() // convenience Ä: clears the whole canvas rect
-
+        // gfx.clear() // convenience Ä: clears the whole canvas rect
+        ctx.clearRect(0,0, canvas.width, canvas.height)
         // draw the nodes & save their bounds for edge drawing
         var nodeBoxes = {}
         particleSystem.eachNode(function(node, pt){

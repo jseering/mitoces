@@ -31,7 +31,7 @@
 		                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">Departments<b class="caret"></b></a>
 						            <ul class="dropdown-menu scroll-menu">
                                         <li>
-                                            <a link_type="new" object_type="department">New Department</a>
+                                            <a link_type="new" object_type="department" style="cursor:pointer;">New Department</a>
                                         </li>
                                         {% for department in departments %}
 							            <li>
@@ -57,7 +57,7 @@
 		                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">Modules<b class="caret"></b></a>
 						            <ul class="dropdown-menu scroll-menu">
                                         <li>
-                                            <a link_type="new" object_type="module">New Module</a>
+                                            <a link_type="new" object_type="module" style="cursor:pointer;">New Module</a>
                                         </li>
                                         {% for module in modules %}
 							            <li>
@@ -86,34 +86,54 @@
 			<div class="textinfo">
                 {% block textinfo %}
 
-                <h4>{{ focusmodule }}</h4>
-                {% if focusmodule.outcomes %}
-                <h5>Outcomes:</h5>
-                <ul>
-                    {% for outcome in focusmodule.outcomes %}
-                    <li>
-                        <a href="/outcomes/{{ outcome.id }}" title="{{ outcome }}">{{ outcome.description }}</a>
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-                {% if focusmodule.subjects %}
-                <h5>Subjects:</h5>
-                <ul>
-                    {% for subject in focusmodule.subjects.all %}
-                    <li>
-                        <a href="/subjects/{{ subject.id }}">{{ subject }}</a>
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
+                <h4>Module: {{ focusmodule }}</h4>
+<p>{{ focusmodule.description }}</p>
+{% if focusmodule.outcomes.count == 0 %}
+<h5>Outcomes: <i>None</i></h5>
+{% else %}
+<h5>Outcomes:</h5>
+<ul>
+{% for outcome in focusmodule.outcomes %}
+<li>
+    <a href="/outcomes/{{ outcome.id }}/" title="{{ outcome }}">{{ outcome.description }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+
+<br>
+{% if focusmodule.subjects.count == 0 %}
+<h5>This module does not appear in any subjects.</h5>
+{% else %}
+<h5>This module appears in...</h5>
+<ul>
+    {% for subject in focusmodule.subjects.all %}
+<li>
+    <a href="/subjects/{{ subject.id }}/">{{ subject }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+<br><h5>Instructors:</h5>
+<ul>
+{% for instructor in focusmodule.instructors.all %}
+<li>
+    <a href="/users/{{ instructor.id }}/">{{ instructor }}</a>
+</li>
+{% endfor %}
+</ul>
+
+{% if user in focusmodule.instructors.all %}
+<br><button class="edit_button" onclick="location.href='/modules/{{ focusmodule.id }}/edit/';">edit module</button>
+{% endif %}
+
 
                 {% endblock %}
             </div>
 			
-            <div class="arborview">
-                <canvas id="viewport" width="800px" height="600px" style="padding:5px;"></canvas>
-            </div>				
+                <canvas id="viewport" width_percent="70" style="padding:10px;"></canvas>
 
 		</div>
 	    <script src="{{ STATIC_URL }}js/jquery-2.0.3.min.js"></script>
@@ -123,6 +143,7 @@
         <script src="{{ STATIC_URL }}js/arbor-tween.js"></script>
         <script src="{{ STATIC_URL }}js/renderer.js"></script>
         <script src="{{ STATIC_URL }}js/new_object.js"></script>
+        <script src="{{ STATIC_URL }}js/set_canvas_size.js"></script>
         {% block js %}
         {% endblock %}
 	</body>
