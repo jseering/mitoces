@@ -36,8 +36,9 @@ $(function(){
         var object_class = $('h4#header').attr('object_type');
         var object_id = $('h4#header').attr('object_id');
         // get the list item object type and id
-        var remove_class = $(this).parent().attr('object_type');
-        var remove_id = $(this).parent().attr('object_id');
+        var lielem = $(this).parent();
+        var remove_class = lielem.attr('object_type');
+        var remove_id = lielem.attr('object_id');
         // make an ajax post to the corresponding url
         $.ajax({
             type:"POST",
@@ -49,7 +50,7 @@ $(function(){
                 var returned_data = jsondata;
                 if (returned_data.result=="succeeded") { // success 
                     // if deletion successful, remove the parent li element
-                    $(this).parent().remove();
+                    lielem.remove();
                 } else { // deletion failed
                     // don't do anything
                 }

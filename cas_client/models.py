@@ -108,6 +108,9 @@ class Subject(models.Model):
                                      blank=True,
                                      null=True)
     prerequisites = models.ManyToManyField('self', related_name='postrequisites', blank=True, null=True, symmetrical=False)
+    def _get_full_name(self):
+        return str(self.number).ljust(8) + self.name
+    fullname = property(_get_full_name)
     def __unicode__(self):
         return str(self.number).ljust(8) + self.name
 

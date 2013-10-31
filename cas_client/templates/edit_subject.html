@@ -2,7 +2,7 @@
 
 {% block textinfo %}
 
-<h4 id="header" object_id="{{ focussubject.id }}" class="edit" title="click to edit">{{ focussubject }}</h4>
+<h4 id="header" object_type="subject" object_id="{{ focussubject.id }}" class="edit" title="click to edit">{{ focussubject }}</h4>
 {% csrf_token %}
 <p class="edit" title="click to edit">{{ focussubject.description }}</p>
 
@@ -40,6 +40,19 @@
 </li>
 </ul>
 {% endif %}
+
+
+<br><h5>Instructors:</h5>
+<ul class="editing">
+{% for instructor in focussubject.instructors.all %}
+<li object_type="instructor" object_id="{{ instructor.id }}">
+    <img src="{{ STATIC_URL }}img/redx.png" class="delete" title="delete"> &nbsp; <a href="/users/{{ instructor.id }}/">{{ instructor }}</a>
+</li>
+{% endfor %}
+<li>
+    <img src="{{ STATIC_URL }}img/greenplus.png" class="add" title="add instructor"> &nbsp; Add instructor
+</li>
+</ul>
 
 
 {% if user in focussubject.instructors.all %}

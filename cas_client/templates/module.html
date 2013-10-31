@@ -10,7 +10,7 @@
 <h5>Outcomes:</h5>
 <ul>
 {% for outcome in focusmodule.outcomes %}
-<li>
+<li object_type="outcome">
     <a href="/outcomes/{{ outcome.id }}/" title="{{ outcome }}">{{ outcome.description }}</a>
 </li>
 {% endfor %}
@@ -51,7 +51,8 @@
 <script>
 	var outcome_all = "{{ outcome_all }}";
 	var outcome_prereqs = "{{ outcome_prereqs }}";
-    console.log("outcome_all = " + outcome_all);
+    var outcome_ids = "{{ outcome_ids }}"
+    outcome_ids = outcome_ids.substr(1,outcome_ids.length-2).split(/,/)
 	var outcomes = parseString(outcome_all);
 	var outcome_prereqs = parseObjects(outcome_prereqs);
 
@@ -63,26 +64,27 @@
     
     function init(){
         theUI = {"nodes":{},"edges":{}};
-        console.log("here1");
         for (var i=0;i<outcomes.length;i++){
-            addOutcome(theUI,outcomes[i]);
-            console.log(outcomes[i])
+            addOutcome(theUI,outcomes[i],parseInt(outcome_ids[i]));
             for (var j=0;j<outcome_prereqs[outcomes[i]].length;j++){
-            	addOutcomePrereq(theUI, outcome_prereqs[outcomes[i]][j]);
             	addEdge(theUI, outcome_prereqs[outcomes[i]][j], outcomes[i]);
             }
         }
         sys.graft(theUI);
     }
-    
-    function addModule(theUI,name,id){
-        theUI["nodes"][name] = {};
-        theUI["nodes"][name]["color"] = "#CF9238";
-        theUI["nodes"][name]["shape"] = "rectangle";
-        theUI["nodes"][name]["type"] = "module";
-        theUI["nodes"][name]["label"] = name;
-        theUI["nodes"][name]["id"] = id;
-    }
+
+    // on link hover on text side, change color of node in graph
+    $('li[object_type="outcome"]').hover(
+        function() { // mouseenter
+            var name = $(this).children().attr('title');
+            var node = sys.getNode(name);
+            sys.tweenNode(node,0.01,{color:"#0066CC"});
+        }, function() { // mouseleave
+            var name = $(this).children().attr('title');
+            var node = sys.getNode(name);
+            sys.tweenNode(node,0.01,{color:"#41A565"});
+        }
+    );
     
     function addOutcome(theUI,name,id){
         theUI["nodes"][name] = {};
@@ -93,31 +95,14 @@
         theUI["nodes"][name]["id"] = id;
     }
 
-    function addOutcomePrereq(theUI,name,id){
-    	theUI["nodes"][name] = {};
-        theUI["nodes"][name]["color"]="#41A565";
-        theUI["nodes"][name]["shape"]="rectangle";
-        theUI["nodes"][name]["type"]="outcome";
-        theUI["nodes"][name]["label"]=name;
-    }
-    
-    function addKeyword(theUI,name,id){
-        theUI["nodes"][name] = {};
-        theUI["nodes"][name]["color"]="#416DA5";
-        theUI["nodes"][name]["shape"]="rectangle";
-        theUI["nodes"][name]["type"]="keyword";
-        theUI["nodes"][name]["label"]=name;
-        theUI["nodes"][name]["id"] = id;
-    }
-    
     function addEdge(theUI,from,to){
         if (theUI["edges"][from] == undefined){
             theUI["edges"][from] = {};
         }
         theUI["edges"][from][to] = {};
         theUI["edges"][from][to]["length"] = 2;
-        theUI["edges"][from][to]["weight"] = 0.5;
-        theUI["edges"][from][to]["color"] = '#888888';
+        theUI["edges"][from][to]["weight"] = 1;
+        theUI["edges"][from][to]["color"] = '#000000';
         theUI["edges"][from][to]["directed"] = true;
     }
     
@@ -126,7 +111,6 @@
         string = string.replace(/&#39;/g,'"');
         var pattern = new RegExp('u&quot;(.*?)\"(.*?)&quot;','g');
         string = string.replace(pattern,"\"$1\'$2\"");
-        console.log(string);
         var object = JSON.parse(string);
         return object;
     }
@@ -136,7 +120,6 @@
         string = string.replace(/&#39;/g,'"');
         var pattern = new RegExp('u&quot;(.*?)\"(.*?)&quot;','g');
         string = string.replace(pattern,"\"$1\'$2\"");
-        console.log("string in parse = " + string);
         var list = [];
         var index = -1;
         var transcribe = false;
@@ -145,11 +128,8 @@
             if (string[i]=='"'){ // beginning on new list item
                 if (transcribe) {
                     transcribe = false;
-                    console.log("set transcribe to false");
-                    console.log(list[index])
                 } else {
                     transcribe = true;
-                    console.log("set transcribe to true");
                     index = index + 1;
                     list[index] = '';
                 }

@@ -57,7 +57,7 @@
 <br><h5>Instructors:</h5>
 <ul class="editing">
 {% for instructor in focusoutcome.instructors.all %}
-<li object_type="user" object_id="{{ instructor.id }}">
+<li object_type="instructor" object_id="{{ instructor.id }}">
     <img src="{{ STATIC_URL }}img/redx.png" class="delete" title="delete"> &nbsp; <a href="/users/{{ instructor.id }}/">{{ instructor }}</a>
 </li>
 {% endfor %}

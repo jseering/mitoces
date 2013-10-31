@@ -57,12 +57,14 @@ def module(request,module_id):
     focusmodule.outcomes = Outcome.objects.filter(modules__id=focusmodule.id)
     outcome_prereqs = {}
     outcome_all = list()
+    outcome_ids = list()
     for outcome in focusmodule.outcomes.all():
         outcome_all.append(outcome.name)
+        outcome_ids.append(outcome.id)
         outcome_prereqs[outcome.name] = []
         for prereq in outcome.prerequisites.all():
             outcome_prereqs[outcome.name].append(prereq.name)
-    return render_to_response('module.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focusmodule': focusmodule, 'outcome_prereqs': outcome_prereqs, 'outcome_all': outcome_all}, RequestContext(request,context))
+    return render_to_response('module.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focusmodule': focusmodule, 'outcome_prereqs': outcome_prereqs, 'outcome_all': outcome_all, 'outcome_ids': outcome_ids}, RequestContext(request,context))
 
 @login_required
 def outcome(request,outcome_id):
@@ -91,7 +93,16 @@ def department(request,department_id):
     modules = Module.objects.all()
     focusdepartment = Department.objects.get(id=department_id)
     focusdepartment.subjects = Subject.objects.filter(number__startswith=focusdepartment.name)
-    return render_to_response('department.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focusdepartment': focusdepartment}, RequestContext(request,context))
+    subject_prereqs = {}
+    subject_all = list()
+    subject_ids = list()
+    for subject in focusdepartment.subjects.all():
+        subject_all.append(subject.fullname)
+        subject_ids.append(subject.id)
+        subject_prereqs[subject.fullname] = []
+        for prereq in subject.prerequisites.all():
+            subject_prereqs[subject.fullname].append(prereq.fullname)
+    return render_to_response('department.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focusdepartment': focusdepartment,'subject_prereqs': subject_prereqs, 'subject_all': subject_all, 'subject_ids': subject_ids}, RequestContext(request,context))
 
 # === Editing ===
 @login_required
@@ -177,6 +188,28 @@ def remove_outcome_from_module(request,module_id,outcome_id):
     outcome = Outcome.objects.get(id=outcome_id)
     module = Module.objects.get(id=module_id)   
     outcome.modules.remove(module)
+    # TODO: Figure out how to check if this fails, and return 'result': 'failed'
+    to_json = {
+        'result': 'succeeded'
+    }
+    return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+
+@login_required
+def remove_instructor_from_module(request,module_id,instructor_id):
+    instructor = User.objects.get(id=instructor_id)
+    module = Module.objects.get(id=module_id)   
+    module.instructors.remove(instructor)
+    # TODO: Figure out how to check if this fails, and return 'result': 'failed'
+    to_json = {
+        'result': 'succeeded'
+    }
+    return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+
+@login_required
+def remove_instructor_from_subject(request,subject_id,instructor_id):
+    instructor = User.objects.get(id=instructor_id)
+    subject = Subject.objects.get(id=subject_id)   
+    subject.instructors.remove(instructor)
     # TODO: Figure out how to check if this fails, and return 'result': 'failed'
     to_json = {
         'result': 'succeeded'
@@ -341,8 +374,119 @@ def add_outcome_to_module(request,module_id):
                 'result': 'succeeded',
             }
             return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+    else:
+        context['outcomes'] = Outcome.objects.all()
     return render_to_response('add_outcome.html', context, RequestContext(request,context))
 
+def add_existing_outcome_to_module(request,module_id,outcome_id):
+    if request.method=="POST":
+        module_id = request.POST.get('module_id','')
+        outcome_id = request.POST.get('outcome_id','')
+        if outcome_id=='' or module_id=='':
+            to_json = {
+                'result': 'failed'
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+        else:
+            this_module = Module.objects.get(id=module_id)
+            outcome = Outcome.objects.get(id=outcome_id)
+            outcome.modules.add(this_module)
+            to_json = {
+                'result': 'succeeded',
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+
+def add_instructor_to_module(request,module_id):
+    context = {}
+    context['user'] = request.user
+    this_module = Module.objects.get(id=module_id)
+    context['module'] = this_module
+    if request.method=="POST":
+        module_id = request.POST.get('module_id','')
+        incl_on_outcomes = request.POST.get('incl_on_outcomes','')
+        instructor_id = request.POST.get('instructor_id','')
+        if instructor_id=='' or module_id=='' or incl_on_outcomes=='':
+            to_json = {
+                'result': 'failed'
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+        else:
+            instructor = User.objects.get(id=instructor_id)
+            this_module.instructors.add(instructor)
+            this_module.save()
+            if (int(incl_on_outcomes)==1):
+                for outcome in Outcome.objects.filter(modules__id=module_id):
+                    outcome.instructors.add(instructor)
+                    outcome.save()
+            to_json = {
+                'result': 'succeeded',
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+    else:
+        context['users'] = User.objects.all()
+        context['module_instructors'] = this_module.instructors.all()
+        return render_to_response('add_instructor_to_module.html', context, RequestContext(request,context))
+
+def add_instructor_to_outcome(request,outcome_id):
+    context = {}
+    context['user'] = request.user
+    this_outcome = Outcome.objects.get(id=outcome_id)
+    context['outcome'] = this_outcome
+    if request.method=="POST":
+        outcome_id = request.POST.get('outcome_id','')
+        instructor_id = request.POST.get('instructor_id','')
+        if instructor_id=='':
+            to_json = {
+                'result': 'failed'
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+        else:
+            instructor = User.objects.get(id=instructor_id)
+            this_outcome.instructors.add(instructor)
+            this_outcome.save()
+            to_json = {
+                'result': 'succeeded',
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+    else:
+        context['users'] = User.objects.all()
+        context['outcome_instructors'] = this_outcome.instructors.all()
+        return render_to_response('add_instructor_to_outcome.html', context, RequestContext(request,context))
+
+def add_instructor_to_subject(request,subject_id):
+    context = {}
+    context['user'] = request.user
+    this_subject = Subject.objects.get(id=subject_id)
+    context['subject'] = this_subject
+    if request.method=="POST":
+        subject_id = request.POST.get('subject_id','')
+        instructor_id = request.POST.get('instructor_id','')
+        if instructor_id=='':
+            to_json = {
+                'result': 'failed'
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+        else:
+            instructor = User.objects.get(id=instructor_id)
+            this_subject.instructors.add(instructor)
+            this_subject.save()
+            to_json = {
+                'result': 'succeeded',
+            }
+            return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
+    else:
+        context['users'] = User.objects.all()
+        context['subject_instructors'] = this_subject.instructors.all()
+        return render_to_response('add_instructor_to_subject.html', context, RequestContext(request,context))
 
 
+def get_description_of_outcome(request,outcome_id):
+    if request.POST:
+        outcome = Outcome.objects.get(id=outcome_id)
+        outcome_description = outcome.description
+        to_json = {
+            'result': 'succeeded',
+            'description': outcome_description,
+        }
+        return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
 

@@ -30,9 +30,6 @@
 							<li class="dropdown">
 		                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">Departments<b class="caret"></b></a>
 						            <ul class="dropdown-menu scroll-menu">
-                                        <li>
-                                            <a link_type="new" object_type="department" style="cursor:pointer;">New Department</a>
-                                        </li>
                                         {% for department in departments %}
 							            <li>
 								            <a href="/departments/{{ department.id }}/">{{ department }}</a>

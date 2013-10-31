@@ -10,15 +10,12 @@
       init:function(system){
         particleSystem = system
         particleSystem.screenSize(canvas.width, canvas.height) 
-        particleSystem.screen({padding:[50, 200, 50, 200], // leave some space at the bottom for the param sliders
-                              step:.02}) // have the ‘camera’ zoom somewhat slowly as the graph unfolds 
-
+        particleSystem.screen({padding:[50, 150, 50, 150], step:.02}) 
         that.initMouseHandling()
       },
 
       redraw:function(){
         if (!particleSystem) return
-        // gfx.clear() // convenience Ä: clears the whole canvas rect
         ctx.clearRect(0,0, canvas.width, canvas.height)
         // draw the nodes & save their bounds for edge drawing
         var nodeBoxes = {}
@@ -117,6 +114,8 @@
 
 
       },
+
+
       initMouseHandling:function(){
         // no-nonsense drag and drop (thanks springy.js)
         selected = null;
@@ -140,35 +139,27 @@
             $(canvas).unbind('dblclick',handler.double_clicked)
             return false
           },
-          single_clicked:function(e){
+          double_clicked:function(e){
             $(canvas).unbind('mousemove',handler.dragged)
             $(window).unbind('mouseup',handler.dropped)
             $(canvas).unbind('mouseup',handler.single_clicked)
             $(canvas).bind('dblclick',handler.double_clicked)
             return false;
           },
-          double_clicked:function(e){
+          single_clicked:function(e){
             if (dragged===null || dragged.node===undefined) return
             if (dragged.node !== null) dragged.node.fixed = false                  
               var name=dragged.node.name;
               var type = dragged.node.data.type;
-              if (type=='module') {
-                $.get('/module_id/'+name+'/', function(data){
-                  var id = data
-                  window.open('/modules/'+id+'/')
-                })
+              var node_id = dragged.node.data.id;
+              if (type=='subject') {
+                  location.href = '/subject/'+node_id+'/';
+              } else if (type=='module') {
               }
               else if (type=='outcome') {
-                $.get('/outcome_id/'+name+'/',function(data){
-                  var id = data
-                  window.open('/outcomes/'+id+'/')
-                })
+                  location.href = '/outcomes/'+node_id+'/';
               }
               else if (type=='keyword') {
-                $.get('/keyword_id/'+name+'/',function(data){
-                  var id = data
-                  window.open('/keywords/'+id+'/')
-                })
               }
             $(canvas).unbind('mousemove',handler.dragged)
             $(window).unbind('mouseup',handler.dropped)

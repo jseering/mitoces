@@ -145,6 +145,119 @@
         <script src="{{ STATIC_URL }}js/new_object.js"></script>
         <script src="{{ STATIC_URL }}js/set_canvas_size.js"></script>
         {% block js %}
+<script>
+	var outcome_all = "{{ outcome_all }}";
+	var outcome_prereqs = "{{ outcome_prereqs }}";
+    console.log("outcome_all = " + outcome_all);
+	var outcomes = parseString(outcome_all);
+	var outcome_prereqs = parseObjects(outcome_prereqs);
+
+    var sys = arbor.ParticleSystem(500,500,0.8);
+    var theUI;
+    sys.parameters({gravity:true});
+    sys.renderer = Renderer("#viewport");
+    init();
+    
+    function init(){
+        theUI = {"nodes":{},"edges":{}};
+        console.log("here1");
+        for (var i=0;i<outcomes.length;i++){
+            addOutcome(theUI,outcomes[i]);
+            console.log(outcomes[i])
+            for (var j=0;j<outcome_prereqs[outcomes[i]].length;j++){
+            	addOutcomePrereq(theUI, outcome_prereqs[outcomes[i]][j]);
+            	addEdge(theUI, outcome_prereqs[outcomes[i]][j], outcomes[i]);
+            }
+        }
+        sys.graft(theUI);
+    }
+    
+    function addModule(theUI,name,id){
+        theUI["nodes"][name] = {};
+        theUI["nodes"][name]["color"] = "#CF9238";
+        theUI["nodes"][name]["shape"] = "rectangle";
+        theUI["nodes"][name]["type"] = "module";
+        theUI["nodes"][name]["label"] = name;
+        theUI["nodes"][name]["id"] = id;
+    }
+    
+    function addOutcome(theUI,name,id){
+        theUI["nodes"][name] = {};
+        theUI["nodes"][name]["color"]="#41A565";
+        theUI["nodes"][name]["shape"]="rectangle";
+        theUI["nodes"][name]["type"]="outcome";
+        theUI["nodes"][name]["label"]=name;
+        theUI["nodes"][name]["id"] = id;
+    }
+
+    function addOutcomePrereq(theUI,name,id){
+    	theUI["nodes"][name] = {};
+        theUI["nodes"][name]["color"]="#41A565";
+        theUI["nodes"][name]["shape"]="rectangle";
+        theUI["nodes"][name]["type"]="outcome";
+        theUI["nodes"][name]["label"]=name;
+    }
+    
+    function addKeyword(theUI,name,id){
+        theUI["nodes"][name] = {};
+        theUI["nodes"][name]["color"]="#416DA5";
+        theUI["nodes"][name]["shape"]="rectangle";
+        theUI["nodes"][name]["type"]="keyword";
+        theUI["nodes"][name]["label"]=name;
+        theUI["nodes"][name]["id"] = id;
+    }
+    
+    function addEdge(theUI,from,to){
+        if (theUI["edges"][from] == undefined){
+            theUI["edges"][from] = {};
+        }
+        theUI["edges"][from][to] = {};
+        theUI["edges"][from][to]["length"] = 2;
+        theUI["edges"][from][to]["weight"] = 0.5;
+        theUI["edges"][from][to]["color"] = '#888888';
+        theUI["edges"][from][to]["directed"] = true;
+    }
+    
+    function parseObjects(string) {
+        string = string.replace(/u&#39;/g,'"');
+        string = string.replace(/&#39;/g,'"');
+        var pattern = new RegExp('u&quot;(.*?)\"(.*?)&quot;','g');
+        string = string.replace(pattern,"\"$1\'$2\"");
+        console.log(string);
+        var object = JSON.parse(string);
+        return object;
+    }
+    
+    function parseString(string){
+        string = string.replace(/u&#39;/g,'"');
+        string = string.replace(/&#39;/g,'"');
+        var pattern = new RegExp('u&quot;(.*?)\"(.*?)&quot;','g');
+        string = string.replace(pattern,"\"$1\'$2\"");
+        console.log("string in parse = " + string);
+        var list = [];
+        var index = -1;
+        var transcribe = false;
+        for (var i=0;i<string.length;i++){
+            var count = 1;
+            if (string[i]=='"'){ // beginning on new list item
+                if (transcribe) {
+                    transcribe = false;
+                    console.log("set transcribe to false");
+                    console.log(list[index])
+                } else {
+                    transcribe = true;
+                    console.log("set transcribe to true");
+                    index = index + 1;
+                    list[index] = '';
+                }
+            }
+            if (transcribe && string[i+1]!='"') {
+                list[index] += string[i+1];
+            }
+        }
+        return list;
+    }
+</script>
         {% endblock %}
 	</body>
 </html>

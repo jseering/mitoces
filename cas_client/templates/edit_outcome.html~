@@ -4,7 +4,7 @@
 
 <h4 id="header" object_type="outcome" object_id="{{ focusoutcome.id }}" class="edit" title="click to edit">Outcome: {{ focusoutcome }}</h4>
 {% csrf_token %}
-<p id="description" class="edit" title="click to edit">{{ focusoutcome.description }}</p>
+<p id="description" object_type="outcome" object_id="{{ focusoutcome.id }}" class="edit" title="click to edit">{{ focusoutcome.description }}</p>
 {% if focusoutcome.prerequisites.count == 0 %}
 <h5>Prerequisites: </h5>
 <ul class="editing">

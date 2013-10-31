@@ -42,6 +42,19 @@
 {% endif %}
 
 
+<br><h5>Instructors:</h5>
+<ul class="editing">
+{% for instructor in focussubject.instructors.all %}
+<li object_type="instructor" object_id="{{ instructor.id }}">
+    <img src="{{ STATIC_URL }}img/redx.png" class="delete" title="delete"> &nbsp; <a href="/users/{{ instructor.id }}/">{{ instructor }}</a>
+</li>
+{% endfor %}
+<li>
+    <img src="{{ STATIC_URL }}img/greenplus.png" class="add" title="add instructor"> &nbsp; Add instructor
+</li>
+</ul>
+
+
 {% if user in focussubject.instructors.all %}
 <br><button onclick="location.href='/subjects/{{ focussubject.id }}'">done</button>&nbsp;&nbsp;<button class="delete" object_id="{{ focussubject.id }}">delete subject</button>
 {% endif %}
