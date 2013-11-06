@@ -119,7 +119,7 @@ def department(request,department_id):
     subjects = Subject.objects.all()
     modules = Module.objects.all()
     focusdepartment = Department.objects.get(id=department_id)
-    focusdepartment.subjects = Subject.objects.filter(number__startswith=focusdepartment.name)
+    focusdepartment.subjects = Subject.objects.filter(number__startswith=focusdepartment.name+".")
     subject_prereqs = {}
     subject_all = list()
     subject_ids = list()

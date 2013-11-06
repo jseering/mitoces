@@ -119,7 +119,7 @@ def department(request,department_id):
     subjects = Subject.objects.all()
     modules = Module.objects.all()
     focusdepartment = Department.objects.get(id=department_id)
-    focusdepartment.subjects = Subject.objects.filter(number__startswith=focusdepartment.name)
+    focusdepartment.subjects = Subject.objects.filter(number__startswith=focusdepartment.name+".")
     subject_prereqs = {}
     subject_all = list()
     subject_ids = list()
@@ -468,7 +468,7 @@ def add_subject(request):
             return HttpResponse(simplejson.dumps(to_json), content_type="application/json")
         else:
             subject_creator = User.objects.get(id=subject_creator_id)
-            subject = Module(number=subject_number,name=subject_name,description=subject_description,creator=subject_creator)
+            subject = Subject(number=subject_number,name=subject_name,description=subject_description,creator=subject_creator)
             subject.save()
             subject.instructors.add(subject_creator)
             to_json = {
