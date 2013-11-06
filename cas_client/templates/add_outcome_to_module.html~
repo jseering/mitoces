@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+	<head>
+		<title>Add Outcome</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+		body {
+			padding-top: 60px;
+		}
+		@media (max-width: 979px) {
+			body {
+				padding-top: 0px;
+			}
+		}
+		.container {
+			overflow: visible !important
+		}
+		</style>
+        <link rel="icon" type="image/png" href="{{ STATIC_URL }}img/favicon.png">
+        <link href="{{ STATIC_URL }}css/new_object.css" rel="stylesheet">
+        {% block header %}
+        {% endblock %}
+	</head>
+	<body style="margin-left:20px;">
+
+        <h1 id="header" module_id="{{ module.id }}">Add Outcome to Module: {{ module }}</h1>
+        {% csrf_token %}
+        
+        <button id="existing" style="font-size:16px;" disabled="disabled">select existing</button>&nbsp;<button id="create_new" style="font-size:16px;">create new</button>
+
+        <div class="existing" style="margin-bottom:-50px;">
+        <h4>Select the outcome from the dropdown menu below:</h3>
+        <select id="outcome_list">
+            <option value="outcome" user_id="">outcome</option>
+            {% for outcome in outcomes %}
+                <option value="{{ outcome.name }}" outcome_id="{{ outcome.id }}">{{ outcome.name }}</option>
+            {% endfor %}
+        </select>  
+        <div id="existing_info">
+            <h3>Title:</h3>
+            <p id="name" style="font-size:20px;width:500px;"></p>
+        
+            <h3>Description:</h3>
+            <p id="description" style="width:500px;height:100px;" maxlength="400"></p>
+        </div>
+        </div>
+
+        <div class="new" style="display:none;">
+        <h3>Title:<span>(e.g., Define eigenvalue stability)</span></h3>
+        <input id="id_name" type="text" name="name" maxlength="40" style="font-size:20px;width:500px;">
+        
+        <h3>Description:</h3>
+        <textarea id="id_description" style="width:500px;height:100px;" maxlength="400"></textarea>
+
+        </div>
+
+        <select name="creator" id="id_creator" style="display:none;">
+            <option value="{{ user.id }}" selected="selected">{{ user }}</option>
+        </select>
+
+        </select multiple="multiple" name="instructors" id="id_instructors" style="display:none;">
+            <option value="{{ user.id }}" selected="selected">{{ user }}</option>
+        </select>
+
+        <br><br><br>
+        <button id="save" style="font-size:16px;">save outcome</button>
+        <button onclick="window.close();" style="font-size:16px;">cancel</button>        
+
+    </body>
+
+    <script src="{{ STATIC_URL }}js/jquery-2.0.3.min.js"></script>
+    <script src="{{ STATIC_URL }}js/add_outcome.js"></script>
+</html>

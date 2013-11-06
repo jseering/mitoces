@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+	<head>
+		<title>Add Subject</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+		body {
+			padding-top: 60px;
+		}
+		@media (max-width: 979px) {
+			body {
+				padding-top: 0px;
+			}
+		}
+		.container {
+			overflow: visible !important
+		}
+		</style>
+        <link rel="icon" type="image/png" href="{{ STATIC_URL }}img/favicon.png">
+        <link href="{{ STATIC_URL }}css/new_object.css" rel="stylesheet">
+        {% block header %}
+        {% endblock %}
+	</head>
+	<body style="margin-left:20px;">
+
+        <h1 id="header" module_id="{{ module.id }}">Add Subject to Module: {{ module }}</h1>
+        {% csrf_token %}
+        
+        <h4>Select the subject from the dropdown menu below:</h3>
+        <select id="subject_list">
+            <option value="subject" subject_id="">subject</option>
+            {% for subject in subjects %}
+                {% if subject in module_subjects %}
+                {% else %}
+                    <option value="{{ subject }}" subject_id="{{ subject.id }}">{{ subject }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>        
+    
+        <br><br><br>
+        <button id="save" style="font-size:16px;">save</button>
+        <button onclick="window.close();" style="font-size:16px;">cancel</button>        
+
+    </body>
+
+    <script src="{{ STATIC_URL }}js/jquery-2.0.3.min.js"></script>
+    <script src="{{ STATIC_URL }}js/add_subject_to_outcome.js"></script>
+</html>

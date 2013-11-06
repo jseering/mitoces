@@ -40,17 +40,17 @@
 <li>
     <img src="{{ STATIC_URL }}img/redx.png" class="delete" title="delete"> &nbsp; <a href="/subjects/{{ subject.id }}/">{{ subject }}</a>
 </li>
+{% endfor %}
 <li>
     <img src="{{ STATIC_URL }}img/greenplus.png" class="add" title="add subject"> &nbsp; Add subject
 </li>
-{% endfor %}
 </ul>
 {% endif %}
 
 <br><h5>Instructors:</h5>
 <ul class="editing">
 {% for instructor in focusmodule.instructors.all %}
-<li>
+<li object_type="instructor" object_id="{{ instructor.id }}">
     <img src="{{ STATIC_URL }}img/redx.png" class="delete" title="delete"> &nbsp; <a href="/users/{{ instructor.id }}/">{{ instructor }}</a>
 </li>
 {% endfor %}

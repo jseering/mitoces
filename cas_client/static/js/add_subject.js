@@ -4,35 +4,42 @@ $(function(){
     $('button#save').click(function() {
         // check to make sure there is a title and description
         if ($('input#id_name').val()=="") {
-            alert('Please title your new module.');
+            alert('Please title your new subject.');
             $('input#id_name').focus();
             return false;
         }   
+        if ($('input#id_number').val()=="") {
+            alert('Please give your new subject a number.');
+            $('input#id_number').focus();
+            return false;
+        }
         if ($('textarea#id_description').val()=="") {
-            alert('Please give your new module a description.');
+            alert('Please give your new subject a description.');
             $('textarea#id_description').focus();
             return false;
         }   
         // do an ajax post to create the new module
-        var module_name = $('input#id_name').val();  
-        var module_description = $('textarea#id_description').val();
-        var module_creator_id = $('select#id_creator option').attr('value');
+        var subject_number = $('input#id_number').val();
+        var subject_name = $('input#id_name').val();  
+        var subject_description = $('textarea#id_description').val();
+        var subject_creator_id = $('select#id_creator option').attr('value');
         $.ajax({
             type:"POST",
-            url:"/modules/add/",
+            url:"/subjects/add/",
             data:{
-                'module_name': module_name,
-                'module_description': module_description,
-                'module_creator_id': module_creator_id,
+                'subject_number': subject_number,
+                'subject_name': subject_name,
+                'subject_description': subject_description,
+                'subject_creator_id': subject_creator_id,
                 'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
             },
             success: function(jsondata) {
                 var returned_data = jsondata;
                 if (returned_data.result=="succeeded") { // success 
-                    var new_module_id = returned_data.new_module_id;
+                    var new_subject_id = returned_data.new_subject_id;
                     // close the pop up and send the main window to the new module
                     window.close();
-                    window.opener.location.href="/modules/" + new_module_id + "/edit/";
+                    window.opener.location.href="/subjects/" + new_subject_id + "/edit/";
                 } else { // creation failed
                     // do nothing
                 }

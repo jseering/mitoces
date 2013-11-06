@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 	<head>
-		<title>New Module</title>
+		<title>New Subject</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<style>
 		body {
@@ -22,11 +22,12 @@
 	</head>
 	<body style="margin-left:20px;">
 
-        <h1>New Module</h1>
+        <h1>New Subject</h1>
         {% csrf_token %}
         
-        <h3>Title:<span>(e.g., Integration Methods for ODEs)</span></h3>
-        <input id="id_name" type="text" name="name" maxlength="60" style="font-size:20px;width:500px;">
+        <h3>Title:<span>(e.g., 16.90 Computational Methods in Aerospace Engineering)</span></h3>
+        <input id="id_number" type="text" name="number" maxlength="10" style="font-size:18px;width:80px;">
+        <input id="id_name" type="text" name="name" maxlength="60" style="font-size:18px;width:420px;">
         
         <h3>Description:</h3>
         <textarea id="id_description" style="width:500px;height:100px;" maxlength="600"></textarea>
@@ -44,11 +45,11 @@
         </select>
 
         <br><br><br>
-        <button id="save" style="font-size:16px;">save module</button>
+        <button id="save" style="font-size:16px;">save subject</button>
         <button onclick="window.close();" style="font-size:16px;">cancel</button>        
 
     </body>
 
     <script src="{{ STATIC_URL }}js/jquery-2.0.3.min.js"></script>
-    <script src="{{ STATIC_URL }}js/add_outcome.js"></script>
+    <script src="{{ STATIC_URL }}js/add_subject.js"></script>
 </html>

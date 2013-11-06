@@ -2,15 +2,23 @@
 
 {% block textinfo %}
 
-<h4 id="header" object_type="subject" object_id="{{ focussubject.id }}" class="edit" title="click to edit">{{ focussubject }}</h4>
+<h4 id="header" object_type="subject" object_id="{{ focussubject.id }}" class="edit" title="click to edit"><span id="number">{{ focussubject.number }}</span>&nbsp;<span id="name">{{ focussubject.name }}</span></h4>
 {% csrf_token %}
-<p class="edit" title="click to edit">{{ focussubject.description }}</p>
+<p id="description" object_type="subject" object_id="{{ focussubject.id }}" class="edit" title="click to edit">{{ focussubject.description }}</p>
 
-{% if focussubject.modules %}
+
+{% if focussubject.modules.count == 0 %}
+<h5>Modules:</h5>
+<ul class="editing">
+<li>
+    <img src="{{ STATIC_URL }}img/greenplus.png" class="add" title="add module"> &nbsp; Add module
+</li>
+</ul>
+{% else %}
 <h5>Modules:</h5>
 <ul class="editing">
 {% for module in focussubject.modules %}
-<li>
+<li object_type="module" object_id="{{ module.id }}">
     <img src="{{ STATIC_URL }}img/redx.png" class="delete" title="delete"> &nbsp; <a href="/modules/{{ module.id }}/">{{ module }}</a>
 </li>
 {% endfor %}
@@ -31,7 +39,7 @@
 <h5>Prerequisite subjects: </h5>
 <ul class="editing">
 {% for subject in focussubject.prerequisites.all %}
-<li>
+<li object_type="subject" object_id="{{ subject.id }}">
     <img src="{{ STATIC_URL }}img/redx.png" class="delete" title="delete"> &nbsp; <a href="/subjects/{{ subject.id }}/">{{ subject }}</a>
 </li>
 {% endfor %}
@@ -65,5 +73,6 @@
 
 {% block js %}
  <script src="{{ STATIC_URL }}js/delete.js"></script>
+ <script src="{{ STATIC_URL }}js/click_to_edit_subject.js"></script>
 {% endblock %}
 

@@ -153,7 +153,7 @@
               var type = dragged.node.data.type;
               var node_id = dragged.node.data.id;
               if (type=='subject') {
-                  location.href = '/subject/'+node_id+'/';
+                  location.href = '/subjects/'+node_id+'/';
               } else if (type=='module') {
               }
               else if (type=='outcome') {

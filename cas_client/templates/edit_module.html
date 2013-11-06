@@ -37,13 +37,13 @@
 {% else %}
 <ul class="editing">
     {% for subject in focusmodule.subjects.all %}
-<li>
+<li object_type="subject" object_id="{{ subject.id }}">
     <img src="{{ STATIC_URL }}img/redx.png" class="delete" title="delete"> &nbsp; <a href="/subjects/{{ subject.id }}/">{{ subject }}</a>
 </li>
+{% endfor %}
 <li>
     <img src="{{ STATIC_URL }}img/greenplus.png" class="add" title="add subject"> &nbsp; Add subject
 </li>
-{% endfor %}
 </ul>
 {% endif %}
 

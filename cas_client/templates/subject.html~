@@ -5,11 +5,13 @@
 <h4>{{ focussubject }}</h4>
 <p>{{ focussubject.description }}</p>
 
-{% if focussubject.modules %}
+{% if focussubject.modules.count == 0 %}
+<h5>Modules: <i>None</i></h5>
+{% else %}
 <h5>Modules:</h5>
 <ul>
 {% for module in focussubject.modules %}
-<li>
+<li object_type="module">
     <a href="/modules/{{ module.id }}/">{{ module }}</a>
 </li>
 {% endfor %}
@@ -29,7 +31,9 @@
 </ul>
 {% endif %}
 
-
+{% if focussubject.instructors.count == 0 %}
+<h5>Instructors: <i>None</i></h5>
+{% else %}
 <br><h5>Instructors:</h5>
 <ul>
 {% for instructor in focussubject.instructors.all %}
@@ -49,12 +53,12 @@
 {% block js %}
 
 <script>
-	var subject_all = "{{ subject_all }}";
-	var subject_prereqs = "{{ subject_prereqs }}";
-    var subject_ids = "{{ subject_ids }}"
-    subject_ids = subject_ids.substr(1,subject_ids.length-2).split(/,/)
-	var subjects = parseString(subject_all);
-	var subject_prereqs = parseObjects(subject_prereqs);
+	var module_all = "{{ module_all }}";
+	var module_prereqs = "{{ module_prereqs }}";
+    var module_ids = "{{ module_ids }}"
+    module_ids = module_ids.substr(1,module_ids.length-2).split(/,/)
+	var modules = parseString(module_all);
+	var module_prereqs = parseObjects(module_prereqs);
 
     var sys = arbor.ParticleSystem(500,500,0.8);
     var theUI;
@@ -64,33 +68,33 @@
     
     function init(){
         theUI = {"nodes":{},"edges":{}};
-        for (var i=0;i<outcomes.length;i++){
-            addSubject(theUI,subjects[i],parseInt(subject_ids[i]));
-            for (var j=0;j<subject_prereqs[subject[i]].length;j++){
-            	addEdge(theUI, subject_prereqs[subject[i]][j], subjects[i]);
+        for (var i=0;i<modules.length;i++){
+            addModule(theUI,modules[i],parseInt(module_ids[i]));
+            for (var j=0;j<module_prereqs[modules[i]].length;j++){
+            	addEdge(theUI, module_prereqs[modules[i]][j], modules[i]);
             }
         }
         sys.graft(theUI);
     }
 
     // on link hover on text side, change color of node in graph
-    $('li[object_type="subject"]').hover(
+    $('li[object_type="module"] a').hover(
         function() { // mouseenter
-            var name = $(this).children().attr('title');
+            var name = $(this).text();
             var node = sys.getNode(name);
             sys.tweenNode(node,0.01,{color:"#0066CC"});
         }, function() { // mouseleave
-            var name = $(this).children().attr('title');
+            var name = $(this).text();
             var node = sys.getNode(name);
             sys.tweenNode(node,0.01,{color:"#41A565"});
         }
     );
     
-    function addSubject(theUI,name,id){
+    function addModule(theUI,name,id){
         theUI["nodes"][name] = {};
         theUI["nodes"][name]["color"]="#41A565";
         theUI["nodes"][name]["shape"]="rectangle";
-        theUI["nodes"][name]["type"]="outcome";
+        theUI["nodes"][name]["type"]="module";
         theUI["nodes"][name]["label"]=name;
         theUI["nodes"][name]["id"] = id;
     }
@@ -143,4 +147,3 @@
 </script>
 
 {% endblock %}
-

@@ -155,6 +155,7 @@
               if (type=='subject') {
                   location.href = '/subjects/'+node_id+'/';
               } else if (type=='module') {
+                  location.href = '/modules/'+node_id+'/';
               }
               else if (type=='outcome') {
                   location.href = '/outcomes/'+node_id+'/';

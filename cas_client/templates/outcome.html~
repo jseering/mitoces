@@ -10,7 +10,7 @@
 <h5>Prerequisite outcomes:</h5>
 <ul>
 {% for outcome in focusoutcome.prerequisites.all %}
-<li>
+<li object_type="outcome">
     <a href="/outcomes/{{ outcome.id }}/" title="{{ outcome }}">{{ outcome.description }}</a>
 </li>
 {% endfor %}
@@ -38,16 +38,6 @@
 {% endfor %}
 </ul>
 {% endif %}
-{% if focusoutcome.departments %}
-<h5>Departments:</h5>
-<ul>
-    {% for department in focusoutcome.departments.all %}
-<li>
-    <a href="/departments/{{ department.id }}/">{{ department }}</a>
-</li>
-{% endfor %}
-</ul>
-{% endif %}
 
 <br><h5>Instructors:</h5>
 <ul>
@@ -63,6 +53,105 @@
 {% endif %}
 
 
+{% endblock %}
 
+{% block js %}
+
+<script>
+	var outcome_all = "{{ outcome_all }}";
+	var outcome_prereqs = "{{ outcome_prereqs }}";
+    var outcome_ids = "{{ outcome_ids }}"
+    outcome_ids = outcome_ids.substr(1,outcome_ids.length-2).split(/,/)
+	var outcomes = parseString(outcome_all);
+	var outcome_prereqs = parseObjects(outcome_prereqs);
+
+    var sys = arbor.ParticleSystem(500,500,0.8);
+    var theUI;
+    sys.parameters({gravity:true});
+    sys.renderer = Renderer("#viewport");
+    init();
+    
+    function init(){
+        theUI = {"nodes":{},"edges":{}};
+        for (var i=0;i<outcomes.length;i++){
+            addModule(theUI,outcomes[i],parseInt(outcome_ids[i]));
+            if (i==0){ 
+                theUI["nodes"][outcomes[i]]["color"]="#000000";
+            }
+            for (var j=0;j<outcome_prereqs[outcomes[i]].length;j++){
+            	addEdge(theUI, outcome_prereqs[outcomes[i]][j], outcomes[i]);
+            }
+        }
+        sys.graft(theUI);
+    }
+
+    // on link hover on text side, change color of node in graph
+    $('li[object_type="outcome"] a').hover(
+        function() { // mouseenter
+            var name = $(this).text();
+            var node = sys.getNode(name);
+            sys.tweenNode(node,0.01,{color:"#0066CC"});
+        }, function() { // mouseleave
+            var name = $(this).text();
+            var node = sys.getNode(name);
+            sys.tweenNode(node,0.01,{color:"#41A565"});
+        }
+    );
+    
+    function addModule(theUI,name,id){
+        theUI["nodes"][name] = {};
+        theUI["nodes"][name]["color"]="#41A565";
+        theUI["nodes"][name]["shape"]="rectangle";
+        theUI["nodes"][name]["type"]="outcome";
+        theUI["nodes"][name]["label"]=name;
+        theUI["nodes"][name]["id"] = id;
+    }
+
+    function addEdge(theUI,from,to){
+        if (theUI["edges"][from] == undefined){
+            theUI["edges"][from] = {};
+        }
+        theUI["edges"][from][to] = {};
+        theUI["edges"][from][to]["length"] = 2;
+        theUI["edges"][from][to]["weight"] = 1;
+        theUI["edges"][from][to]["color"] = '#000000';
+        theUI["edges"][from][to]["directed"] = true;
+    }
+    
+    function parseObjects(string) {
+        string = string.replace(/u&#39;/g,'"');
+        string = string.replace(/&#39;/g,'"');
+        var pattern = new RegExp('u&quot;(.*?)\"(.*?)&quot;','g');
+        string = string.replace(pattern,"\"$1\'$2\"");
+        var object = JSON.parse(string);
+        return object;
+    }
+    
+    function parseString(string){
+        string = string.replace(/u&#39;/g,'"');
+        string = string.replace(/&#39;/g,'"');
+        var pattern = new RegExp('u&quot;(.*?)\"(.*?)&quot;','g');
+        string = string.replace(pattern,"\"$1\'$2\"");
+        var list = [];
+        var index = -1;
+        var transcribe = false;
+        for (var i=0;i<string.length;i++){
+            var count = 1;
+            if (string[i]=='"'){ // beginning on new list item
+                if (transcribe) {
+                    transcribe = false;
+                } else {
+                    transcribe = true;
+                    index = index + 1;
+                    list[index] = '';
+                }
+            }
+            if (transcribe && string[i+1]!='"') {
+                list[index] += string[i+1];
+            }
+        }
+        return list;
+    }
+</script>
 
 {% endblock %}
