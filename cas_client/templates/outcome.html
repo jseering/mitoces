@@ -60,10 +60,13 @@
 <script>
 	var outcome_all = "{{ outcome_all }}";
 	var outcome_prereqs = "{{ outcome_prereqs }}";
-    var outcome_ids = "{{ outcome_ids }}"
-    outcome_ids = outcome_ids.substr(1,outcome_ids.length-2).split(/,/)
+    var outcome_ids = "{{ outcome_ids }}";
+    var outcome_colors = "{{ outcome_colors }}";
+    outcome_ids = outcome_ids.substr(1,outcome_ids.length-2).split(/,/);
 	var outcomes = parseString(outcome_all);
 	var outcome_prereqs = parseObjects(outcome_prereqs);
+    var outcome_colors = parseObjects(outcome_colors);
+    console.log(outcome_colors);
 
     var sys = arbor.ParticleSystem(500,500,0.8);
     var theUI;
@@ -74,7 +77,7 @@
     function init(){
         theUI = {"nodes":{},"edges":{}};
         for (var i=0;i<outcomes.length;i++){
-            addModule(theUI,outcomes[i],parseInt(outcome_ids[i]));
+            addModule(theUI,outcomes[i],parseInt(outcome_ids[i]),outcome_colors[i]);
             if (i==0){ 
                 theUI["nodes"][outcomes[i]]["color"]="#000000";
             }
@@ -98,9 +101,9 @@
         }
     );
     
-    function addModule(theUI,name,id){
+    function addModule(theUI,name,id,color){
         theUI["nodes"][name] = {};
-        theUI["nodes"][name]["color"]="#41A565";
+        theUI["nodes"][name]["color"]=color;
         theUI["nodes"][name]["shape"]="rectangle";
         theUI["nodes"][name]["type"]="outcome";
         theUI["nodes"][name]["label"]=name;

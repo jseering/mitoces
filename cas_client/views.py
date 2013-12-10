@@ -58,13 +58,25 @@ def module(request,module_id):
     outcome_prereqs = {}
     outcome_all = list()
     outcome_ids = list()
+    outcome_colors = list()
+    # prereqs from other modules: light green #00FF00
+    # outcomes from this module: green #41A565
+    # hover color: #0066CC
     for outcome in focusmodule.outcomes.all():
+        outcome_colors.append('#41A565')
         outcome_all.append(outcome.name)
         outcome_ids.append(outcome.id)
         outcome_prereqs[outcome.name] = []
         for prereq in outcome.prerequisites.all():
             outcome_prereqs[outcome.name].append(prereq.name)
-    return render_to_response('module.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focusmodule': focusmodule, 'outcome_prereqs': outcome_prereqs, 'outcome_all': outcome_all, 'outcome_ids': outcome_ids}, RequestContext(request,context))
+            # see if this prereq is contained in this module ... if not, add it to outcomes_all and make color light green
+            modules_with_this_outcome = Module.objects.filter(outcome__id=prereq.id)
+            if focusmodule not in modules_with_this_outcome:
+                outcome_colors.append('#CC9999')
+                outcome_all.append(prereq.name)
+                outcome_ids.append(prereq.id)
+                outcome_prereqs[prereq.name] = []
+    return render_to_response('module.html', {'departments': departments, 'subjects': subjects, 'modules': modules, 'focusmodule': focusmodule, 'outcome_prereqs': outcome_prereqs, 'outcome_all': outcome_all, 'outcome_ids': outcome_ids, 'outcome_colors': outcome_colors}, RequestContext(request,context))
 
 @login_required
 def outcome(request,outcome_id):

@@ -9,11 +9,11 @@
 }
 
 .textinfo{
-    width:30%;
+    width:20%;
     float:left;
     margin-left:20px;
     margin-top:0px;
-    min-width:500px;
+    min-width:400px;
     padding:4px;
     overflow-y:auto;
     padding-bottom:20px;
