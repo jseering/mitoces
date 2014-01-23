@@ -68,6 +68,7 @@ urlpatterns = patterns('',
     url(r'^subjects/(?P<subject_id>\d+)/add/subject/$', 'cas_client.views.add_prereq_to_subject', name="add prereq to subject"),
     url(r'^subjects/(?P<subject_id>\d+)/get/description/$', 'cas_client.views.get_description_of_subject', name="get description of subject"),
     url(r'^subjects/(?P<subject_id>\d+)/remove/subject/(?P<prereq_id>\d+)/$', 'cas_client.views.remove_prereq_from_subject', name="remove prereq from subject"),  
+    url(r'^subjects/add/$', 'cas_client.views.add_subject', name="add subject"),
 
     # Department
     url(r'^departments/(?P<department_id>\d+)/$', 'cas_client.views.department', name="department"),

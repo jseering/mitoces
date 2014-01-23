@@ -73,6 +73,8 @@ urlpatterns = patterns('',
     # Department
     url(r'^departments/(?P<department_id>\d+)/$', 'cas_client.views.department', name="department"),
 
+    # TEST TO SEE IF GITHUB IS UPDATING
+
     # Authentication
     url(r'^cas_test/login/$', 'django_cas.views.login', name="login"),
     url(r'^cas_test/logout/$', 'django_cas.views.logout', name="logout"),

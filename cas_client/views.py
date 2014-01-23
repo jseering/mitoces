@@ -767,8 +767,8 @@ def add_module_to_subject(request,subject_id):
             module = Module(name=module_name,description=module_description,creator=module_creator)
             module.save()
             module.instructors.add(module_creator)
-            this_subject.modules.add(module)
-            this_subject.save()
+            this_subject = Subject.objects.get(id=subject_id)
+            module.subjects.add(this_subject)
             to_json = {
                 'result': 'succeeded',
             }

@@ -72,7 +72,7 @@ def module(request,module_id):
             # see if this prereq is contained in this module ... if not, add it to outcomes_all and make color light green
             modules_with_this_outcome = Module.objects.filter(outcome__id=prereq.id)
             if focusmodule not in modules_with_this_outcome:
-                outcome_colors.append('#CCCC99')
+                outcome_colors.append('#CC9999')
                 outcome_all.append(prereq.name)
                 outcome_ids.append(prereq.id)
                 outcome_prereqs[prereq.name] = []
@@ -767,8 +767,11 @@ def add_module_to_subject(request,subject_id):
             module = Module(name=module_name,description=module_description,creator=module_creator)
             module.save()
             module.instructors.add(module_creator)
-            this_subject.modules.add(module)
-            this_subject.save()
+            this_subject = Subject.objects.get(id=subject_id)
+            #print "this_subject =", this_subject
+            #this_subject.modules.add(module)
+            #this_subject.save()
+            module.subjects.add(this_subject)
             to_json = {
                 'result': 'succeeded',
             }
